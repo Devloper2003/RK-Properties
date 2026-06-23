@@ -1,0 +1,6 @@
+{
+  "name": "RK Properties - Luxury Real Estate Vrindavan",
+  "description": "Premium MVDA approved plots, residential developments, and strategic investment properties in the sacred land of Vrindavan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

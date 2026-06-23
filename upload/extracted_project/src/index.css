@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "Space Grotesk", system-ui, monospace;
+  
+  --color-gold-50: #FCFBF7;
+  --color-gold-100: #F4EFE6;
+  --color-gold-200: #E5E1D8;
+  --color-gold-300: #D9D1C2;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #8B735B;
+  --color-gold-700: #5E5852;
+}
+
+/* Custom visual styles matching Natural Tones design theme */
+.luxury-gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #8B735B 50%, #5E5852 100%);
+}
+
+.luxury-text-gradient {
+  background: linear-gradient(135deg, #2D2926 0%, #8B735B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sunset-radial {
+  background: radial-gradient(circle at top right, rgba(244, 239, 230, 0.8), rgba(252, 251, 247, 1));
+}
+
+/* Custom scrollbar for premium touch */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FCFBF7;
+}
+::-webkit-scrollbar-thumb {
+  background: #E5E1D8;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;
+}
+

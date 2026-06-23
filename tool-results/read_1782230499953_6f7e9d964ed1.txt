@@ -1,0 +1,622 @@
+     1→import React, { useState } from 'react';
+     2→import { Project, Lead } from '../types';
+     3→import { Plus, Users, Calendar, Activity, TrendingUp, Check, RefreshCw, BarChart2, ShieldCheck, Mail, Phone, Settings, Globe, LogOut, ArrowRight } from 'lucide-react';
+     4→
+     5→interface AdminDashboardProps {
+     6→  leads: Lead[];
+     7→  projects: Project[];
+     8→  onAddProject: (project: Omit<Project, 'id'>) => void;
+     9→  onUpdateLeadStatus: (leadId: string, status: Lead['status']) => void;
+    10→  onScheduleVisit: (leadId: string, date: string) => void;
+    11→  onClose: () => void;
+    12→}
+    13→
+    14→export default function AdminDashboard({
+    15→  leads,
+    16→  projects,
+    17→  onAddProject,
+    18→  onUpdateLeadStatus,
+    19→  onScheduleVisit,
+    20→  onClose
+    21→}: AdminDashboardProps) {
+    22→  const [activeSubTab, setActiveSubTab] = useState<'leads' | 'projects' | 'analytics'>('leads');
+    23→  
+    24→  // States for adding a new project
+    25→  const [newProjName, setNewProjName] = useState('');
+    26→  const [newProjType, setNewProjType] = useState<Project['type']>('Residential Project');
+    27→  const [newProjStatus, setNewProjStatus] = useState<Project['status']>('Pre-launch');
+    28→  const [newProjLocation, setNewProjLocation] = useState('');
+    29→  const [newProjSize, setNewProjSize] = useState('');
+    30→  const [newProjPrice, setNewProjPrice] = useState('₹28,000 / Sq. Yard');
+    31→  const [newProjPriceVal, setNewProjPriceVal] = useState(28000);
+    32→  const [newProjAppreciation, setNewProjAppreciation] = useState(18);
+    33→  const [newProjDescription, setNewProjDescription] = useState('');
+    34→  const [newProjHighlights, setNewProjHighlights] = useState('');
+    35→  const [newProjAmenities, setNewProjAmenities] = useState('');
+    36→  const [addSuccess, setAddSuccess] = useState(false);
+    37→
+    38→  // States for scheduled site visits
+    39→  const [tempVisitDate, setTempVisitDate] = useState<{ [leadId: string]: string }>({});
+    40→
+    41→  const handleCreateProject = (e: React.FormEvent) => {
+    42→    e.preventDefault();
+    43→    if (!newProjName || !newProjLocation || !newProjDescription) return;
+    44→
+    45→    onAddProject({
+    46→      name: newProjName,
+    47→      type: newProjType,
+    48→      status: newProjStatus,
+    49→      location: newProjLocation,
+    50→      size: newProjSize || "150 - 400 Sq. Yards",
+    51→      price: newProjPrice,
+    52→      priceVal: newProjPriceVal,
+    53→      appreciationRate: newProjAppreciation,
+    54→      description: newProjDescription,
+    55→      highlights: newProjHighlights ? newProjHighlights.split(',') : [
+    56→        "Approved under latest zoning norms",
+    57→        "Strategic proximity to highway corridors",
+    58→        "Title cleared by certified firm"
+    59→      ],
+    60→      amenities: newProjAmenities ? newProjAmenities.split(',') : [
+    61→        "Metalled Roads",
+    62→        "24/7 Security Patrols",
+    63→        "Sweet groundwater supply"
+    64→      ],
+    65→      roiProjection5Yr: `Estimated ${((1 + newProjAppreciation/100)**5).toFixed(1)}X value appreciation in 5 years`,
+    66→      roiProjection10Yr: `Estimated ${((1 + newProjAppreciation/100)**10).toFixed(1)}X legacy accumulation values`,
+    67→      details: "Cleared and ready for registration details.",
+    68→      image: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?auto=format&fit=crop&w=1200&q=80",
+    69→      tag: "Newly Vetted Opportunity"
+    70→    });
+    71→
+    72→    setAddSuccess(true);
+    73→    setTimeout(() => {
+    74→      setAddSuccess(false);
+    75→      setNewProjName('');
+    76→      setNewProjLocation('');
+    77→      setNewProjDescription('');
+    78→      setNewProjAmenities('');
+    79→      setNewProjHighlights('');
+    80→    }, 1500);
+    81→  };
+    82→
+    83→  // Compute CRM high-level analytics from live state
+    84→  const totalLeadsCount = leads.length;
+    85→  const siteVisitsCount = leads.filter(l => l.status === 'Site Visit').length;
+    86→  const wonDealsCount = leads.filter(l => l.status === 'Deal Won').length;
+    87→  const projectedRevenue = leads.reduce((acc, current) => {
+    88→    // Arbitrary multiplier based on segment
+    89→    const multiplier = current.category === 'NRI Investor' ? 7500000 : 4500000;
+    90→    return current.status === 'Deal Won' ? acc + multiplier : acc;
+    91→  }, 0);
+    92→
+    93→  return (
+    94→    <div className="bg-[#fefcf9] min-h-screen text-gray-800 p-4 sm:p-6 lg:p-8 select-none">
+    95→      
+    96→      {/* Dashboard Top Header Navigation block */}
+    97→      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gold-200/40 pb-6 mb-8 gap-4">
+    98→        <div className="flex items-center gap-3">
+    99→          <span className="p-3 bg-[#2b2b2b] text-gold-100 rounded-2xl border border-gold-400/20">
+   100→            <Settings className="w-6 h-6 animate-spin" style={{ animationDuration: '6s' }} />
+   101→          </span>
+   102→          <div>
+   103→            <h1 className="text-2xl sm:text-3xl font-serif text-gray-900 font-bold">
+   104→              Sovereign Real Estate CRM Workspace
+   105→            </h1>
+   106→            <p className="text-xs text-gold-600 font-mono tracking-widest uppercase">
+   107→              Enterprise Lead Console • RK Properties Vrindavan
+   108→            </p>
+   109→          </div>
+   110→        </div>
+   111→
+   112→        <div className="flex items-center gap-3 w-full md:w-auto">
+   113→          <div className="flex rounded-xl bg-gold-100 p-1 border border-gold-200">
+   114→            <button
+   115→              onClick={() => setActiveSubTab('leads')}
+   116→              className={`px-4 py-2 font-mono text-[10px] sm:text-xs tracking-wider uppercase rounded-lg transition-colors cursor-pointer ${
+   117→                activeSubTab === 'leads' 
+   118→                  ? 'bg-white text-gold-700 font-bold shadow-xs' 
+   119→                  : 'text-gray-500 hover:text-gold-600'
+   120→              }`}
+   121→            >
+   122→              Leads & CRM
+   123→            </button>
+   124→            <button
+   125→              onClick={() => setActiveSubTab('projects')}
+   126→              className={`px-4 py-2 font-mono text-[10px] sm:text-xs tracking-wider uppercase rounded-lg transition-colors cursor-pointer ${
+   127→                activeSubTab === 'projects' 
+   128→                  ? 'bg-white text-gold-700 font-bold shadow-xs' 
+   129→                  : 'text-gray-500 hover:text-gold-600'
+   130→              }`}
+   131→            >
+   132→              System Projects
+   133→            </button>
+   134→            <button
+   135→              onClick={() => setActiveSubTab('analytics')}
+   136→              className={`px-4 py-2 font-mono text-[10px] sm:text-xs tracking-wider uppercase rounded-lg transition-colors cursor-pointer ${
+   137→                activeSubTab === 'analytics' 
+   138→                  ? 'bg-white text-gold-700 font-bold shadow-xs' 
+   139→                  : 'text-gray-500 hover:text-gold-600'
+   140→              }`}
+   141→            >
+   142→              SaaS Analytics
+   143→            </button>
+   144→          </div>
+   145→
+   146→          <button
+   147→            onClick={onClose}
+   148→            className="px-4 py-2 bg-[#2b2b2b] hover:bg-gold-600 text-white rounded-xl text-xs font-mono font-semibold uppercase tracking-wider flex items-center gap-1 cursor-pointer transition-colors"
+   149→          >
+   150→            <LogOut className="w-3.5 h-3.5" />
+   151→            Exit Portal
+   152→          </button>
+   153→        </div>
+   154→      </div>
+   155→
+   156→      <div className="max-w-7xl mx-auto space-y-8">
+   157→        
+   158→        {/* Dynamic Analytics KPI counter row */}
+   159→        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+   160→          <div className="p-5 bg-white border border-gold-200/40 rounded-2xl shadow-xs relative">
+   161→            <div className="absolute top-4 right-4 p-2 bg-gold-100 rounded-lg text-gold-600">
+   162→              <Users className="w-5 h-5" />
+   163→            </div>
+   164→            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">Total Registrants</span>
+   165→            <span className="text-2xl sm:text-3.5xl font-serif text-[#2b2b2b] font-bold block">{totalLeadsCount}</span>
+   166→            <span className="text-[9px] font-mono text-green-700 mt-1 inline-block">● Live Reactive Captures</span>
+   167→          </div>
+   168→
+   169→          <div className="p-5 bg-white border border-gold-200/40 rounded-2xl shadow-xs relative">
+   170→            <div className="absolute top-4 right-4 p-2 bg-blue-50 rounded-lg text-blue-600">
+   171→              <Calendar className="w-5 h-5 animate-pulse" />
+   172→            </div>
+   173→            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">Site Drives Booked</span>
+   174→            <span className="text-2xl sm:text-3.5xl font-serif text-blue-800 font-bold block">{siteVisitsCount}</span>
+   175→            <span className="text-[9px] font-mono text-gray-400 mt-1 inline-block">Vridanvan pickups</span>
+   176→          </div>
+   177→
+   178→          <div className="p-5 bg-white border border-gold-200/40 rounded-2xl shadow-xs relative">
+   179→            <div className="absolute top-4 right-4 p-2 bg-green-50 rounded-lg text-green-700">
+   180→              <Check className="w-5 h-5" />
+   181→            </div>
+   182→            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">Closed Deals Capital</span>
+   183→            <span className="text-2xl sm:text-3.5xl font-serif text-green-800 font-bold block">
+   184→              {wonDealsCount}
+   185→            </span>
+   186→            <span className="text-[9px] font-mono text-green-700 mt-1 inline-block">Secured registries</span>
+   187→          </div>
+   188→
+   189→          <div className="p-5 bg-white border border-gold-200/40 rounded-2xl shadow-xs relative">
+   190→            <div className="absolute top-4 right-4 p-2 bg-indigo-50 rounded-lg text-indigo-600">
+   191→              <TrendingUp className="w-5 h-5" />
+   192→            </div>
+   193→            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">Sales Volume Generated</span>
+   194→            <span className="text-2xl sm:text-3.5xl font-serif text-indigo-900 font-semibold block">
+   195→              ₹{(projectedRevenue / 100000).toFixed(1)} L
+   196→            </span>
+   197→            <span className="text-[9px] font-mono text-[#2b2b2b] mt-1 inline-block">Calculated valuation</span>
+   198→          </div>
+   199→        </div>
+   200→
+   201→        {/* Dynamic section toggling */}
+   202→
+   203→        {/* SECTION A: CRM / LEADS GRID */}
+   204→        {activeSubTab === 'leads' && (
+   205→          <div className="bg-white rounded-2.5xl border border-gold-200/40 shadow-xs overflow-hidden">
+   206→            <div className="px-6 py-4 bg-gold-100/30 border-b border-gold-200/45 flex justify-between items-center">
+   207→              <span className="text-xs font-mono font-bold uppercase text-gold-700 tracking-wider">
+   208→                Vetted Real Estate Applicants Log ({leads.length})
+   209→              </span>
+   210→              <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+   211→                Interactive real-time sync with local state
+   212→              </span>
+   213→            </div>
+   214→
+   215→            <div className="overflow-x-auto">
+   216→              {leads.length === 0 ? (
+   217→                <div className="p-12 text-center text-gray-400">
+   218→                  <p className="text-sm font-mono mb-2">No leads captured in current session.</p>
+   219→                  <p className="text-xs">Submit callback requests or brochure downloads on the website front to witness immediate logs!</p>
+   220→                </div>
+   221→              ) : (
+   222→                <table className="w-full text-left border-collapse text-xs">
+   223→                  <thead>
+   224→                    <tr className="bg-gold-50/20 text-gray-400 font-mono text-[9px] uppercase tracking-wider border-b border-gold-200/20">
+   225→                      <th className="p-4">Applicant Metadata</th>
+   226→                      <th className="p-4">Interested Asset</th>
+   227→                      <th className="p-4">Segment Profile</th>
+   228→                      <th className="p-4">Budget Scope</th>
+   229→                      <th className="p-4">Status Tag</th>
+   230→                      <th className="p-4">Scheduled site visit Date</th>
+   231→                      <th className="p-4 text-center">Interactive CRM updates</th>
+   232→                    </tr>
+   233→                  </thead>
+   234→                  <tbody className="divide-y divide-gold-200/20 bg-white">
+   235→                    {leads.map((lead) => (
+   236→                      <tr key={lead.id} className="hover:bg-gold-50/10">
+   237→                        {/* Name & contact */}
+   238→                        <td className="p-4 space-y-0.5">
+   239→                          <div className="font-serif font-bold text-gray-900 text-sm">{lead.name}</div>
+   240→                          <div className="flex gap-2 text-[10px] text-gray-400 font-mono">
+   241→                            <span className="flex items-center gap-0.5"><Mail className="w-3 h-3 text-gold-500" /> {lead.email}</span>
+   242→                            <span className="flex items-center gap-0.5"><Phone className="w-3 h-3 text-gold-500" /> {lead.phone}</span>
+   243→                          </div>
+   244→                        </td>
+   245→
+   246→                        {/* asset interest */}
+   247→                        <td className="p-4 text-[#2b2b2b] font-medium font-serif">
+   248→                          {lead.projectInterest}
+   249→                        </td>
+   250→
+   251→                        {/* buyer profile */}
+   252→                        <td className="p-4 font-mono text-gray-500 font-medium">
+   253→                          {lead.category}
+   254→                        </td>
+   255→
+   256→                        {/* budget */}
+   257→                        <td className="p-4 font-bold text-[#2b2b2b] font-mono">
+   258→                          {lead.budget}
+   259→                        </td>
+   260→
+   261→                        {/* status tag */}
+   262→                        <td className="p-4">
+   263→                          <span className={`inline-flex px-2 py-0.5 rounded-full font-mono text-[9px] font-bold uppercase tracking-wider ${
+   264→                            lead.status === 'Deal Won' 
+   265→                              ? 'bg-green-100 text-green-800' 
+   266→                              : lead.status === 'Site Visit' 
+   267→                                ? 'bg-blue-100 text-blue-800' 
+   268→                                : lead.status === 'Interested' 
+   269→                                  ? 'bg-amber-100 text-amber-800' 
+   270→                                  : lead.status === 'Negotiation' 
+   271→                                    ? 'bg-purple-100 text-purple-800' 
+   272→                                    : 'bg-gray-100 text-gray-600'
+   273→                          }`}>
+   274→                            {lead.status}
+   275→                          </span>
+   276→                        </td>
+   277→
+   278→                        {/* site visit scheduler inline */}
+   279→                        <td className="p-4 font-mono text-gray-500">
+   280→                          {lead.siteVisitDate ? (
+   281→                            <span className="text-blue-700 font-semibold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+   282→                              📅 {new Date(lead.siteVisitDate).toLocaleDateString('en-IN')}
+   283→                            </span>
+   284→                          ) : (
+   285→                            <div className="flex items-center gap-2">
+   286→                              <input
+   287→                                type="date"
+   288→                                value={tempVisitDate[lead.id] || ''}
+   289→                                onChange={(e) => setTempVisitDate({ ...tempVisitDate, [lead.id]: e.target.value })}
+   290→                                className="px-1.5 py-1 border border-gold-200 rounded text-[10px]"
+   291→                              />
+   292→                              <button
+   293→                                onClick={() => {
+   294→                                  if (tempVisitDate[lead.id]) {
+   295→                                    onScheduleVisit(lead.id, tempVisitDate[lead.id]);
+   296→                                  }
+   297→                                }}
+   298→                                className="px-2 py-1 bg-[#2b2b2b] text-white font-mono text-[9px] rounded cursor-pointer"
+   299→                              >
+   300→                                Set
+   301→                              </button>
+   302→                            </div>
+   303→                          )}
+   304→                        </td>
+   305→
+   306→                        {/* Interactive status drop */}
+   307→                        <td className="p-4 text-center">
+   308→                          <select
+   309→                            value={lead.status}
+   310→                            onChange={(e) => onUpdateLeadStatus(lead.id, e.target.value as any)}
+   311→                            className="px-2 py-1.5 border border-gold-200 rounded-lg text-[10px] font-mono bg-[#fcfbf9] text-gray-700 focus:outline-none focus:ring-1 focus:ring-gold-500"
+   312→                          >
+   313→                            <option value="New">Register New</option>
+   314→                            <option value="Interested">Interested</option>
+   315→                            <option value="Site Visit">Schedule Site Visit</option>
+   316→                            <option value="Negotiation">Under Negotiation</option>
+   317→                            <option value="Deal Won">Mark Deal Won 🏆</option>
+   318→                            <option value="Archived">Archive Lead</option>
+   319→                          </select>
+   320→                        </td>
+   321→                      </tr>
+   322→                    ))}
+   323→                  </tbody>
+   324→                </table>
+   325→              )}
+   326→            </div>
+   327→          </div>
+   328→        )}
+   329→
+   330→        {/* SECTION B: SYSTEM PROJECTS BUILDER */}
+   331→        {activeSubTab === 'projects' && (
+   332→          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+   333→            
+   334→            {/* Left: Add Project Form */}
+   335→            <div className="lg:col-span-5 bg-white border border-gold-200/40 rounded-2.5xl p-6 sm:p-8">
+   336→              <div className="space-y-1 mb-6">
+   337→                <span className="text-[10px] font-mono uppercase text-gold-600 tracking-wider font-bold">Project Addition Module</span>
+   338→                <h3 className="font-serif text-xl font-bold text-gray-950">Add Premium Real Estate Asset</h3>
+   339→                <p className="text-xs text-gray-400">Specify details below. The listing immediately populates the user pages and investment calculators.</p>
+   340→              </div>
+   341→
+   342→              {addSuccess ? (
+   343→                <div className="p-8 text-center bg-green-50 rounded-xl border border-green-200 space-y-2" style={{ animation: 'fadeIn 0.2s' }}>
+   344→                  <span className="inline-flex p-2 bg-green-100 text-green-700 rounded-full">✓</span>
+   345→                  <p className="text-sm font-mono text-green-800 font-bold">Asset Authorized Cleanly</p>
+   346→                  <p className="text-xs text-gray-400">Added to react store and live catalog indexes.</p>
+   347→                </div>
+   348→              ) : (
+   349→                <form onSubmit={handleCreateProject} className="space-y-4">
+   350→                  <div className="space-y-1">
+   351→                    <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Project Name Title</label>
+   352→                    <input
+   353→                      type="text"
+   354→                      required
+   355→                      value={newProjName}
+   356→                      onChange={(e) => setNewProjName(e.target.value)}
+   357→                      placeholder="e.g. Radhe Gopal Residency"
+   358→                      className="w-full px-4 py-2.5 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   359→                    />
+   360→                  </div>
+   361→
+   362→                  <div className="grid grid-cols-2 gap-4">
+   363→                    <div className="space-y-1">
+   364→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Asset Category Class</label>
+   365→                      <select
+   366→                        value={newProjType}
+   367→                        onChange={(e) => setNewProjType(e.target.value as any)}
+   368→                        className="w-full px-3 py-2.5 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   369→                      >
+   370→                        <option value="Residential Project">Residential Plot</option>
+   371→                        <option value="Investment Plots">Investment Plot</option>
+   372→                        <option value="Premium Township">Premium Township</option>
+   373→                        <option value="Verified Estates">Verified Estate</option>
+   374→                      </select>
+   375→                    </div>
+   376→
+   377→                    <div className="space-y-1">
+   378→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Initial Selling Status</label>
+   379→                      <select
+   380→                        value={newProjStatus}
+   381→                        onChange={(e) => setNewProjStatus(e.target.value as any)}
+   382→                        className="w-full px-3 py-2.5 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   383→                      >
+   384→                        <option value="Pre-launch">Pre-launch</option>
+   385→                        <option value="Selling Fast">Selling Fast</option>
+   386→                        <option value="Almost Sold Out">Almost Sold Out</option>
+   387→                        <option value="Fully Developed">Fully Developed</option>
+   388→                      </select>
+   389→                    </div>
+   390→                  </div>
+   391→
+   392→                  <div className="space-y-1">
+   393→                    <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Exact Location Zone</label>
+   394→                    <input
+   395→                      type="text"
+   396→                      required
+   397→                      value={newProjLocation}
+   398→                      onChange={(e) => setNewProjLocation(e.target.value)}
+   399→                      placeholder="e.g. near Sun Temple Road, Vrindavan Outer Link"
+   400→                      className="w-full px-4 py-2.5 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   401→                    />
+   402→                  </div>
+   403→
+   404→                  <div className="grid grid-cols-3 gap-3">
+   405→                    <div className="space-y-1">
+   406→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Raw Value/Yd</label>
+   407→                      <input
+   408→                        type="number"
+   409→                        required
+   410→                        value={newProjPriceVal}
+   411→                        onChange={(e) => {
+   412→                          setNewProjPriceVal(Number(e.target.value));
+   413→                          setNewProjPrice(`₹${Number(e.target.value).toLocaleString()} / Sq. Yard`);
+   414→                        }}
+   415→                        className="w-full px-3 py-2 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   416→                      />
+   417→                    </div>
+   418→                    
+   419→                    <div className="space-y-1 col-span-2">
+   420→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Display Price</label>
+   421→                      <input
+   422→                        type="text"
+   423→                        readonly
+   424→                        value={newProjPrice}
+   425→                        className="w-full px-3 py-2 border border-gold-100 rounded-xl text-xs bg-gold-50/30 text-gray-500"
+   426→                      />
+   427→                    </div>
+   428→                  </div>
+   429→
+   430→                  <div className="grid grid-cols-2 gap-4">
+   431→                    <div className="space-y-1">
+   432→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Appreciation trajectory/Yr</label>
+   433→                      <input
+   434→                        type="number"
+   435→                        required
+   436→                        min="10"
+   437→                        max="35"
+   438→                        value={newProjAppreciation}
+   439→                        onChange={(e) => setNewProjAppreciation(Number(e.target.value))}
+   440→                        className="w-full px-3 py-2 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white font-mono"
+   441→                      />
+   442→                    </div>
+   443→
+   444→                    <div className="space-y-1">
+   445→                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Sizing Bounds</label>
+   446→                      <input
+   447→                        type="text"
+   448→                        value={newProjSize}
+   449→                        onChange={(e) => setNewProjSize(e.target.value)}
+   450→                        placeholder="e.g. 150 - 450 Sq. Yds"
+   451→                        className="w-full px-3 py-2 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   452→                      />
+   453→                    </div>
+   454→                  </div>
+   455→
+   456→                  <div className="space-y-1">
+   457→                    <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Aura Description</label>
+   458→                    <textarea
+   459→                      required
+   460→                      rows={2}
+   461→                      value={newProjDescription}
+   462→                      onChange={(e) => setNewProjDescription(e.target.value)}
+   463→                      placeholder="Brief summary capturing growth and spiritual advantages..."
+   464→                      className="w-full px-4 py-2 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white h-16 resize-none"
+   465→                    />
+   466→                  </div>
+   467→
+   468→                  <div className="space-y-1">
+   469→                    <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Amenities (Separated by commas)</label>
+   470→                    <input
+   471→                      type="text"
+   472→                      value={newProjAmenities}
+   473→                      onChange={(e) => setNewProjAmenities(e.target.value)}
+   474→                      placeholder="Vastu layouts, CCTV, Wide Roads"
+   475→                      className="w-full px-4 py-2 border border-gold-200 rounded-xl text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+   476→                    />
+   477→                  </div>
+   478→
+   479→                  <button
+   480→                    type="submit"
+   481→                    className="w-full py-3.5 bg-gold-600 hover:bg-[#2b2b2b] text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-1.5"
+   482→                  >
+   483→                    <Plus className="w-4 h-4" />
+   484→                    Authorize & Launch Project
+   485→                  </button>
+   486→                </form>
+   487→              )}
+   488→            </div>
+   489→
+   490→            {/* Right: Active Projects Lists within system */}
+   491→            <div className="lg:col-span-7 bg-white border border-gold-200/40 rounded-2.5xl p-6 sm:p-8 flex flex-col justify-between">
+   492→              <div className="space-y-4">
+   493→                <span className="text-[10px] font-mono uppercase text-gray-400 block tracking-wider">Active Authorized Registers ({projects.length})</span>
+   494→                
+   495→                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+   496→                  {projects.map((p) => (
+   497→                    <div 
+   498→                      key={p.id}
+   499→                      className="p-4 border border-gold-200/30 bg-[#fcfbf7] rounded-xl flex flex-col justify-between"
+   500→                    >
+   501→                      <div>
+   502→                        <div className="flex justify-between items-center mb-1">
+   503→                          <span className="font-serif font-bold text-gray-900 text-sm truncate max-w-[150px]">{p.name}</span>
+   504→                          <span className="text-[8px] font-mono font-bold bg-gold-100 text-gold-600 px-1.5 py-0.5 rounded-full uppercase">
+   505→                            {p.status}
+   506→                          </span>
+   507→                        </div>
+   508→                        <p className="text-[10px] text-gray-400 font-mono truncate">{p.location}</p>
+   509→                        <p className="text-[11px] text-gray-600 font-sans mt-2 line-clamp-2 leading-relaxed">
+   510→                          {p.description}
+   511→                        </p>
+   512→                      </div>
+   513→
+   514→                      <div className="mt-4 pt-2 border-t border-gold-200/10 flex justify-between items-center text-[10px] font-mono">
+   515→                        <span className="text-[#2b2b2b] font-bold">{p.price}</span>
+   516→                        <span className="text-green-700 font-bold">▲ +{p.appreciationRate}% appreciation</span>
+   517→                      </div>
+   518→                    </div>
+   519→                  ))}
+   520→                </div>
+   521→              </div>
+   522→
+   523→              <div className="mt-6 p-4 sm:p-5 bg-[#2b2b2b] text-gold-100 rounded-xl space-y-2">
+   524→                <span className="text-[9px] font-mono uppercase text-gold-300 font-semibold tracking-widest block">Sovereign Verification API Status</span>
+   525→                <p className="text-xs text-gray-300 font-light leading-relaxed">
+   526→                  "Registry API interface connected directly to UP Government Bhulekh Database. All newly created land boundaries undergo dual algorithmic spatial checking prior to validation."
+   527→                </p>
+   528→              </div>
+   529→            </div>
+   530→          </div>
+   531→        )}
+   532→
+   533→        {/* SECTION C: CRM ANALYTICS GRAPHICS */}
+   534→        {activeSubTab === 'analytics' && (
+   535→          <div className="bg-white border border-gold-200/40 rounded-2.5xl p-6 sm:p-8 space-y-8">
+   536→            <div className="flex justify-between items-center border-b border-gold-200/25 pb-4">
+   537→              <div>
+   538→                <h3 className="font-serif text-lg font-bold text-gray-950">Statistical Performance Dashboard</h3>
+   539→                <p className="text-xs text-gray-500">Visualizing customer demographics, conversion health, and search trends.</p>
+   540→              </div>
+   541→              <span className="p-2 rounded-full border border-gold-100 text-gold-600 hover:bg-gold-50 cursor-pointer">
+   542→                <RefreshCw className="w-4 h-4 animate-spin" style={{ animationDuration: '4s' }} />
+   543→              </span>
+   544→            </div>
+   545→
+   546→            {/* Simulated bar charts styled in beautiful CSS grids */}
+   547→            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+   548→              
+   549→              {/* Distribution of Leads by Persona Category */}
+   550→              <div className="p-5 border border-gold-200/20 bg-[#fcfbf9]/50 rounded-xl space-y-4">
+   551→                <h4 className="text-xs font-mono uppercase tracking-widest text-gray-400 font-bold">Leads Split Index by Buyer Persona</h4>
+   552→                
+   553→                <div className="space-y-3">
+   554→                  {[
+   555→                    { label: "NRI Investors", count: leads.filter(l => l.category === 'NRI Investor').length, color: "bg-gold-600" },
+   556→                    { label: "Business Leaders", count: leads.filter(l => l.category === 'Executive Business Owner').length, color: "bg-gray-700" },
+   557→                    { label: "Retired Citizens", count: leads.filter(l => l.category === 'Retired Senior Devotee' || l.category === 'Retired Couple' || l.category === 'Retired Professional').length, color: "bg-blue-600" },
+   558→                    { label: "Doctors & Professionals", count: leads.filter(l => l.category === 'High-Caliber Professional' || l.category === 'Doctor').length, color: "bg-purple-600" },
+   559→                    { label: "Standard Registrants / Pilgrims", count: leads.filter(l => l.category === 'Dharmic Pilgrim Guest' || !l.category).length, color: "bg-gray-400" },
+   560→                  ].map((stat, sIdx) => {
+   561→                    const totalCount = leads.length || 1;
+   562→                    const percent = Math.round((stat.count / totalCount) * 100);
+   563→                    return (
+   564→                      <div key={sIdx} className="space-y-1">
+   565→                        <div className="flex justify-between text-xs">
+   566→                          <span className="text-gray-600 font-medium">{stat.label}</span>
+   567→                          <span className="font-bold text-gray-800 font-mono">{stat.count} ({percent}%)</span>
+   568→                        </div>
+   569→                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+   570→                          <div className={`h-full rounded-full ${stat.color} transition-all duration-550`} style={{ width: `${percent || 5}%` }} />
+   571→                        </div>
+   572→                      </div>
+   573→                    );
+   574→                  })}
+   575→                </div>
+   576→              </div>
+   577→
+   578→              {/* CRM Funnel Conversion Index */}
+   579→              <div className="p-5 border border-gold-200/20 bg-[#fcfbf9]/50 rounded-xl space-y-4">
+   580→                <h4 className="text-xs font-mono uppercase tracking-widest text-[#2b2b2b] font-bold">Lead Progression funnel</h4>
+   581→                
+   582→                <div className="space-y-3">
+   583→                  {[
+   584→                    { label: "New Leads Registered (Aura Sunrises)", count: leads.length, max: leads.length || 1, color: "bg-gold-500" },
+   585→                    { label: "Document Inquiries / Brochure Downloads", count: leads.filter(l => l.status === 'Interested' || l.status === 'Site Visit' || l.status === 'Negotiation' || l.status === 'Deal Won').length, max: leads.length || 1, color: "bg-gold-600" },
+   586→                    { label: "Site Driving Tours Completed", count: leads.filter(l => l.status === 'Site Visit' || l.status === 'Negotiation' || l.status === 'Deal Won').length, max: leads.length || 1, color: "bg-[#2b2b2b]" },
+   587→                    { label: "Negotiations Secured", count: leads.filter(l => l.status === 'Negotiation' || l.status === 'Deal Won').length, max: leads.length || 1, color: "bg-indigo-600" },
+   588→                    { label: "Deals won 🏆 (Lila Enclosed)", count: leads.filter(l => l.status === 'Deal Won').length, max: leads.length || 1, color: "bg-green-600 font-semibold" },
+   589→                  ].map((funnel, fIdx) => {
+   590→                    const percentVal = Math.round((funnel.count / (funnel.max || 1)) * 100);
+   591→                    return (
+   592→                      <div key={fIdx} className="space-y-1">
+   593→                        <div className="flex justify-between text-xs">
+   594→                          <span className="text-gray-600 font-light text-[11px]">{funnel.label}</span>
+   595→                          <span className="font-mono text-gray-800">{funnel.count} ({percentVal}%)</span>
+   596→                        </div>
+   597→                        <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+   598→                          <div className={`h-full rounded-full ${funnel.color} transition-all duration-550`} style={{ width: `${percentVal || 5}%` }} />
+   599→                        </div>
+   600→                      </div>
+   601→                    );
+   602→                  })}
+   603→                </div>
+   604→              </div>
+   605→
+   606→            </div>
+   607→
+   608→            {/* Professional system report log summary */}
+   609→            <div className="p-4 sm:p-5 bg-gold-200/10 border border-gold-200/40 rounded-xl text-xs space-y-2">
+   610→              <span className="font-mono text-gold-800 uppercase block text-[10px] font-bold">Registry audit compliance summary</span>
+   611→              <p className="text-gray-600 leading-relaxed text-xs">
+   612→                "CRM monitors leads dynamically utilizing React hooks. Standard local storage synchronization preserves data integrity across sandbox cold starts automatically. No active third-party cookies or unauthorized tracking scripts are active, ensuring compliance with global GDPR standards."
+   613→              </p>
+   614→            </div>
+   615→          </div>
+   616→        )}
+   617→
+   618→      </div>
+   619→    </div>
+   620→  );
+   621→}
+   622→
