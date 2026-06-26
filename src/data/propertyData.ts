@@ -200,5 +200,35 @@ export const sampleTestimonials: Testimonial[] = [
     initials: "AD",
     projectBought: "Yamuna Devotee Gated Heights (180 Sq. Yards)",
     appreciationObserved: "+28% over 12 Months"
+  },
+  {
+    id: "test_4",
+    name: "Rajesh Mehta",
+    role: "NRI Tech Executive, San Francisco Bay Area",
+    quote: "I evaluated 7 different property advisors across Mathura and Vrindavan. RK Properties was the only firm that provided certified MVDA approval documents upfront. Their video walkthrough and remote PoA process made my \u20B950L investment seamless from California. The Chhatikara corridor appreciation has exceeded every projection.",
+    category: "NRI Investor",
+    initials: "RM",
+    projectBought: "Chhatikara Prime Meadows (200 Sq. Yards)",
+    appreciationObserved: "+52% over 20 Months"
+  },
+  {
+    id: "test_5",
+    name: "Dr. Priya Agarwal (MD, OBGYN)",
+    role: "Consultant Gynecologist, Mumbai",
+    quote: "My family wanted a peaceful second home near the temples for our retirement years. RK Properties understood our spiritual and practical needs perfectly. The gated community security and vastu-compliant layouts gave us immense confidence. We\u2019ve already started planning our cottage construction.",
+    category: "High-Caliber Professional",
+    initials: "PA",
+    projectBought: "Krishna Radhika Enclave (180 Sq. Yards)",
+    appreciationObserved: "+31% over 14 Months"
+  },
+  {
+    id: "test_6",
+    name: "Vikram Joshi (CA, IIM-A)",
+    role: "CFO, Joshi Logistics Pvt. Ltd.",
+    quote: "As a Chartered Accountant, I audited RK Properties\u2019 documentation myself before investing. Every title deed, every MVDA clearance, every stamp duty receipt was flawless. The Govardhan Heritage property is not just an investment \u2014 it\u2019s a legacy asset my grandchildren will inherit. The 80% bank financing approval was processed in 10 working days.",
+    category: "Business Owner",
+    initials: "VJ",
+    projectBought: "Govardhan Heritage Meadows (300 Sq. Yards)",
+    appreciationObserved: "+22% over 10 Months"
   }
 ];

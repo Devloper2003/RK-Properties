@@ -2,6 +2,7 @@
 
 import { Instagram, Youtube, Facebook, Linkedin, ArrowUp, ShieldCheck } from 'lucide-react';
 import { usePropertyStore } from '@/store/use-property-store';
+import NewsletterSection from '@/components/rk-properties/NewsletterSection';
 
 const socialLinks = [
   { icon: Instagram, label: 'Instagram', href: '#' },
@@ -17,6 +18,16 @@ export default function Footer() {
     <footer className="mt-auto bg-gradient-to-br from-gold-800 via-gold-900 to-gold-900 text-gold-100/80 pt-0 pb-12 select-none">
       {/* Decorative gold gradient line at the top */}
       <div className="h-1 w-full bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
+
+      {/* Decorative mandala ornament */}
+      <div className="flex justify-center -mt-4 relative z-10">
+        <div className="w-8 h-8 rounded-full bg-gold-800 border-2 border-gold-500/40 flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-gold-500/60">
+            <path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5L8 0Z" fill="currentColor" opacity="0.6"/>
+            <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-gold-700/30 pb-12 mb-12">
@@ -72,8 +83,11 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Newsletter */}
+        <NewsletterSection />
+
         {/* Certified by RERA */}
-        <div className="flex items-center justify-center gap-2 mb-6">
+        <div className="flex items-center justify-center gap-2 mb-6 animate-breathe">
           <ShieldCheck className="w-4 h-4 text-gold-500" />
           <span className="text-[10px] font-mono text-gold-500 uppercase tracking-widest">Certified by RERA Uttar Pradesh &middot; UPRERAAGT11245</span>
         </div>

@@ -1,9 +1,22 @@
 'use client';
 
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  Phone, Sparkles, Menu, X
+  Phone, Sparkles, Menu, X, MapPin,
+  Calculator, BookOpen, HelpCircle, Building2,
+  ShieldCheck, ChevronDown
 } from 'lucide-react';
 import { usePropertyStore } from '@/store/use-property-store';
+import { useScrolledPast } from '@/hooks/use-scroll-animations';
+
+const navLinks = [
+  { label: 'Premium Projects', sectionId: 'project-showcase-section' },
+  { label: 'Why Vrindavan', sectionId: 'why-vrindavan' },
+  { label: 'Location', sectionId: 'location-corridor' },
+  { label: 'Investment Calculator', sectionId: 'calculator-anchor' },
+  { label: 'Our Strategy', sectionId: 'our-strategy' },
+  { label: 'Registry FAQs', sectionId: 'faq-section-anchor' },
+];
 
 export default function Navbar() {
   const {
@@ -12,92 +25,177 @@ export default function Navbar() {
     scrollToId
   } = usePropertyStore();
 
+  const scrolled = useScrolledPast(80);
+  const [activeSection, setActiveSection] = useState<string>('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Track which section is currently visible
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      { threshold: [0.15, 0.5], rootMargin: '-80px 0px -40% 0px' }
+    );
+
+    const ids = navLinks.map(l => l.sectionId);
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && observerRef.current) observerRef.current.observe(el);
+    });
+
+    return () => observerRef.current?.disconnect();
+  }, []);
+
+  const handleNavClick = useCallback((sectionId: string) => {
+    scrollToId(sectionId);
+    setMobileMenuOpen(false);
+  }, [scrollToId, setMobileMenuOpen]);
+
   return (
-    <nav className="fixed top-0 inset-x-0 z-40 bg-gold-50/90 backdrop-blur-md border-b border-gold-200/20 shadow-xs select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Brand */}
-          <div className="flex flex-col cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gold-800">
-              RK PROPERTIES
-            </span>
-            <span className="text-[8px] sm:text-[9px] font-mono uppercase tracking-wider text-gold-600 font-semibold mt-px">
-              Trust &bull; Transparency &bull; Value &mdash; RK Group
-            </span>
-          </div>
-
-          {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8 text-xs font-mono uppercase tracking-wider font-semibold text-gray-600">
-            <button onClick={() => scrollToId('project-showcase-section')} className="hover:text-gold-600 cursor-pointer transition-colors">
-              Premium Projects
-            </button>
-            <button onClick={() => scrollToId('why-vrindavan')} className="hover:text-gold-600 cursor-pointer transition-colors">
-              Why Vrindavan
-            </button>
-            <button onClick={() => scrollToId('calculator-anchor')} className="hover:text-gold-800 hover:underline cursor-pointer transition-colors flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-gold-600" /> Investment Calculator
-            </button>
-            <button onClick={() => scrollToId('our-strategy')} className="hover:text-gold-600 cursor-pointer transition-colors">
-              Our Strategy
-            </button>
-            <button onClick={() => scrollToId('faq-section-anchor')} className="hover:text-gold-600 cursor-pointer transition-colors">
-              Registry FAQs
-            </button>
-          </div>
-
-          {/* Action widgets */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => scrollToId('contact-experience')}
-              className="px-4 py-2 bg-gold-800 hover:bg-gold-600 text-white text-[10px] font-mono uppercase font-bold tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+    <>
+      <nav
+        className={`fixed top-9 inset-x-0 z-40 transition-all duration-500 select-none ${
+          scrolled
+            ? 'bg-white/95 backdrop-blur-xl shadow-lg'
+            : 'bg-gold-50/80 backdrop-blur-md shadow-xs'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Brand */}
+            <div
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              <Phone className="w-3.5 h-3.5 text-gold-200" />
-              Book Site Tour
-            </button>
-          </div>
+              <div className="flex flex-col">
+                <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gold-800">
+                  RK PROPERTIES
+                </span>
+                <span className={`text-[8px] sm:text-[9px] font-mono uppercase tracking-wider text-gold-600 font-semibold mt-px transition-all duration-500 ${scrolled ? 'text-[7px] sm:text-[8px]' : ''}`}>
+                  Trust &bull; Transparency &bull; Value &mdash; RK Group
+                </span>
+              </div>
+              <div className={`hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gold-100/80 border border-gold-200/50 transition-all duration-300 ${scrolled ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+                <ShieldCheck className="w-3 h-3 text-gold-600" />
+                <span className="text-[8px] font-mono font-bold text-gold-700 uppercase tracking-wider">RERA</span>
+              </div>
+            </div>
 
-          {/* Mobile menu */}
-          <div className="lg:hidden flex items-center gap-2">
-            <button
-              onClick={() => scrollToId('contact-experience')}
-              className="p-1.5 rounded-lg bg-gold-800 text-white"
-            >
-              <Phone className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-500 hover:text-gray-900 focus:outline-none"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {/* Desktop Links */}
+            <div className="hidden lg:flex items-center gap-7 text-xs font-mono uppercase tracking-wider font-semibold text-gray-600">
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.sectionId;
+                return (
+                  <button
+                    key={link.sectionId}
+                    onClick={() => handleNavClick(link.sectionId)}
+                    className={`relative cursor-pointer transition-all duration-300 pb-0.5 flex items-center gap-1.5 ${
+                      isActive
+                        ? 'text-gold-700'
+                        : 'hover:text-gold-600'
+                    }`}
+                  >
+                    {link.sectionId === 'calculator-anchor' && (
+                      <Sparkles className="w-3 h-3 text-gold-600" />
+                    )}
+                    {link.label}
+                    {/* Active indicator dot */}
+                    <span
+                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-600 transition-all duration-300 ${
+                        isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Action widgets */}
+            <div className="hidden md:flex items-center gap-3">
+              <button
+                onClick={() => handleNavClick('contact-experience')}
+                className="px-4 py-2 bg-gold-800 hover:bg-gold-600 text-white text-[10px] font-mono uppercase font-bold tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-sm hover:shadow-md"
+              >
+                <Phone className="w-3.5 h-3.5 text-gold-200" />
+                Book Site Tour
+              </button>
+            </div>
+
+            {/* Scrolled gold gradient bottom border */}
+            <div className={`absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-gold-400 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
+
+            {/* Mobile menu toggle */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button
+                onClick={() => handleNavClick('contact-experience')}
+                className="p-1.5 rounded-lg bg-gold-800 text-white shadow-sm"
+                aria-label="Book site tour"
+              >
+                <Phone className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 text-gray-500 hover:text-gray-900 focus:outline-none"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu overlay + panel */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gold-100 p-4 space-y-3 font-mono text-xs uppercase tracking-wider animate-fade-in">
-          <button onClick={() => scrollToId('project-showcase-section')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
-            Premium Projects
-          </button>
-          <button onClick={() => scrollToId('why-vrindavan')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
-            Why Vrindavan
-          </button>
-          <button onClick={() => scrollToId('calculator-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
-            Investment Calculator
-          </button>
-          <button onClick={() => scrollToId('our-strategy')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
-            Our Strategy
-          </button>
-          <button onClick={() => scrollToId('faq-section-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
-            Registry FAQs
-          </button>
-          <button onClick={() => scrollToId('contact-experience')} className="block w-full text-left py-2 bg-gold-100 text-gold-700 font-bold px-3 rounded-lg text-center cursor-pointer flex items-center justify-center gap-2">
-            <Phone className="w-3.5 h-3.5" />
-            Book Site Tour Package
-          </button>
-        </div>
+        <>
+          {/* Dark overlay */}
+          <div
+            className="lg:hidden fixed inset-0 z-30 bg-black/20 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Menu panel */}
+          <div className="lg:hidden fixed top-20 inset-x-0 z-30 bg-white/98 backdrop-blur-lg border-b border-gold-100 shadow-lg p-5 space-y-1 font-mono text-xs uppercase tracking-wider animate-fade-in">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.sectionId;
+              return (
+                <button
+                  key={link.sectionId}
+                  onClick={() => handleNavClick(link.sectionId)}
+                  className={`flex items-center gap-2.5 w-full text-left py-2.5 px-3 rounded-lg cursor-pointer transition-colors ${
+                    isActive
+                      ? 'bg-gold-100 text-gold-700 font-bold'
+                      : 'text-gray-600 hover:bg-gold-50 hover:text-gold-600'
+                  }`}
+                >
+                  {link.sectionId === 'calculator-anchor' ? (
+                    <Sparkles className="w-3.5 h-3.5 text-gold-600" />
+                  ) : (
+                    <span className="w-3.5 h-3.5 flex items-center justify-center">
+                      <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-gold-600' : 'bg-gray-300'}`} />
+                    </span>
+                  )}
+                  {link.label}
+                </button>
+              );
+            })}
+            <div className="pt-3 border-t border-gold-100 mt-2">
+              <button
+                onClick={() => handleNavClick('contact-experience')}
+                className="w-full py-2.5 bg-gold-800 text-white font-bold px-3 rounded-xl text-center cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Phone className="w-3.5 h-3.5 text-gold-200" />
+                Book Site Tour Package
+              </button>
+            </div>
+          </div>
+        </>
       )}
-    </nav>
+    </>
   );
 }

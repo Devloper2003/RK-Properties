@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ArrowRight, Phone } from 'lucide-react';
+import { ArrowRight, Phone, ChevronDown } from 'lucide-react';
 import { useAnimatedCounter } from '@/hooks/use-scroll-animations';
 import { useToast } from '@/components/rk-properties/ToastProvider';
 
@@ -60,7 +60,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
   };
 
   return (
-    <section className="relative overflow-hidden min-h-[92vh] flex flex-col justify-between bg-gradient-to-b from-gold-50 via-gold-100 to-gold-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden min-h-[92vh] flex flex-col justify-between bg-gradient-to-b from-gold-50 via-gold-100 to-gold-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8 noise-overlay">
       {/* ── Ornamental border frame ── */}
       <div className="absolute inset-3 sm:inset-6 border border-gold-300/25 rounded-2xl pointer-events-none z-0" />
       <div className="absolute inset-4 sm:inset-7 border border-gold-200/15 rounded-xl pointer-events-none z-0" />
@@ -182,6 +182,18 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
         <p className="text-center mt-3 text-[9px] sm:text-[10px] font-mono text-gray-400 uppercase tracking-widest">
           0 Litigation — Clean Title Verified on Every Plot
         </p>
+      </div>
+
+      {/* ── Scroll Indicator ── */}
+      <div className="flex justify-center mt-8 relative z-10">
+        <button
+          onClick={onExploreProjects}
+          className="flex flex-col items-center gap-1.5 text-gold-500/60 hover:text-gold-600 transition-colors cursor-pointer group"
+          aria-label="Scroll to explore"
+        >
+          <span className="text-[9px] font-mono uppercase tracking-widest group-hover:tracking-[0.3em] transition-all">Scroll to Explore</span>
+          <ChevronDown className="w-5 h-5 animate-scroll-bounce" />
+        </button>
       </div>
 
       {/* ── Scoped shimmer keyframes ── */}

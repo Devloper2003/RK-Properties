@@ -44,7 +44,7 @@ export interface Testimonial {
   name: string;
   role: string;
   quote: string;
-  category: 'NRI Investor' | 'Business Owner' | 'Retired Professional' | 'Local Developer';
+  category: 'NRI Investor' | 'Business Owner' | 'Retired Professional' | 'High-Caliber Professional' | 'Local Developer';
   initials: string;
   projectBought: string;
   appreciationObserved: string;

@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X } from 'lucide-react';
+import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X, Share2 } from 'lucide-react';
 import { Project, Lead } from '@/types/rk-properties';
 import { useToast } from '@/components/rk-properties/ToastProvider';
+import { usePropertyStore } from '@/store/use-property-store';
 
 interface PropertyShowcaseProps {
   onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
   onBookProject: (projectName: string) => void;
   projects?: Project[];
+  compareIds?: string[];
+  onToggleCompare?: (id: string) => void;
 }
 
 function PropertyImage({ src, alt }: { src: string; alt: string }) {
@@ -28,7 +31,7 @@ function PropertyImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-export default function PropertyShowcase({ onAddLead, onBookProject, projects = [] }: PropertyShowcaseProps) {
+export default function PropertyShowcase({ onAddLead, onBookProject, projects = [], compareIds = [], onToggleCompare }: PropertyShowcaseProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [brochureProject, setBrochureProject] = useState<Project | null>(null);
   const [brochureName, setBrochureName] = useState('');
@@ -37,6 +40,7 @@ export default function PropertyShowcase({ onAddLead, onBookProject, projects = 
   const [brochurePersona, setBrochurePersona] = useState('NRI Investor');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const { addToast } = useToast();
+  const { addRecentlyViewed } = usePropertyStore();
 
   const handleBrochureSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,6 +129,24 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
     });
   };
 
+  const handleShareWhatsApp = (project: Project) => {
+    const message = `Namaste! I found this MVDA-approved property on RK Properties:\n\n📍 ${project.name}\n💰 ${project.price}\n📍 ${project.location}\n📈 +${project.appreciationRate}% annual appreciation\n\nView details: ${window.location.href}`;
+    const encoded = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/?text=${encoded}`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: `${project.name} - RK Properties`,
+        text: message,
+        url: window.location.href,
+      }).catch(() => {
+        window.open(whatsappUrl, '_blank');
+      });
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+  };
+
   const getStatusClasses = (status: string) => {
     switch (status) {
       case 'Selling Fast': return 'bg-red-50 text-red-600 border-red-200';
@@ -152,6 +174,23 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
               {/* Bottom gradient overlay on image */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+
+              {/* Compare Checkbox */}
+              {onToggleCompare && (
+                <label
+                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/95 backdrop-blur-md rounded-lg border border-gold-200 shadow-xs cursor-pointer hover:border-gold-400 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    checked={compareIds.includes(p.id)}
+                    onChange={() => onToggleCompare(p.id)}
+                    disabled={!compareIds.includes(p.id) && compareIds.length >= 3}
+                    className="w-3.5 h-3.5 rounded accent-gold-700 cursor-pointer"
+                  />
+                  <span className="text-[9px] font-mono font-bold text-gold-700 uppercase tracking-wider">Compare</span>
+                </label>
+              )}
 
               {/* MVDA Badge */}
               <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 border border-gold-200 backdrop-blur-md rounded-full shadow-xs z-10">
@@ -226,7 +265,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               {/* Actions */}
               <div className="flex items-center gap-3 pt-2">
                 <button
-                  onClick={() => setSelectedProject(p)}
+                  onClick={() => { setSelectedProject(p); addRecentlyViewed(p.id); }}
                   className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 border border-gold-200 hover:border-gold-500 hover:bg-gold-50/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Eye className="w-3.5 h-3.5" />
@@ -239,6 +278,14 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                   title="Download Instant PDF Brochure"
                 >
                   <Download className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => handleShareWhatsApp(p)}
+                  className="py-3 px-3.5 rounded-xl border border-green-200/40 hover:border-green-400 bg-green-50/20 hover:bg-green-50 text-green-700 cursor-pointer transition-all duration-200"
+                  title="Share on WhatsApp"
+                >
+                  <Share2 className="w-4 h-4" />
                 </button>
 
                 <button

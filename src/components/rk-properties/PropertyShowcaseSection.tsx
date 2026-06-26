@@ -1,14 +1,40 @@
 'use client';
 
+import { useState, useCallback } from 'react';
+import { GitCompareArrows } from 'lucide-react';
 import { usePropertyStore } from '@/store/use-property-store';
 import PropertyShowcase from '@/components/rk-properties/PropertyShowcase';
+import PropertyComparison from '@/components/rk-properties/PropertyComparison';
 
 export default function PropertyShowcaseSection() {
   const { projects, selectedCategoryFilter, setSelectedCategoryFilter, addLead, setSelectedProjectForContact, scrollToId } = usePropertyStore();
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [showComparison, setShowComparison] = useState(false);
 
   const filteredProjects = selectedCategoryFilter === 'All'
     ? projects
     : projects.filter(p => p.type === selectedCategoryFilter);
+
+  const toggleCompare = useCallback((id: string) => {
+    setCompareIds(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  }, []);
+
+  const clearCompare = useCallback(() => {
+    setCompareIds([]);
+    setShowComparison(false);
+  }, []);
+
+  const removeFromCompare = useCallback((id: string) => {
+    setCompareIds(prev => {
+      const next = prev.filter(x => x !== id);
+      if (next.length === 0) setShowComparison(false);
+      return next;
+    });
+  }, []);
 
   const handleBookProject = (projectName: string) => {
     setSelectedProjectForContact(projectName);
@@ -56,12 +82,50 @@ export default function PropertyShowcaseSection() {
           </div>
         </div>
 
+        {/* Compare Button */}
+        {compareIds.length > 0 && (
+          <div className="mb-6 flex items-center justify-between bg-white border border-gold-300 rounded-xl px-4 py-3 shadow-sm animate-fade-in">
+            <span className="text-xs font-mono text-gold-700">
+              <span className="font-bold">{compareIds.length}</span> property{compareIds.length > 1 ? 'ies' : 'y'} selected for comparison
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearCompare}
+                className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 rounded-lg transition-all cursor-pointer"
+              >
+                Clear Selection
+              </button>
+              <button
+                onClick={() => setShowComparison(true)}
+                disabled={compareIds.length < 2}
+                className="flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-mono uppercase tracking-wider font-bold rounded-lg transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-gold-800 text-white hover:bg-gold-600"
+              >
+                <GitCompareArrows className="w-3.5 h-3.5" />
+                Compare ({compareIds.length})
+              </button>
+            </div>
+          </div>
+        )}
+
         <PropertyShowcase
           projects={filteredProjects}
           onAddLead={addLead}
           onBookProject={handleBookProject}
+          compareIds={compareIds}
+          onToggleCompare={toggleCompare}
         />
       </div>
+
+      {/* Comparison Modal */}
+      {showComparison && (
+        <PropertyComparison
+          projects={projects}
+          selectedIds={compareIds}
+          onClose={() => setShowComparison(false)}
+          onClear={clearCompare}
+          onRemove={removeFromCompare}
+        />
+      )}
     </section>
   );
 }

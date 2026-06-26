@@ -193,7 +193,7 @@ export default function StrategySection() {
         </div>
 
         {/* Competitive Moat - Why Over Others */}
-        <div data-animate="scale-in" className="bg-gold-800 rounded-3xl p-8 sm:p-12 text-gold-100 relative overflow-hidden">
+        <div data-animate="scale-in" className="bg-gold-800 rounded-3xl p-8 sm:p-12 text-gold-100 relative overflow-hidden gold-glow-border">
           <div className="absolute top-0 right-0 w-80 h-80 bg-gold-600/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-60 h-60 bg-gold-500/5 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">

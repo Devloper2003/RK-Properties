@@ -7,18 +7,23 @@ import { useScrollAnimations } from '@/hooks/use-scroll-animations';
 import { ToastProvider } from '@/components/rk-properties/ToastProvider';
 
 // Public-facing section components (organized by function & role)
+import AnnouncementBanner from '@/components/rk-properties/AnnouncementBanner';
 import Navbar from '@/components/rk-properties/Navbar';
 import HeroSection from '@/components/rk-properties/HeroSection';
 import TrustBadges from '@/components/rk-properties/TrustBadges';
 import WhyVrindavan from '@/components/rk-properties/WhyVrindavan';
 import PropertyShowcaseSection from '@/components/rk-properties/PropertyShowcaseSection';
 import InvestmentCalculator from '@/components/rk-properties/InvestmentCalculator';
+import UrgencySection from '@/components/rk-properties/UrgencySection';
+import LocationCorridorSection from '@/components/rk-properties/LocationCorridorSection';
 import StrategySection from '@/components/rk-properties/StrategySection';
 import TestimonialsSection from '@/components/rk-properties/TestimonialsSection';
 import FAQSection from '@/components/rk-properties/FAQSection';
 import ContactSection from '@/components/rk-properties/ContactSection';
 import Footer from '@/components/rk-properties/Footer';
 import FloatingActions from '@/components/rk-properties/FloatingActions';
+import RecentlyViewedStrip from '@/components/rk-properties/RecentlyViewedStrip';
+import CookieConsent from '@/components/rk-properties/CookieConsent';
 
 export default function Home() {
   const {
@@ -51,7 +56,10 @@ export default function Home() {
 
   return (
     <ToastProvider>
-      <div className="bg-gold-50 text-gold-800 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative">
+      <div className="bg-gold-50 text-gold-800 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative pt-9">
+        {/* ── Announcement Banner ── */}
+        <AnnouncementBanner />
+
         {/* ── Navigation ── */}
         <Navbar />
 
@@ -72,6 +80,9 @@ export default function Home() {
 
         {/* ── Property Showcase ── */}
         <PropertyShowcaseSection />
+
+        {/* ── Urgency / Scarcity ── */}
+        <UrgencySection />
 
         {/* ── Section Divider ── */}
         <div className="section-divider max-w-7xl mx-auto my-0" />
@@ -108,11 +119,20 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Location Corridor ── */}
+        <LocationCorridorSection />
+
+        {/* ── Recently Viewed ── */}
+        <RecentlyViewedStrip />
+
         {/* ── Footer ── */}
         <Footer />
 
         {/* ── Floating Actions (Back to Top, WhatsApp, Scroll Progress) ── */}
         <FloatingActions />
+
+        {/* ── Cookie Consent ── */}
+        <CookieConsent />
       </div>
     </ToastProvider>
   );

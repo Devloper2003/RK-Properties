@@ -13,6 +13,7 @@ interface PropertyStoreState {
   // UI State
   mobileMenuOpen: boolean;
   mounted: boolean;
+  recentlyViewed: string[];
 
   // Actions
   setProjects: (projects: Project[]) => void;
@@ -22,6 +23,7 @@ interface PropertyStoreState {
   setMounted: (mounted: boolean) => void;
   addLead: (leadData: Omit<Lead, 'id' | 'date'>) => Promise<void>;
   scrollToId: (id: string) => void;
+  addRecentlyViewed: (projectId: string) => void;
 }
 
 export const usePropertyStore = create<PropertyStoreState>((set) => ({
@@ -40,6 +42,15 @@ export const usePropertyStore = create<PropertyStoreState>((set) => ({
   selectedCategoryFilter: 'All',
   mobileMenuOpen: false,
   mounted: false,
+  recentlyViewed: (() => {
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem('rk_recently_viewed');
+      if (cached) {
+        try { return JSON.parse(cached); } catch {}
+      }
+    }
+    return [];
+  })(),
 
   setProjects: (projects) => {
     set({ projects });
@@ -74,5 +85,16 @@ export const usePropertyStore = create<PropertyStoreState>((set) => ({
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  },
+
+  addRecentlyViewed: (projectId) => {
+    set((state) => {
+      const filtered = state.recentlyViewed.filter(id => id !== projectId);
+      const updated = [projectId, ...filtered].slice(0, 4);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('rk_recently_viewed', JSON.stringify(updated));
+      }
+      return { recentlyViewed: updated };
+    });
   }
 }));

@@ -39,6 +39,19 @@ export function useAnimatedCounter(
   const ref = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
 
+  const animateCount = useCallback(() => {
+    const startTime = performance.now();
+    const step = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration]);
+
   useEffect(() => {
     if (!startOnView) {
       animateCount();
@@ -58,20 +71,7 @@ export function useAnimatedCounter(
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-    }, [target, duration]);
-
-  const animateCount = () => {
-    const startTime = performance.now();
-    const step = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
+  }, [target, duration, startOnView, animateCount]);
 
   return { count, ref };
 }
