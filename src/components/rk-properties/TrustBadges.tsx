@@ -43,7 +43,7 @@ export default function TrustBadges() {
                 key={badge.label}
                 className={`group relative flex items-center gap-3 bg-white dark:bg-gray-900 px-5 py-3.5 rounded-xl border border-gold-200/40 dark:border-gold-700/30 shadow-xs
                   transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg hover:shadow-gold-200/30 dark:hover:shadow-gold-900/30 hover:border-gold-300/60 dark:hover:border-gold-600/50
-                  ${badge.span ? 'col-span-2 sm:col-span-1' : ''}`}
+                  ${'span' in badge && badge.span ? 'col-span-2 sm:col-span-1' : ''}`}
               >
                 {/* Subtle glow behind card on hover */}
                 <span

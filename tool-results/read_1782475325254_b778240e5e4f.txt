@@ -1,0 +1,522 @@
+     1→     1→'use client';
+     2→     2→
+     3→     3→import { useState } from 'react';
+     4→     4→import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X, Share2, Images } from 'lucide-react';
+     5→     5→import { Project, Lead } from '@/types/rk-properties';
+     6→     6→import { useToast } from '@/components/rk-properties/ToastProvider';
+     7→     7→import { usePropertyStore } from '@/store/use-property-store';
+     8→     8→import ImageGallery from '@/components/rk-properties/ImageGallery';
+     9→     9→
+    10→    10→interface PropertyShowcaseProps {
+    11→    11→  onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
+    12→    12→  onBookProject: (projectName: string) => void;
+    13→    13→  projects?: Project[];
+    14→    14→  compareIds?: string[];
+    15→    15→  onToggleCompare?: (id: string) => void;
+    16→    16→}
+    17→    17→
+    18→    18→function PropertyImage({ src, alt }: { src: string; alt: string }) {
+    19→    19→  const [loaded, setLoaded] = useState(false);
+    20→    20→  return (
+    21→    21→    <div className="relative h-64 overflow-hidden bg-gold-100 dark:bg-gray-800">
+    22→    22→      {!loaded && <div className="absolute inset-0 skeleton-shimmer" />}
+    23→    23→      <img
+    24→    24→        src={src}
+    25→    25→        alt={alt}
+    26→    26→        referrerPolicy="no-referrer"
+    27→    27→        loading="lazy"
+    28→    28→        onLoad={() => setLoaded(true)}
+    29→    29→        className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+    30→    30→      />
+    31→    31→    </div>
+    32→    32→  );
+    33→    33→}
+    34→    34→
+    35→    35→export default function PropertyShowcase({ onAddLead, onBookProject, projects = [], compareIds = [], onToggleCompare }: PropertyShowcaseProps) {
+    36→    36→  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    37→    37→  const [brochureProject, setBrochureProject] = useState<Project | null>(null);
+    38→    38→  const [brochureName, setBrochureName] = useState('');
+    39→    39→  const [brochurePhone, setBrochurePhone] = useState('');
+    40→    40→  const [brochureEmail, setBrochureEmail] = useState('');
+    41→    41→  const [brochurePersona, setBrochurePersona] = useState('NRI Investor');
+    42→    42→  const [downloadSuccess, setDownloadSuccess] = useState(false);
+    43→    43→  const { addToast } = useToast();
+    44→    44→  const { addRecentlyViewed } = usePropertyStore();
+    45→    45→  const [galleryImages, setGalleryImages] = useState<string[] | null>(null);
+    46→    46→  const [galleryName, setGalleryName] = useState('');
+    47→    47→
+    48→    48→  const openGallery = (project: Project) => {
+    49→    49→    setGalleryName(project.name);
+    50→    50→    setGalleryImages([project.image, ...(project.gallery || [])]);
+    51→    51→  };
+    52→    52→
+    53→    53→  const handleBrochureSubmit = (e: React.FormEvent) => {
+    54→    54→    e.preventDefault();
+    55→    55→    if (!brochureName || !brochurePhone || !brochureEmail || !brochureProject) return;
+    56→    56→
+    57→    57→    onAddLead({
+    58→    58→      name: brochureName,
+    59→    59→      email: brochureEmail,
+    60→    60→      phone: brochurePhone,
+    61→    61→      projectInterest: brochureProject.name,
+    62→    62→      category: brochurePersona,
+    63→    63→      status: 'Interested',
+    64→    64→      budget: '₹20L - ₹50L',
+    65→    65→      notes: "Downloaded dynamic PDF brochure via showcase page."
+    66→    66→    });
+    67→    67→
+    68→    68→    setDownloadSuccess(true);
+    69→    69→    addToast({
+    70→    70→      type: 'success',
+    71→    71→      title: 'Brochure Requested!',
+    72→    72→      message: `Your ${brochureProject.name} dossier is being prepared and will download shortly.`,
+    73→    73→    });
+    74→    74→
+    75→    75→    setTimeout(() => {
+    76→    76→      const dateStr = new Date().toLocaleDateString('en-IN');
+    77→    77→      const content = `
+    78→    78→============================================================
+    79→    79→              RK PROPERTIES VIRTUAL BROCHURE
+    80→    80→============================================================
+    81→    81→Project: ${brochureProject.name}
+    82→    82→Zoning: Mathura-Vrindavan Development Authority Approved
+    83→    83→Location: ${brochureProject.location}
+    84→    84→Appreciation Vector: +${brochureProject.appreciationRate}% / Annum (Compounded)
+    85→    85→============================================================
+    86→    86→Issued To: ${brochureName}
+    87→    87→Registered Email: ${brochureEmail}
+    88→    88→Registered Phone: ${brochurePhone}
+    89→    89→Date of Registry Verification: ${dateStr}
+    90→    90→============================================================
+    91→    91→
+    92→    92→PROJECT OVERVIEW:
+    93→    93→${brochureProject.description}
+    94→    94→
+    95→    95→HIGHLIGHTS:
+    96→    96→${brochureProject.highlights.map((h: string) => `- ${h}`).join('\n')}
+    97→    97→
+    98→    98→INVESTMENT PROJECTIONS:
+    99→    99→- 5 Year Timeline: ${brochureProject.roiProjection5Yr}
+   100→   100→- 10 Year Legacy: ${brochureProject.roiProjection10Yr}
+   101→   101→
+   102→   102→AMENITIES SECURED:
+   103→   103→${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
+   104→   104→
+   105→   105→============================================================
+   106→   106→        CONTACT OUR DEDICATED SOVEREIGN PROPERTY DESK
+   107→   107→              Email: listings@rkproperties.in
+   108→   108→============================================================
+   109→   109→      `;
+   110→   110→
+   111→   111→      const blob = new Blob([content], { type: 'text/plain' });
+   112→   112→      const url = URL.createObjectURL(blob);
+   113→   113→      const link = document.createElement('a');
+   114→   114→      link.href = url;
+   115→   115→      link.download = `RK_Properties_${brochureProject.name.replace(/\s+/g, '_')}_Brochure.txt`;
+   116→   116→      document.body.appendChild(link);
+   117→   117→      link.click();
+   118→   118→      document.body.removeChild(link);
+   119→   119→
+   120→   120→      setTimeout(() => {
+   121→   121→        setBrochureProject(null);
+   122→   122→        setDownloadSuccess(false);
+   123→   123→        setBrochureName('');
+   124→   124→        setBrochurePhone('');
+   125→   125→        setBrochureEmail('');
+   126→   126→      }, 1000);
+   127→   127→    }, 1500);
+   128→   128→  };
+   129→   129→
+   130→   130→  const handleGetBrochureFromModal = (project: Project) => {
+   131→   131→    setSelectedProject(null);
+   132→   132→    setBrochureProject(project);
+   133→   133→    addToast({
+   134→   134→      type: 'info',
+   135→   135→      title: 'Fill in your details',
+   136→   136→      message: 'Complete the form to receive your verified property dossier.',
+   137→   137→    });
+   138→   138→  };
+   139→   139→
+   140→   140→  const handleShareWhatsApp = (project: Project) => {
+   141→   141→    const message = `Namaste! I found this MVDA-approved property on RK Properties:\n\n📍 ${project.name}\n💰 ${project.price}\n📍 ${project.location}\n📈 +${project.appreciationRate}% annual appreciation\n\nView details: ${window.location.href}`;
+   142→   142→    const encoded = encodeURIComponent(message);
+   143→   143→    const whatsappUrl = `https://wa.me/?text=${encoded}`;
+   144→   144→
+   145→   145→    if (navigator.share) {
+   146→   146→      navigator.share({
+   147→   147→        title: `${project.name} - RK Properties`,
+   148→   148→        text: message,
+   149→   149→        url: window.location.href,
+   150→   150→      }).catch(() => {
+   151→   151→        window.open(whatsappUrl, '_blank');
+   152→   152→      });
+   153→   153→    } else {
+   154→   154→      window.open(whatsappUrl, '_blank');
+   155→   155→    }
+   156→   156→  };
+   157→   157→
+   158→   158→  const getStatusClasses = (status: string) => {
+   159→   159→    switch (status) {
+   160→   160→      case 'Selling Fast': return 'bg-red-50 text-red-600 border-red-200';
+   161→   161→      case 'Pre-launch': return 'bg-sky-50 text-sky-600 border-sky-200';
+   162→   162→      case 'Almost Sold Out': return 'bg-amber-50 text-amber-600 border-amber-200';
+   163→   163→      default: return 'bg-green-50 text-green-700 border-green-200';
+   164→   164→    }
+   165→   165→  };
+   166→   166→
+   167→   167→  return (
+   168→   168→    <div className="space-y-12 select-none">
+   169→   169→      {/* Property Cards */}
+   170→   170→      <div className="grid grid-cols-1 md:grid-cols-2 gap-8" data-animate-stagger>
+   171→   171→        {projects.map((p, idx) => (
+   172→   172→          <div
+   173→   173→            key={p.id}
+   174→   174→            id={`project-card-${p.id}`}
+   175→   175→            data-animate
+   176→   176→            style={{ '--stagger-idx': idx } as React.CSSProperties}
+   177→   177→            className="group relative bg-gold-50 dark:bg-gray-900 border border-gold-200/40 dark:border-gold-800/40 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gold-500/70 dark:hover:border-gold-600/60 transition-all duration-500 flex flex-col justify-between"
+   178→   178→          >
+   179→   179→            {/* Image with skeleton loading */}
+   180→   180→            <div className="relative">
+   181→   181→              <PropertyImage src={p.image} alt={p.name} />
+   182→   182→
+   183→   183→              {/* Bottom gradient overlay on image */}
+   184→   184→              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+   185→   185→
+   186→   186→              {/* Compare Checkbox */}
+   187→   187→              {onToggleCompare && (
+   188→   188→                <label
+   189→   189→                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg border border-gold-200 dark:border-gold-700/40 shadow-xs cursor-pointer hover:border-gold-400 dark:hover:border-gold-600 transition-colors"
+   190→   190→                  onClick={(e) => e.stopPropagation()}
+   191→   191→                >
+   192→   192→                  <input
+   193→   193→                    type="checkbox"
+   194→   194→                    checked={compareIds.includes(p.id)}
+   195→   195→                    onChange={() => onToggleCompare(p.id)}
+   196→   196→                    disabled={!compareIds.includes(p.id) && compareIds.length >= 3}
+   197→   197→                    className="w-3.5 h-3.5 rounded accent-gold-700 cursor-pointer"
+   198→   198→                  />
+   199→   199→                  <span className="text-[9px] font-mono font-bold text-gold-700 dark:text-gold-300 uppercase tracking-wider">Compare</span>
+   200→   200→                </label>
+   201→   201→              )}
+   202→   202→
+   203→   203→              {/* MVDA Badge */}
+   204→   204→              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 dark:bg-gray-900/95 border border-gold-200 dark:border-gold-700/40 backdrop-blur-md rounded-full shadow-xs z-10">
+   205→   205→                <ShieldCheck className="w-4 h-4 text-gold-600" />
+   206→   206→                <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-gold-700 dark:text-gold-300">
+   207→   207→                  MVDA APPROVED
+   208→   208→                </span>
+   209→   209→              </div>
+   210→   210→
+   211→   211→              {/* Tag */}
+   212→   212→              <div className="absolute bottom-4 left-4 px-2.5 py-1 bg-gold-600/90 dark:bg-gold-700/90 backdrop-blur-sm text-white font-mono text-[9px] font-bold uppercase tracking-widest rounded-lg z-10">
+   213→   213→                {p.tag}
+   214→   214→              </div>
+   215→   215→
+   216→   216→              {/* Status badge */}
+   217→   217→              <div className={`absolute top-4 right-4 text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1.5 rounded-full border z-10 ${getStatusClasses(p.status)}`}>
+   218→   218→                {p.status}
+   219→   219→              </div>
+   220→   220→
+   221→   221→              {/* Pre-launch NEW ribbon */}
+   222→   222→              {p.status === 'Pre-launch' && (
+   223→   223→                <div className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1 z-10">
+   224→   224→                  <div className="relative px-3 py-0.5 bg-gold-500 text-white font-mono text-[8px] font-bold uppercase tracking-widest rounded-b-lg shadow-md">
+   225→   225→                    <Sparkles className="w-3 h-3 inline mr-1" />
+   226→   226→                    NEW
+   227→   227→                    <span className="absolute -top-0 left-0 w-full h-0.5 bg-gold-300/60" />
+   228→   228→                  </div>
+   229→   229→                </div>
+   230→   230→              )}
+   231→   231→            </div>
+   232→   232→
+   233→   233→            {/* Content */}
+   234→   234→            <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+   235→   235→              <div>
+   236→   236→                <div className="flex justify-between items-start mb-1">
+   237→   237→                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 dark:text-gold-100 group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors leading-tight">
+   238→   238→                    {p.name}
+   239→   239→                  </h4>
+   240→   240→                </div>
+   241→   241→
+   242→   242→                <div className="flex justify-between items-center mb-3 mt-2">
+   243→   243→                  <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 font-mono">
+   244→   244→                    <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+   245→   245→                    <span className="truncate max-w-[200px] sm:max-w-none">{p.location}</span>
+   246→   246→                  </div>
+   247→   247→                  <div className="text-right shrink-0 ml-2">
+   248→   248→                    <span className="text-[9px] font-mono text-gray-400 dark:text-gray-500 uppercase tracking-wider block">Starting from</span>
+   249→   249→                    <span className="text-gold-800 dark:text-gold-200 font-serif font-semibold text-lg">
+   250→   250→                      {p.price.split(' ')[0]} <span className="text-xs text-gray-500 font-mono">/ yd</span>
+   251→   251→                    </span>
+   252→   252→                  </div>
+   253→   253→                </div>
+   254→   254→
+   255→   255→                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-light line-clamp-2 mb-5">
+   256→   256→                  {p.description}
+   257→   257→                </p>
+   258→   258→
+   259→   259→                <div className="grid grid-cols-2 gap-4 mb-6 border-b border-gold-200/20 dark:border-gold-800/20 pb-4">
+   260→   260→                  <div>
+   261→   261→                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500 block">Available Sizes</span>
+   262→   262→                    <span className="text-xs font-medium text-gray-800 dark:text-gray-300">{p.size}</span>
+   263→   263→                  </div>
+   264→   264→                  <div>
+   265→   265→                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Appreciation Velocity</span>
+   266→   266→                    <span className="text-xs font-bold text-green-700 flex items-center gap-1 font-mono">
+   267→   267→                      ▲ +{p.appreciationRate}% / Yr
+   268→   268→                    </span>
+   269→   269→                  </div>
+   270→   270→                </div>
+   271→   271→              </div>
+   272→   272→
+   273→   273→              {/* Actions */}
+   274→   274→              <div className="flex items-center gap-3 pt-2">
+   275→   275→                <button
+   276→   276→                  onClick={() => { setSelectedProject(p); addRecentlyViewed(p.id); }}
+   277→   277→                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 border border-gold-200 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 hover:bg-gold-50/20 dark:hover:bg-gray-800/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
+   278→   278→                >
+   279→   279→                  <Eye className="w-3.5 h-3.5" />
+   280→   280→                  Technical Details
+   281→   281→                </button>
+   282→   282→
+   283→   283→                <button
+   284→   284→                  onClick={() => setBrochureProject(p)}
+   285→   285→                  className="py-3 px-4 rounded-xl border border-gold-200/40 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 bg-gold-50/20 dark:bg-gray-800/20 hover:bg-gold-50 dark:hover:bg-gray-800 text-gold-700 dark:text-gold-300 cursor-pointer transition-all duration-200"
+   286→   286→                  title="Download Instant PDF Brochure"
+   287→   287→                >
+   288→   288→                  <Download className="w-4 h-4" />
+   289→   289→                </button>
+   290→   290→
+   291→   291→                <button
+   292→   292→                  onClick={() => handleShareWhatsApp(p)}
+   293→   293→                  className="py-3 px-3.5 rounded-xl border border-green-200/40 hover:border-green-400 bg-green-50/20 hover:bg-green-50 text-green-700 cursor-pointer transition-all duration-200"
+   294→   294→                  title="Share on WhatsApp"
+   295→   295→                >
+   296→   296→                  <Share2 className="w-4 h-4" />
+   297→   297→                </button>
+   298→   298→
+   299→   299→                <button
+   300→   300→                  onClick={() => onBookProject(p.name)}
+   301→   301→                  className="py-3 px-5 rounded-xl bg-gradient-to-r from-gold-800 to-gold-700 hover:from-gold-600 hover:to-gold-500 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg"
+   302→   302→                >
+   303→   303→                  Book Plot
+   304→   304→                </button>
+   305→   305→              </div>
+   306→   306→            </div>
+   307→   307→          </div>
+   308→   308→        ))}
+   309→   309→      </div>
+   310→   310→
+   311→   311→      {/* Project Detail Modal */}
+   312→   312→      {selectedProject && (
+   313→   313→        <div
+   314→   314→          className="fixed inset-0 z-50 bg-gray-900/40 dark:bg-gray-950/80 backdrop-blur-sm flex justify-center items-center p-4"
+   315→   315→          onClick={(e) => { if (e.target === e.currentTarget) setSelectedProject(null); }}
+   316→   316→        >
+   317→   317→          <div className="bg-gold-50 dark:bg-gray-950 w-full max-w-3xl rounded-2xl border border-gold-200 dark:border-gold-800 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-fade-in">
+   318→   318→            <div className="relative h-48 sm:h-56">
+   319→   319→              <img
+   320→   320→                src={selectedProject.image}
+   321→   321→                className="w-full h-full object-cover cursor-pointer"
+   322→   322→                alt={selectedProject.name}
+   323→   323→                onClick={() => openGallery(selectedProject)}
+   324→   324→              />
+   325→   325→                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent" />
+   326→   326→              <button
+   327→   327→                onClick={() => setSelectedProject(null)}
+   328→   328→                className="absolute top-4 right-4 p-1.5 rounded-full bg-black/40 text-white hover:bg-black/60 cursor-pointer text-lg"
+   329→   329→              >
+   330→   330→                <X className="w-4 h-4" />
+   331→   331→              </button>
+   332→   332→              <div className="absolute bottom-4 left-6">
+   333→   333→                <span className="px-3 py-1 bg-white/95 text-gold-700 font-mono text-[10px] font-bold rounded-full border border-gold-200">
+   334→   334→                  MVDA APPROVED ID: MVDA-VRN-{selectedProject.id.toUpperCase()}
+   335→   335→                </span>
+   336→   336→                <h3 className="text-2xl sm:text-3xl font-serif text-white font-bold mt-1">
+   337→   337→                  {selectedProject.name}
+   338→   338→                </h3>
+   339→   339→              </div>
+   340→   340→            </div>
+   341→   341→
+   342→   342→            <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
+   343→   343→              <div>
+   344→   344→                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">Corporate Property Description</h5>
+   345→   345→                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-light">{selectedProject.description}</p>
+   346→   346→              </div>
+   347→   347→
+   348→   348→              <div className="bg-gold-50/55 dark:bg-gold-900/30 border border-gold-200/40 dark:border-gold-800/40 p-4 sm:p-5 rounded-2xl">
+   349→   349→                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gold-700 dark:text-gold-300 font-bold mb-3">Sovereign Protection Highlights</h5>
+   350→   350→                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 dark:text-gray-300 font-light">
+   351→   351→                  {selectedProject.highlights.map((h, index) => (
+   352→   352→                    <div key={index} className="flex gap-2 items-start">
+   353→   353→                      <CheckCircle2 className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" />
+   354→   354→                      <span>{h}</span>
+   355→   355→                    </div>
+   356→   356→                  ))}
+   357→   357→                </div>
+   358→   358→              </div>
+   359→   359→
+   360→   360→              <div className="space-y-2">
+   361→   361→                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500">Pristine Infrastructures Secured</h5>
+   362→   362→                <div className="flex flex-wrap gap-2">
+   363→   363→                  {selectedProject.amenities.map((amenity, index) => (
+   364→   364→                    <span
+   365→   365→                      key={index}
+   366→   366→                      className="px-3 py-1 rounded-full bg-white dark:bg-gray-800 border border-gold-200/40 dark:border-gold-700/40 text-[11px] font-medium text-gray-700 dark:text-gray-300"
+   367→   367→                    >
+   368→   368→                      ✦ {amenity}
+   369→   369→                    </span>
+   370→   370→                  ))}
+   371→   371→                </div>
+   372→   372→              </div>
+   373→   373→
+   374→   374→              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-gold-200/20 dark:border-gold-800/20 pt-4">
+   375→   375→                <div>
+   376→   376→                  <h6 className="text-[10px] font-mono uppercase tracking-widest text-gold-800 dark:text-gold-200 font-bold">5 Year Yield Trajectory</h6>
+   377→   377→                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{selectedProject.roiProjection5Yr}</p>
+   378→   378→                </div>
+   379→   379→                <div>
+   380→   380→                  <h6 className="text-[10px] font-mono uppercase tracking-widest text-gold-700 font-bold">10 Year Legacy Protection</h6>
+   381→   381→                  <p className="text-xs text-gray-500 mt-1">{selectedProject.roiProjection10Yr}</p>
+   382→   382→                </div>
+   383→   383→              </div>
+   384→   384→            </div>
+   385→   385→
+   386→   386→            <div className="border-t border-gold-200/20 dark:border-gold-800/20 p-4 sm:px-6 bg-gold-200/10 dark:bg-gray-900/50 flex justify-end gap-3 bg-gold-50 dark:bg-gray-950">
+   387→   387→              <button
+   388→   388→                onClick={() => openGallery(selectedProject)}
+   389→   389→                className="flex items-center gap-1.5 py-2.5 px-4 rounded-xl border border-gold-200 dark:border-gold-700/40 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 dark:text-gold-300 hover:bg-gold-50 dark:hover:bg-gray-800 cursor-pointer transition-all"
+   390→   390→              >
+   391→   391→                <Images className="w-3.5 h-3.5" />
+   392→   392→                Photo Gallery
+   393→   393→              </button>
+   394→   394→              <button
+   395→   395→                onClick={() => handleGetBrochureFromModal(selectedProject)}
+   396→   396→                className="py-2.5 px-4 rounded-xl border border-gold-200 dark:border-gold-700/40 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 dark:text-gold-300 hover:bg-gold-50 dark:hover:bg-gray-800 cursor-pointer transition-all"
+   397→   397→              >
+   398→   398→                Get Brochure PDF
+   399→   399→              </button>
+   400→   400→              <button
+   401→   401→                onClick={() => {
+   402→   402→                  setSelectedProject(null);
+   403→   403→                  onBookProject(selectedProject.name);
+   404→   404→                }}
+   405→   405→                className="py-2.5 px-5 rounded-xl bg-gold-800 hover:bg-gold-600 text-white text-xs font-mono font-semibold uppercase tracking-wider cursor-pointer transition-all"
+   406→   406→              >
+   407→   407→                Inquire & Schedule Visit
+   408→   408→              </button>
+   409→   409→            </div>
+   410→   410→          </div>
+   411→   411→        </div>
+   412→   412→      )}
+   413→   413→
+   414→   414→      {/* Brochure Download Modal */}
+   415→   415→      {brochureProject && (
+   416→   416→        <div
+   417→   417→          className="fixed inset-0 z-50 bg-gray-900/60 dark:bg-gray-950/80 backdrop-blur-sm flex justify-center items-center p-4"
+   418→   418→          onClick={(e) => { if (e.target === e.currentTarget) setBrochureProject(null); }}
+   419→   419→        >
+   420→   420→          <div className="bg-gold-50 dark:bg-gray-950 w-full max-w-md rounded-2xl border border-gold-200 dark:border-gold-800 p-6 sm:p-8 relative shadow-2xl animate-fade-in">
+   421→   421→            <button
+   422→   422→              onClick={() => setBrochureProject(null)}
+   423→   423→              className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gold-300 cursor-pointer text-lg"
+   424→   424→            >
+   425→   425→              <X className="w-4 h-4" />
+   426→   426→            </button>
+   427→   427→
+   428→   428→            <div className="text-center space-y-2 mb-6">
+   429→   429→              <span className="inline-flex p-3 bg-gold-100 dark:bg-gold-900 rounded-full border border-gold-200 dark:border-gold-700/40 text-gold-700 dark:text-gold-300 mb-2">
+   430→   430→                <Download className="w-6 h-6 animate-bounce" />
+   431→   431→              </span>
+   432→   432→              <h4 className="font-serif text-xl font-bold text-gray-900 dark:text-gold-100">
+   433→   433→                Download Official Brochure
+   434→   434→              </h4>
+   435→   435→              <p className="text-xs text-gold-600 font-mono uppercase tracking-wider">
+   436→   436→                {brochureProject.name}
+   437→   437→              </p>
+   438→   438→              <p className="text-xs text-gray-400">
+   439→   439→                Specify registry details below. The digital dossier is instant and legally protected.
+   440→   440→              </p>
+   441→   441→            </div>
+   442→   442→
+   443→   443→            {downloadSuccess ? (
+   444→   444→              <div className="space-y-3 py-6 text-center animate-fade-in">
+   445→   445→                <span className="inline-flex items-center justify-center p-3 rounded-full bg-green-100 text-green-700 border border-green-200 animate-pulse">
+   446→   446→                  <CheckCircle2 className="w-8 h-8" />
+   447→   447→                </span>
+   448→   448→                <p className="text-sm font-mono text-green-800 font-bold">Verifying Registry Data...</p>
+   449→   449→                <p className="text-xs text-gray-400">Generating compiled dossier voucher. File download begins immediately.</p>
+   450→   450→              </div>
+   451→   451→            ) : (
+   452→   452→              <form onSubmit={handleBrochureSubmit} className="space-y-4">
+   453→   453→                <div className="space-y-1">
+   454→   454→                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Full Name</label>
+   455→   455→                  <input
+   456→   456→                    type="text"
+   457→   457→                    required
+   458→   458→                    value={brochureName}
+   459→   459→                    onChange={(e) => setBrochureName(e.target.value)}
+   460→   460→                    placeholder="Enter your name"
+   461→   461→                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
+   462→   462→                  />
+   463→   463→                </div>
+   464→   464→                <div className="space-y-1">
+   465→   465→                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Contact Mobile Number</label>
+   466→   466→                  <input
+   467→   467→                    type="tel"
+   468→   468→                    required
+   469→   469→                    value={brochurePhone}
+   470→   470→                    onChange={(e) => setBrochurePhone(e.target.value)}
+   471→   471→                    placeholder="e.g. +91 98765 43210"
+   472→   472→                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
+   473→   473→                  />
+   474→   474→                </div>
+   475→   475→                <div className="space-y-1">
+   476→   476→                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Email Address</label>
+   477→   477→                  <input
+   478→   478→                    type="email"
+   479→   479→                    required
+   480→   480→                    value={brochureEmail}
+   481→   481→                    onChange={(e) => setBrochureEmail(e.target.value)}
+   482→   482→                    placeholder="e.g. consult@nrigroup.com"
+   483→   483→                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
+   484→   484→                  />
+   485→   485→                </div>
+   486→   486→                <div className="space-y-1">
+   487→   487→                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Buyer Profile Classification</label>
+   488→   488→                  <select
+   489→   489→                    value={brochurePersona}
+   490→   490→                    onChange={(e) => setBrochurePersona(e.target.value)}
+   491→   491→                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
+   492→   492→                  >
+   493→   493→                    <option value="NRI Investor">NRI (Non-Resident Indian)</option>
+   494→   494→                    <option value="Executive Business Owner">Business Owner & Entrepreneur</option>
+   495→   495→                    <option value="Retired Senior Devotee">Retired Senior Citizen</option>
+   496→   496→                    <option value="High-Caliber Professional">Doctor / CA Specialist</option>
+   497→   497→                    <option value="Dharmic Pilgrim Guest">Vrindavan Visitor / Pilgrim</option>
+   498→   498→                  </select>
+   499→   499→                </div>
+   500→   500→                <button
+   501→   501→                  type="submit"
+   502→   502→                  className="w-full py-4 rounded-xl bg-gold-600 hover:bg-gold-800 text-white font-mono text-xs font-semibold uppercase tracking-wider cursor-pointer transition-all flex items-center justify-center gap-2 mt-4"
+   503→   503→                >
+   504→   504→                  <Download className="w-4 h-4" />
+   505→   505→                  Request Verified Download
+   506→   506→                </button>
+   507→   507→              </form>
+   508→   508→            )}
+   509→   509→          </div>
+   510→   510→        </div>
+   511→   511→      )}
+   512→   512→      {/* Image Gallery Lightbox */}
+   513→   513→      {galleryImages && (
+   514→   514→        <ImageGallery
+   515→   515→          images={galleryImages}
+   516→   516→          projectName={galleryName}
+   517→   517→          onClose={() => setGalleryImages(null)}
+   518→   518→        />
+   519→   519→      )}
+   520→   520→    </div>
+   521→   521→  );
+   522→   522→}

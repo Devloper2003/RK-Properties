@@ -1,6 +1,7 @@
 'use client';
 
 import { Instagram, Youtube, Facebook, Linkedin, ArrowUp, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
 import { usePropertyStore } from '@/store/use-property-store';
 import NewsletterSection from '@/components/rk-properties/NewsletterSection';
 
@@ -33,7 +34,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-gold-700/30 pb-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-4 space-y-4">
-            <span className="text-xl font-serif font-bold text-white tracking-tight block">RK PROPERTIES</span>
+            <Link href="/" className="text-xl font-serif font-bold text-white tracking-tight block hover:text-gold-300 transition-colors">RK PROPERTIES</Link>
             <p className="text-xs text-gray-400 font-light leading-relaxed">
               A majestic synthesis of absolute title security, professional real estate consulting services, and sacred living opportunities in Vrindavan Dham. Built on three core pillars: Trust, Transparency, and Value.
             </p>

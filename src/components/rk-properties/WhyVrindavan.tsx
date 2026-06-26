@@ -64,7 +64,7 @@ function StatCard({
     true
   );
   const displayValue =
-    'isStatic' in stat && stat.isStatic ? stat.displayFn(0) : stat.displayFn(count);
+    'isStatic' in stat && stat.isStatic ? (stat.displayFn as () => string)() : stat.displayFn(count);
 
   return (
     <div

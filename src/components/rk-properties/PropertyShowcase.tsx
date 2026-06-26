@@ -297,6 +297,14 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                 </button>
 
                 <button
+                  onClick={() => usePropertyStore.getState().openOverlay('project-detail', p.id)}
+                  className="py-3 px-5 rounded-xl border-2 border-gold-600 dark:border-gold-500 text-gold-700 dark:text-gold-300 text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 hover:bg-gold-50 dark:hover:bg-gold-900/40 flex items-center gap-1.5"
+                >
+                  <Eye className="w-4 h-4" />
+                  View Details
+                </button>
+
+                <button
                   onClick={() => onBookProject(p.name)}
                   className="py-3 px-5 rounded-xl bg-gradient-to-r from-gold-800 to-gold-700 hover:from-gold-600 hover:to-gold-500 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg"
                 >

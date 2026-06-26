@@ -6,8 +6,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
  * Hook that observes elements with [data-animate] attribute and adds
  * 'is-visible' class when they enter the viewport.
  */
-export function useScrollAnimations() {
+export function useScrollAnimations(enabled: boolean = true, reobserveKey?: unknown) {
   useEffect(() => {
+    if (!enabled) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -17,14 +19,14 @@ export function useScrollAnimations() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.05, rootMargin: '50px 0px -20px 0px' }
     );
 
     const elements = document.querySelectorAll('[data-animate]');
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [enabled, reobserveKey]);
 }
 
 /**

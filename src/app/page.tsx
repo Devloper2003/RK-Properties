@@ -25,6 +25,7 @@ import FloatingActions from '@/components/rk-properties/FloatingActions';
 import DarkModeToggle from '@/components/rk-properties/DarkModeToggle';
 import RecentlyViewedStrip from '@/components/rk-properties/RecentlyViewedStrip';
 import CookieConsent from '@/components/rk-properties/CookieConsent';
+import OverlayShell from '@/components/rk-properties/OverlayShell';
 
 export default function Home() {
   const {
@@ -32,11 +33,12 @@ export default function Home() {
     mounted,
     setMounted,
     scrollToId,
-    addLead
+    addLead,
+    activeOverlay,
   } = usePropertyStore();
 
   // Activate scroll-triggered animations
-  useScrollAnimations();
+  useScrollAnimations(mounted, activeOverlay);
 
   // Initialize on first client render
   useEffect(() => {
@@ -67,78 +69,91 @@ export default function Home() {
     );
   }
 
+  const isOnPage = activeOverlay !== null;
+
   return (
     <ToastProvider>
       <div className="bg-gold-50 dark:bg-[#0F0E0C] text-gold-800 dark:text-gold-200 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative pt-9">
-        {/* ── Announcement Banner ── */}
+        {/* ── Announcement Banner (all pages) ── */}
         <AnnouncementBanner />
 
         {/* ── Navigation ── */}
         <Navbar />
 
-        {/* ── Hero ── */}
-        <HeroSection
-          onExploreProjects={() => scrollToId('project-showcase-section')}
-          onScheduleConsult={() => scrollToId('contact-experience')}
-        />
-
-        {/* ── Trust Badges ── */}
-        <TrustBadges />
-
-        {/* ── Section Divider ── */}
-        <div className="section-divider max-w-7xl mx-auto my-0" />
-
-        {/* ── Why Vrindavan ── */}
-        <WhyVrindavan />
-
-        {/* ── Property Showcase ── */}
-        <PropertyShowcaseSection />
-
-        {/* ── Urgency / Scarcity ── */}
-        <UrgencySection />
-
-        {/* ── Section Divider ── */}
-        <div className="section-divider max-w-7xl mx-auto my-0" />
-
-        {/* ── Investment Calculator ── */}
-        <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white dark:from-gray-950 via-gold-50/50 dark:via-gray-900/30 to-white dark:to-gray-950">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <InvestmentCalculator initialProjects={projects} />
-          </div>
-        </section>
-
-        {/* ── Section Divider ── */}
-        <div className="section-divider max-w-7xl mx-auto my-0" />
-
-        {/* ── Our Strategy ── */}
-        <StrategySection />
-
-        {/* ── Section Divider ── */}
-        <div className="section-divider max-w-7xl mx-auto my-0" />
-
-        {/* ── Testimonials ── */}
-        <TestimonialsSection />
-
-        {/* ── FAQ ── */}
-        <FAQSection />
-
-        {/* ── Contact / Lead Capture ── */}
-        <section className="py-20 bg-white dark:bg-gray-950">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ContactSection
-              projects={projects}
-              onAddLead={addLead}
+        {/* ── Page Content (when an overlay page is active) ── */}
+        {isOnPage ? (
+          <>
+            <div className="flex-1 mt-20">
+              <OverlayShell />
+            </div>
+          </>
+        ) : (
+          <>
+            {/* ── Hero ── */}
+            <HeroSection
+              onExploreProjects={() => usePropertyStore.getState().openOverlay('premium-projects')}
+              onScheduleConsult={() => scrollToId('contact-experience')}
             />
-          </div>
-        </section>
 
-        {/* ── Location Corridor ── */}
-        <LocationCorridorSection />
+            {/* ── Trust Badges ── */}
+            <TrustBadges />
 
-        {/* ── Recently Viewed ── */}
-        <RecentlyViewedStrip />
+            {/* ── Section Divider ── */}
+            <div className="section-divider max-w-7xl mx-auto my-0" />
 
-        {/* ── Footer ── */}
+            {/* ── Why Vrindavan ── */}
+            <WhyVrindavan />
+
+            {/* ── Property Showcase ── */}
+            <PropertyShowcaseSection />
+
+            {/* ── Urgency / Scarcity ── */}
+            <UrgencySection />
+
+            {/* ── Section Divider ── */}
+            <div className="section-divider max-w-7xl mx-auto my-0" />
+
+            {/* ── Investment Calculator ── */}
+            <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white dark:from-gray-950 via-gold-50/50 dark:via-gray-900/30 to-white dark:to-gray-950">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <InvestmentCalculator initialProjects={projects} />
+              </div>
+            </section>
+
+            {/* ── Section Divider ── */}
+            <div className="section-divider max-w-7xl mx-auto my-0" />
+
+            {/* ── Our Strategy ── */}
+            <StrategySection />
+
+            {/* ── Section Divider ── */}
+            <div className="section-divider max-w-7xl mx-auto my-0" />
+
+            {/* ── Testimonials ── */}
+            <TestimonialsSection />
+
+            {/* ── FAQ ── */}
+            <FAQSection />
+
+            {/* ── Contact / Lead Capture ── */}
+            <section id="contact-experience" className="py-20 bg-white dark:bg-gray-950">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <ContactSection
+                  projects={projects}
+                  onAddLead={addLead}
+                />
+              </div>
+            </section>
+
+            {/* ── Location Corridor ── */}
+            <LocationCorridorSection />
+
+            {/* ── Recently Viewed ── */}
+            <RecentlyViewedStrip />
+          </>
+        )}
+
+        {/* ── Footer (always visible) ── */}
         <Footer />
 
         {/* ── Floating Actions (Back to Top, WhatsApp, Scroll Progress) ── */}

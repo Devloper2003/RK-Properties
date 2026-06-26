@@ -72,6 +72,20 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* ── Hero text fade-in-up for page headers ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.animate-hero-text {
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-text-delay-1 { animation-delay: 0.1s; }
+.animate-hero-text-delay-2 { animation-delay: 0.25s; }
+.animate-hero-text-delay-3 { animation-delay: 0.4s; }
+
 /* ── Slide in from right (toast) ── */
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(100%); }

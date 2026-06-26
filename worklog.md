@@ -178,3 +178,19 @@ Stage Summary:
 8. **Add more testimonials** (currently 6, good but could expand for social proof)
 9. **Clean up `upload/extracted_project/`** directory
 10. **Add page transition animations** between sections for smoother scrolling feel
+
+---
+Task ID: 2
+Agent: full-stack-developer
+Task: Create separate /projects page with full details and brochure PDF download
+
+Work Log:
+- Created /src/app/projects/page.tsx with full project listing and detail views
+- Created /src/app/api/brochure/route.ts for PDF brochure generation
+- Updated Navbar.tsx to link to /projects page
+- Installed jspdf for PDF generation
+
+Stage Summary:
+- New files: src/app/projects/page.tsx, src/app/api/brochure/route.ts
+- Modified: src/components/rk-properties/Navbar.tsx
+- All 4 projects displayed with full details, gallery, and brochure download

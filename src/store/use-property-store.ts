@@ -4,6 +4,15 @@ import { create } from 'zustand';
 import { Project, Lead } from '@/types/rk-properties';
 import { propertiesData } from '@/data/propertyData';
 
+export type OverlayPageId =
+  | 'premium-projects'
+  | 'why-vrindavan'
+  | 'location'
+  | 'investment-calculator'
+  | 'our-strategy'
+  | 'registry-faqs'
+  | 'project-detail';
+
 interface PropertyStoreState {
   // Data
   projects: Project[];
@@ -14,6 +23,8 @@ interface PropertyStoreState {
   mobileMenuOpen: boolean;
   mounted: boolean;
   recentlyViewed: string[];
+  activeOverlay: OverlayPageId | null;
+  selectedProjectId: string | null;
 
   // Actions
   setProjects: (projects: Project[]) => void;
@@ -24,9 +35,11 @@ interface PropertyStoreState {
   addLead: (leadData: Omit<Lead, 'id' | 'date'>) => Promise<void>;
   scrollToId: (id: string) => void;
   addRecentlyViewed: (projectId: string) => void;
+  openOverlay: (pageId: OverlayPageId, projectId?: string) => void;
+  closeOverlay: () => void;
 }
 
-export const usePropertyStore = create<PropertyStoreState>((set) => ({
+export const usePropertyStore = create<PropertyStoreState>((set, get) => ({
   // Initialize projects from localStorage or default data
   projects: (() => {
     if (typeof window !== 'undefined') {
@@ -51,6 +64,8 @@ export const usePropertyStore = create<PropertyStoreState>((set) => ({
     }
     return [];
   })(),
+  activeOverlay: null,
+  selectedProjectId: null,
 
   setProjects: (projects) => {
     set({ projects });
@@ -96,5 +111,28 @@ export const usePropertyStore = create<PropertyStoreState>((set) => ({
       }
       return { recentlyViewed: updated };
     });
-  }
+  },
+
+  openOverlay: (pageId, projectId) => {
+    set({
+      activeOverlay: pageId,
+      selectedProjectId: projectId ?? null,
+      mobileMenuOpen: false,
+    });
+    // Track recently viewed
+    if (pageId === 'project-detail' && projectId) {
+      get().addRecentlyViewed(projectId);
+    }
+    // Scroll to top of page
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  },
+
+  closeOverlay: () => {
+    set({ activeOverlay: null, selectedProjectId: null });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0 });
+    }
+  },
 }));
