@@ -1,15 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ArrowRight, Compass, ShieldCheck, Eye } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 
 interface HeroSectionProps {
   onExploreProjects: () => void;
   onScheduleConsult: () => void;
-  onOpenBlueprint: () => void;
 }
 
-export default function HeroSection({ onExploreProjects, onScheduleConsult, onOpenBlueprint }: HeroSectionProps) {
+export default function HeroSection({ onExploreProjects, onScheduleConsult }: HeroSectionProps) {
   const birds = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
     id: i,
     left: Math.random() * 80 + 10,
@@ -105,7 +104,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult, onOp
           </p>
 
           {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto mb-14">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
             <button
               onClick={onExploreProjects}
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-gold-800 text-white font-medium hover:bg-gold-700 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group"
@@ -118,19 +117,8 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult, onOp
               onClick={onScheduleConsult}
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-gold-800 border border-gold-200/60 shadow-xs hover:border-gold-500 hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-medium"
             >
+              <Phone className="w-4 h-4 text-gold-600" />
               Book Site Visit
-            </button>
-          </div>
-
-          {/* Agency Strategy Blueprint trigger */}
-          <div className="flex justify-center mb-4">
-            <button
-              onClick={onOpenBlueprint}
-              className="inline-flex items-center gap-2 text-xs font-mono text-gold-600 hover:text-gold-700 hover:underline cursor-pointer group px-4 py-2 rounded-lg bg-gold-50/50 border border-gold-200/20"
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>Explore ₹25,00,000+ Agency Strategy & Customer Psychology Blueprint</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>

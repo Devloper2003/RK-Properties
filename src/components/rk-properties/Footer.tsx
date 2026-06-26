@@ -3,7 +3,7 @@
 import { usePropertyStore } from '@/store/use-property-store';
 
 export default function Footer() {
-  const { scrollToId, setIsBlueprintOpen } = usePropertyStore();
+  const { scrollToId } = usePropertyStore();
 
   return (
     <footer className="bg-gradient-to-br from-gold-800 via-gold-900 to-gold-900 text-gold-100/80 pt-16 pb-12 select-none border-t border-gold-600/25">
@@ -30,8 +30,8 @@ export default function Footer() {
 
           {/* Links 2 */}
           <div className="md:col-span-2 space-y-3 font-mono text-xs uppercase tracking-wider">
-            <span className="text-white block font-bold mb-1">Verify Compliance</span>
-            <button onClick={() => setIsBlueprintOpen(true)} className="block text-gray-400 hover:text-white cursor-pointer text-left">Consumer Moat</button>
+            <span className="text-white block font-bold mb-1">Quick Links</span>
+            <button onClick={() => scrollToId('our-strategy')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Our Strategy</button>
             <button onClick={() => scrollToId('faq-section-anchor')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Legal FAQ Registry</button>
             <button onClick={() => scrollToId('contact-experience')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Book Site Visit</button>
           </div>

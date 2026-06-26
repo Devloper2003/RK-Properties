@@ -11,17 +11,15 @@ import TrustBadges from '@/components/rk-properties/TrustBadges';
 import WhyVrindavan from '@/components/rk-properties/WhyVrindavan';
 import PropertyShowcaseSection from '@/components/rk-properties/PropertyShowcaseSection';
 import InvestmentCalculator from '@/components/rk-properties/InvestmentCalculator';
+import StrategySection from '@/components/rk-properties/StrategySection';
 import TestimonialsSection from '@/components/rk-properties/TestimonialsSection';
 import FAQSection from '@/components/rk-properties/FAQSection';
 import ContactSection from '@/components/rk-properties/ContactSection';
 import Footer from '@/components/rk-properties/Footer';
-import StrategicBlueprint from '@/components/rk-properties/StrategicBlueprint';
 
 export default function Home() {
   const {
     projects,
-    isBlueprintOpen,
-    setIsBlueprintOpen,
     mounted,
     setMounted,
     scrollToId,
@@ -54,7 +52,6 @@ export default function Home() {
       <HeroSection
         onExploreProjects={() => scrollToId('project-showcase-section')}
         onScheduleConsult={() => scrollToId('contact-experience')}
-        onOpenBlueprint={() => setIsBlueprintOpen(true)}
       />
 
       {/* ── Trust Badges ── */}
@@ -72,6 +69,9 @@ export default function Home() {
           <InvestmentCalculator initialProjects={projects} />
         </div>
       </section>
+
+      {/* ── Our Strategy ── */}
+      <StrategySection />
 
       {/* ── Testimonials ── */}
       <TestimonialsSection />
@@ -91,12 +91,6 @@ export default function Home() {
 
       {/* ── Footer ── */}
       <Footer />
-
-      {/* ── Strategic Blueprint Modal ── */}
-      <StrategicBlueprint
-        isOpen={isBlueprintOpen}
-        onClose={() => setIsBlueprintOpen(false)}
-      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Compass, Sparkles, Menu, X, Lock
+  Phone, Sparkles, Menu, X
 } from 'lucide-react';
 import { usePropertyStore } from '@/store/use-property-store';
 
@@ -9,7 +9,6 @@ export default function Navbar() {
   const {
     mobileMenuOpen,
     setMobileMenuOpen,
-    setIsBlueprintOpen,
     scrollToId
   } = usePropertyStore();
 
@@ -38,6 +37,9 @@ export default function Navbar() {
             <button onClick={() => scrollToId('calculator-anchor')} className="hover:text-gold-800 hover:underline cursor-pointer transition-colors flex items-center gap-1.5">
               <Sparkles className="w-3 h-3 text-gold-600" /> Investment Calculator
             </button>
+            <button onClick={() => scrollToId('our-strategy')} className="hover:text-gold-600 cursor-pointer transition-colors">
+              Our Strategy
+            </button>
             <button onClick={() => scrollToId('faq-section-anchor')} className="hover:text-gold-600 cursor-pointer transition-colors">
               Registry FAQs
             </button>
@@ -46,17 +48,10 @@ export default function Navbar() {
           {/* Action widgets */}
           <div className="hidden md:flex items-center gap-3">
             <button
-              onClick={() => setIsBlueprintOpen(true)}
-              className="px-4 py-2 text-[10px] font-mono uppercase font-bold tracking-widest text-gold-800 rounded-xl hover:bg-gold-100 border border-gold-200/40 cursor-pointer transition-all flex items-center gap-1.5"
-            >
-              <Compass className="w-3.5 h-3.5" />
-              Strategy Briefing
-            </button>
-            <button
               onClick={() => scrollToId('contact-experience')}
               className="px-4 py-2 bg-gold-800 hover:bg-gold-600 text-white text-[10px] font-mono uppercase font-bold tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Lock className="w-3 h-3 text-gold-200" />
+              <Phone className="w-3.5 h-3.5 text-gold-200" />
               Book Site Tour
             </button>
           </div>
@@ -64,16 +59,10 @@ export default function Navbar() {
           {/* Mobile menu */}
           <div className="lg:hidden flex items-center gap-2">
             <button
-              onClick={() => setIsBlueprintOpen(true)}
-              className="p-1.5 rounded-lg border border-gold-200/50 text-gold-700"
-            >
-              <Compass className="w-4 h-4" />
-            </button>
-            <button
               onClick={() => scrollToId('contact-experience')}
               className="p-1.5 rounded-lg bg-gold-800 text-white"
             >
-              <Lock className="w-4 h-4" />
+              <Phone className="w-4 h-4" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -97,10 +86,14 @@ export default function Navbar() {
           <button onClick={() => scrollToId('calculator-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
             Investment Calculator
           </button>
+          <button onClick={() => scrollToId('our-strategy')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
+            Our Strategy
+          </button>
           <button onClick={() => scrollToId('faq-section-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
             Registry FAQs
           </button>
-          <button onClick={() => scrollToId('contact-experience')} className="block w-full text-left py-2 bg-gold-100 text-gold-700 font-bold px-3 rounded-lg text-center cursor-pointer">
+          <button onClick={() => scrollToId('contact-experience')} className="block w-full text-left py-2 bg-gold-100 text-gold-700 font-bold px-3 rounded-lg text-center cursor-pointer flex items-center justify-center gap-2">
+            <Phone className="w-3.5 h-3.5" />
             Book Site Tour Package
           </button>
         </div>

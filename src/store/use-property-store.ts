@@ -11,7 +11,6 @@ interface PropertyStoreState {
   selectedCategoryFilter: string;
 
   // UI State
-  isBlueprintOpen: boolean;
   mobileMenuOpen: boolean;
   mounted: boolean;
 
@@ -19,14 +18,13 @@ interface PropertyStoreState {
   setProjects: (projects: Project[]) => void;
   setSelectedProjectForContact: (name: string) => void;
   setSelectedCategoryFilter: (filter: string) => void;
-  setIsBlueprintOpen: (open: boolean) => void;
   setMobileMenuOpen: (open: boolean) => void;
   setMounted: (mounted: boolean) => void;
   addLead: (leadData: Omit<Lead, 'id' | 'date'>) => Promise<void>;
   scrollToId: (id: string) => void;
 }
 
-export const usePropertyStore = create<PropertyStoreState>((set, get) => ({
+export const usePropertyStore = create<PropertyStoreState>((set) => ({
   // Initialize projects from localStorage or default data
   projects: (() => {
     if (typeof window !== 'undefined') {
@@ -40,7 +38,6 @@ export const usePropertyStore = create<PropertyStoreState>((set, get) => ({
 
   selectedProjectForContact: '',
   selectedCategoryFilter: 'All',
-  isBlueprintOpen: false,
   mobileMenuOpen: false,
   mounted: false,
 
@@ -55,20 +52,11 @@ export const usePropertyStore = create<PropertyStoreState>((set, get) => ({
 
   setSelectedCategoryFilter: (filter) => set({ selectedCategoryFilter: filter }),
 
-  setIsBlueprintOpen: (open) => set({ isBlueprintOpen: open }),
-
   setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
 
   setMounted: (mounted) => set({ mounted }),
 
   addLead: async (leadData) => {
-    const newLead: Lead = {
-      ...leadData,
-      id: `lead_${Math.floor(Math.random() * 89999 + 10000)}`,
-      date: new Date().toISOString()
-    };
-
-    // Save to database
     try {
       await fetch('/api/leads', {
         method: 'POST',
