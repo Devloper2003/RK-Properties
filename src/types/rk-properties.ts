@@ -15,6 +15,7 @@ export interface Project {
   roiProjection10Yr: string;
   details: string;
   image: string;
+  gallery?: string[];
   tag: string;
 }
 

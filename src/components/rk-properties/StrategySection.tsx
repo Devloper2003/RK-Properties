@@ -82,17 +82,17 @@ export default function StrategySection() {
   const { scrollToId } = usePropertyStore();
 
   return (
-    <section id="our-strategy" className="py-20 bg-gradient-to-b from-white via-gold-50/40 to-white select-none">
+    <section id="our-strategy" className="py-20 bg-gradient-to-b from-white via-gold-50/40 to-white dark:from-gray-950 dark:via-gray-900/40 dark:to-gray-950 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div data-animate className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
             The RK Properties Difference
           </span>
-          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 mt-2 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gold-100 mt-2 tracking-tight">
             Our Strategy: Where <span className="text-gold-600 italic">Trust</span> Drives Returns
           </h2>
-          <p className="text-sm text-gray-500 mt-4 leading-relaxed font-light max-w-2xl mx-auto">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 leading-relaxed font-light max-w-2xl mx-auto">
             Unlike unorganized local brokers or generic property portals, RK Properties operates on a fundamentally different model — one built on institutional-grade verification, segment-specific advisory, and complete legal transparency at every step.
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function StrategySection() {
                 key={index}
                 data-animate
                 style={{ '--stagger-idx': index } as React.CSSProperties}
-                className="group relative p-6 sm:p-8 rounded-3xl bg-white border border-gold-200/40 shadow-xs hover:shadow-[0_0_24px_rgba(212,175,55,0.15)] hover:border-gold-500/60 hover:border-l-2 transition-all duration-300"
+                className="group relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-gray-900 border border-gold-200/40 dark:border-gold-800/40 shadow-xs hover:shadow-[0_0_24px_rgba(212,175,55,0.15)] hover:border-gold-500/60 dark:hover:border-gold-600/50 hover:border-l-2 transition-all duration-300"
               >
                 {/* Animated number badge */}
                 <span className="absolute top-4 right-5 font-mono text-[11px] font-bold text-gold-400/40 group-hover:text-gold-500/70 transition-colors duration-300">
@@ -114,17 +114,17 @@ export default function StrategySection() {
                 </span>
 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 rounded-xl bg-gold-100 text-gold-700 group-hover:bg-gold-200 transition-colors">
+                  <div className="p-2.5 rounded-xl bg-gold-100 dark:bg-gold-900 text-gold-700 dark:text-gold-400 group-hover:bg-gold-200 dark:group-hover:bg-gold-800 transition-colors">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-serif text-base sm:text-lg font-bold text-gray-900 pr-8">{pillar.title}</h3>
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-gray-900 dark:text-gold-100 pr-8">{pillar.title}</h3>
                 </div>
-                <p className="text-xs text-gray-500 leading-relaxed font-light mb-5">
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-light mb-5">
                   {pillar.description}
                 </p>
                 <div className="space-y-2">
                   {pillar.highlights.map((highlight, hIdx) => (
-                    <div key={hIdx} className="flex items-center gap-2 text-xs text-gray-600">
+                    <div key={hIdx} className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <CheckCircle2 className="w-3.5 h-3.5 text-gold-600 shrink-0" />
                       <span>{highlight}</span>
                     </div>
@@ -141,10 +141,10 @@ export default function StrategySection() {
             <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
               Transparent Investment Journey
             </span>
-            <h2 className="text-3xl font-serif text-gray-900 mt-2 tracking-tight">
+            <h2 className="text-3xl font-serif text-gray-900 dark:text-gold-100 mt-2 tracking-tight">
               How We Work With You
             </h2>
-            <p className="text-xs text-gray-400 mt-2 font-mono">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 font-mono">
               From first call to registered title deed — every step documented, every rupee accounted for.
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function StrategySection() {
                   key={index}
                   data-animate
                   style={{ '--stagger-idx': index } as React.CSSProperties}
-                  className="relative p-5 rounded-2xl bg-gradient-to-br from-white to-gold-50/70 border border-gold-200/40 shadow-xs group hover:shadow-md hover:border-gold-500/60 transition-all duration-300"
+                  className="relative p-5 rounded-2xl bg-gradient-to-br from-white to-gold-50/70 dark:from-gray-900 dark:to-gray-950 border border-gold-200/40 dark:border-gold-800/40 shadow-xs group hover:shadow-md hover:border-gold-500/60 dark:hover:border-gold-600/50 transition-all duration-300"
                 >
                   {/* Desktop: step dot on the timeline */}
                   <div className="hidden lg:flex absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-gold-600 border-4 border-white shadow-sm z-20 items-center justify-center">
@@ -179,8 +179,8 @@ export default function StrategySection() {
                     STEP {step.step}
                   </span>
                   <div className="text-2xl mb-3 mt-2">{step.icon}</div>
-                  <h4 className="font-serif font-bold text-gray-900 text-sm mb-2">{step.title}</h4>
-                  <p className="text-[11px] text-gray-500 leading-relaxed font-light">{step.description}</p>
+                  <h4 className="font-serif font-bold text-gray-900 dark:text-gold-100 text-sm mb-2">{step.title}</h4>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed font-light">{step.description}</p>
                   {index < processSteps.length - 1 && (
                     <div className="hidden lg:block absolute top-1/2 -right-3 text-gold-300 z-10">
                       <ArrowRight className="w-5 h-5" />

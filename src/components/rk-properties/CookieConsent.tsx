@@ -52,10 +52,10 @@ export default function CookieConsent() {
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h4 className="font-serif font-bold text-gray-900 text-sm mb-0.5">
+            <h4 className="font-serif font-bold text-gray-900 dark:text-gold-100 text-sm mb-0.5">
               Your Privacy Matters to Us
             </h4>
-            <p className="text-[11px] text-gray-500 leading-relaxed font-light">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed font-light">
               We use cookies to enhance your browsing experience and analyze site traffic.
               By continuing, you agree to our privacy practices. No personal data is shared with third parties.
             </p>

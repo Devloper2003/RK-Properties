@@ -82,7 +82,7 @@ function AnimatedBar({ score, color, label, delay }: { score: number; color: str
   return (
     <div ref={ref} className="space-y-1.5">
       <div className="flex justify-between items-center">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 font-semibold">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">
           {label}
         </span>
         <span className="text-[11px] font-mono text-gold-700 font-bold">
@@ -106,7 +106,7 @@ export default function LocationCorridorSection() {
   return (
     <section
       id="location-corridor"
-      className="py-20 bg-gradient-to-b from-gold-50 via-white to-gold-50/50 select-none overflow-hidden"
+      className="py-20 bg-gradient-to-b from-gold-50 via-white to-gold-50/50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -114,10 +114,10 @@ export default function LocationCorridorSection() {
           <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
             Prime Geographic Positioning
           </span>
-          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 mt-2 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gold-100 mt-2 tracking-tight">
             Strategic Location <span className="text-gold-600 italic">Advantage</span>
           </h2>
-          <p className="text-sm text-gray-500 mt-3 leading-relaxed font-light max-w-2xl mx-auto">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 leading-relaxed font-light max-w-2xl mx-auto">
             Every RK Properties project is strategically positioned in Vrindavan&apos;s highest-appreciation corridors — walking distance from sacred temples and minutes from national highways.
           </p>
         </div>
@@ -131,7 +131,7 @@ export default function LocationCorridorSection() {
                 key={lm.name}
                 data-animate
                 style={{ '--stagger-idx': idx } as React.CSSProperties}
-                className={`group relative p-5 rounded-2xl bg-white border ${lm.borderColor} shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
+                className={`group relative p-5 rounded-2xl bg-white dark:bg-gray-900 border ${lm.borderColor} dark:border-gold-800/40 shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
               >
                 {/* Gradient accent top */}
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${lm.color}`} />
@@ -141,18 +141,18 @@ export default function LocationCorridorSection() {
                     <Icon className={`w-5 h-5 ${lm.textColor}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-serif font-bold text-gray-900 text-sm">{lm.name}</h4>
+                    <h4 className="font-serif font-bold text-gray-900 dark:text-gold-100 text-sm">{lm.name}</h4>
                     <div className="flex items-center gap-1.5 mt-1 mb-2">
                       <Clock className="w-3 h-3 text-gold-600" />
                       <span className={`text-[11px] font-mono font-bold ${lm.textColor}`}>
                         {lm.distance}
                       </span>
                     </div>
-                    <p className="text-[11px] text-gray-500 leading-relaxed font-light">
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed font-light">
                       {lm.description}
                     </p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gold-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                  <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gold-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
                 </div>
               </div>
             );
@@ -164,10 +164,10 @@ export default function LocationCorridorSection() {
           <div className="glass rounded-2xl p-6 sm:p-8">
             <div className="flex items-center gap-2 mb-5">
               <MapPin className="w-5 h-5 text-gold-600" />
-              <h3 className="font-serif font-bold text-gray-900 text-base">
+              <h3 className="font-serif font-bold text-gray-900 dark:text-gold-100 text-base">
                 Connectivity Score
               </h3>
-              <span className="text-[9px] font-mono text-gray-400 uppercase tracking-wider ml-auto">
+              <span className="text-[9px] font-mono text-gray-400 dark:text-gray-500 uppercase tracking-wider ml-auto">
                 From RK Properties Project Zones
               </span>
             </div>

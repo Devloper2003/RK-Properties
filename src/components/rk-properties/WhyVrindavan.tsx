@@ -77,19 +77,19 @@ function StatCard({
       <div className="flex items-center gap-2.5">
         {/* Decorative icon */}
         <span
-          className="flex-none p-1.5 rounded-lg bg-gold-100/80 text-gold-600 transition-colors duration-300 group-hover:bg-gold-200/80 group-hover:text-gold-700"
+          className="flex-none p-1.5 rounded-lg bg-gold-100/80 dark:bg-gold-900 text-gold-600 dark:text-gold-400 transition-colors duration-300 group-hover:bg-gold-200/80 dark:group-hover:bg-gold-800 group-hover:text-gold-700 dark:group-hover:text-gold-300"
           aria-hidden="true"
         >
           <stat.icon className="w-4 h-4" />
         </span>
-        <span className="text-2xl sm:text-3xl font-serif text-gold-600 font-bold tracking-tight">
+        <span className="text-2xl sm:text-3xl font-serif text-gold-600 dark:text-gold-400 font-bold tracking-tight">
           {displayValue}
         </span>
       </div>
-      <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">
+      <span className="text-[10px] font-mono text-gray-500 dark:text-gray-400 uppercase tracking-widest block">
         {stat.label}
       </span>
-      <p className="text-xs text-gray-400 font-light mt-1 leading-relaxed">
+      <p className="text-xs text-gray-400 dark:text-gray-500 font-light mt-1 leading-relaxed">
         {stat.desc}
       </p>
     </div>
@@ -100,7 +100,7 @@ export default function WhyVrindavan() {
   return (
     <section
       id="why-vrindavan"
-      className="relative py-20 bg-gradient-to-b from-white via-gold-50 to-white select-none overflow-hidden"
+      className="relative py-20 bg-gradient-to-b from-white via-gold-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 select-none overflow-hidden"
     >
       {/* Decorative gradient orb */}
       <span
@@ -130,7 +130,7 @@ export default function WhyVrindavan() {
             <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
               The Epicenter of Spiritual Sovereignty
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-gold-800 tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-serif text-gold-800 dark:text-gold-100 tracking-tight leading-tight">
               Vrindavan&apos;s Majestic Ascent: <br />
               From holy{' '}
               <span className="font-serif italic text-gold-600">Faith</span>{' '}
@@ -139,7 +139,7 @@ export default function WhyVrindavan() {
                 Wealth
               </span>
             </h2>
-            <p className="text-sm text-gray-600 leading-relaxed font-light">
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-light">
               Vrindavan is no longer just an ancient sacred pilgrimage
               destination. Backed by government focus and prime mega-development
               mandates, it represents one of India&apos;s fast-growing regional
@@ -156,14 +156,14 @@ export default function WhyVrindavan() {
                 style={{ '--stagger-idx': 0 } as React.CSSProperties}
                 className="flex gap-4"
               >
-                <span className="flex-none p-2.5 bg-gold-100 text-gold-700 h-10 w-10 text-center rounded-xl font-bold font-serif">
+                <span className="flex-none p-2.5 bg-gold-100 dark:bg-gold-900 text-gold-700 dark:text-gold-400 h-10 w-10 text-center rounded-xl font-bold font-serif">
                   1
                 </span>
                 <div>
-                  <h4 className="font-serif text-base font-bold text-gray-900">
+                  <h4 className="font-serif text-base font-bold text-gray-900 dark:text-gold-100">
                     Unrivalled Pilgrimage Volume
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Surpassing 20 million visits per year&mdash;driving immense
                     rental yields and boutique hotel requirements near upcoming
                     corridors.
@@ -175,14 +175,14 @@ export default function WhyVrindavan() {
                 style={{ '--stagger-idx': 1 } as React.CSSProperties}
                 className="flex gap-4"
               >
-                <span className="flex-none p-2.5 bg-gold-100 text-gold-700 h-10 w-10 text-center rounded-xl font-bold font-serif">
+                <span className="flex-none p-2.5 bg-gold-100 dark:bg-gold-900 text-gold-700 dark:text-gold-400 h-10 w-10 text-center rounded-xl font-bold font-serif">
                   2
                 </span>
                 <div>
-                  <h4 className="font-serif text-base font-bold text-gray-900">
+                  <h4 className="font-serif text-base font-bold text-gray-900 dark:text-gold-100">
                     High Speed Connectivity
                   </h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Seamless connectivity via Yamuna Expressway and upcoming
                     Rapid Transit links connects Delhi-NCR in under 120 minutes.
                   </p>
@@ -197,7 +197,7 @@ export default function WhyVrindavan() {
             className="lg:col-span-7"
           >
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-6 rounded-3xl p-4 sm:p-6 border border-gold-200/20"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 rounded-3xl p-4 sm:p-6 border border-gold-200/20 dark:border-gold-800/20"
               data-animate-stagger
             >
               {stats.map((stat, idx) => (

@@ -50,14 +50,14 @@ export default function PropertyShowcaseSection() {
   ];
 
   return (
-    <section id="project-showcase-section" className="py-20 bg-white select-none">
+    <section id="project-showcase-section" className="py-20 bg-white dark:bg-gray-950 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div data-animate className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
+        <div data-animate="reveal-up" className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
           <div>
             <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
               Exclusive Hand-picked Land Registers
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 tracking-tight font-medium mt-1">
+            <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gold-100 tracking-tight font-medium mt-1">
               Featured MVDA Authorized Real Estates
             </h2>
             <p className="text-xs text-gray-400 font-mono mt-2">
@@ -65,15 +65,15 @@ export default function PropertyShowcaseSection() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2 bg-gold-50 p-1.5 rounded-xl border border-gold-200/50 shadow-xs">
+          <div className="flex flex-wrap gap-2 bg-gold-50 dark:bg-gray-900 p-1.5 rounded-xl border border-gold-200/50 dark:border-gold-800/40 shadow-xs">
             {filters.map((filter) => (
               <button
                 key={filter.val}
                 onClick={() => setSelectedCategoryFilter(filter.val)}
                 className={`px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-mono tracking-wider uppercase cursor-pointer transition-all duration-200 ${
                   selectedCategoryFilter === filter.val
-                    ? 'bg-white text-gold-700 shadow-xs font-bold border border-gold-300/50'
-                    : 'text-gray-500 hover:text-gold-600 hover:bg-white/50'
+                    ? 'bg-white dark:bg-gray-800 text-gold-700 dark:text-gold-400 shadow-xs font-bold border border-gold-300/50 dark:border-gold-600/50'
+                    : 'text-gray-500 dark:text-gray-500 hover:text-gold-600 dark:hover:text-gold-400 hover:bg-white/50 dark:hover:bg-gray-800/50'
                 }`}
               >
                 {filter.label}
@@ -84,8 +84,8 @@ export default function PropertyShowcaseSection() {
 
         {/* Compare Button */}
         {compareIds.length > 0 && (
-          <div className="mb-6 flex items-center justify-between bg-white border border-gold-300 rounded-xl px-4 py-3 shadow-sm animate-fade-in">
-            <span className="text-xs font-mono text-gold-700">
+          <div className="mb-6 flex items-center justify-between bg-white dark:bg-gray-900 border border-gold-300 dark:border-gold-800/40 rounded-xl px-4 py-3 shadow-sm animate-fade-in">
+            <span className="text-xs font-mono text-gold-700 dark:text-gold-300">
               <span className="font-bold">{compareIds.length}</span> property{compareIds.length > 1 ? 'ies' : 'y'} selected for comparison
             </span>
             <div className="flex items-center gap-2">

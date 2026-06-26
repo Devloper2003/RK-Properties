@@ -19,10 +19,10 @@ function AnimatedStat({ target, suffix, prefix, label }: { target: number; suffi
 
   return (
     <div ref={ref} className="flex flex-col items-center">
-      <span className="text-2xl sm:text-3xl font-serif text-gold-600 font-semibold mb-1">
+      <span className="text-2xl sm:text-3xl font-serif text-gold-600 dark:text-gold-400 font-semibold mb-1">
         {display}
       </span>
-      <span className="text-[10px] sm:text-xs font-mono text-gray-500 uppercase tracking-widest leading-normal">
+      <span className="text-[10px] sm:text-xs font-mono text-gray-500 dark:text-gray-500 uppercase tracking-widest leading-normal">
         {label}
       </span>
     </div>
@@ -60,15 +60,15 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
   };
 
   return (
-    <section className="relative overflow-hidden min-h-[92vh] flex flex-col justify-between bg-gradient-to-b from-gold-50 via-gold-100 to-gold-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8 noise-overlay">
+    <section className="relative overflow-hidden min-h-[92vh] flex flex-col justify-between bg-gradient-to-b from-gold-50 via-gold-100 to-gold-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 pt-24 pb-12 px-4 sm:px-6 lg:px-8 noise-overlay">
       {/* ── Ornamental border frame ── */}
-      <div className="absolute inset-3 sm:inset-6 border border-gold-300/25 rounded-2xl pointer-events-none z-0" />
-      <div className="absolute inset-4 sm:inset-7 border border-gold-200/15 rounded-xl pointer-events-none z-0" />
+      <div className="absolute inset-3 sm:inset-6 border border-gold-300/25 dark:border-gold-700/15 rounded-2xl pointer-events-none z-0" />
+      <div className="absolute inset-4 sm:inset-7 border border-gold-200/15 dark:border-gold-800/10 rounded-xl pointer-events-none z-0" />
 
       {/* ── Enhanced background layers ── */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-radial from-gold-200/45 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-radial from-gold-600/10 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute -top-[150px] left-1/2 -translate-x-1/2 w-[80%] h-[350px] bg-gradient-to-b from-gold-100/95 via-gold-200/40 to-transparent blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-radial from-gold-200/45 dark:from-gold-600/10 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-radial from-gold-600/10 dark:from-gold-500/5 to-transparent blur-3xl pointer-events-none" />
+      <div className="absolute -top-[150px] left-1/2 -translate-x-1/2 w-[80%] h-[350px] bg-gradient-to-b from-gold-100/95 dark:from-gray-800/50 via-gold-200/40 dark:via-gold-700/10 to-transparent blur-2xl rounded-full pointer-events-none" />
       {/* Extra warm glow layer */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-radial from-gold-300/20 via-gold-100/10 to-transparent blur-[80px] pointer-events-none" />
       {/* Diagonal accent sweep */}
@@ -123,9 +123,9 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
       >
         {/* Elite Brand Badge */}
         <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-100 border border-gold-200/50 shadow-xs backdrop-blur-xs">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-100 dark:bg-gold-900/60 border border-gold-200/50 dark:border-gold-700/30 shadow-xs backdrop-blur-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-gold-600 animate-ping" />
-            <span className="text-[10px] sm:text-xs font-mono font-semibold text-gold-700 tracking-wider uppercase">
+            <span className="text-[10px] sm:text-xs font-mono font-semibold text-gold-700 dark:text-gold-300 tracking-wider uppercase">
               Invest with Absolute Legal Guardians
             </span>
           </div>
@@ -133,7 +133,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
 
         {/* Hero Copywriting Block */}
         <div className="text-center max-w-4xl mx-auto select-none">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-gold-800 tracking-tight leading-[1.1] mb-6 font-medium">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-gold-800 dark:text-gold-100 tracking-tight leading-[1.1] mb-6 font-medium">
             Invest Where <span className="text-gold-600 font-serif italic">Faith</span> Meets
             <br className="hidden sm:inline" />
             <span className="relative inline-block mt-1">
@@ -144,8 +144,8 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 font-sans max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            Secure high-yielding <span className="font-medium text-gray-800">MVDA Approved Plots</span> in
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 font-sans max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+            Secure high-yielding <span className="font-medium text-gray-800 dark:text-gold-200">MVDA Approved Plots</span> in
             Vrindavan&apos;s high-appreciation corridors. Tailor-made for NRIs and elite professionals seeking
             complete legal transparency and spiritual inheritance.
           </p>
@@ -162,7 +162,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
 
             <button
               onClick={handleBookSiteVisit}
-              className="hero-btn-shimmer w-full sm:w-auto px-8 py-4 rounded-full bg-white text-gold-800 border border-gold-200/60 shadow-xs hover:border-gold-500 hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-medium"
+              className="hero-btn-shimmer w-full sm:w-auto px-8 py-4 rounded-full bg-white dark:bg-gray-800 text-gold-800 dark:text-gold-200 border border-gold-200/60 dark:border-gold-700/40 shadow-xs hover:border-gold-500 dark:hover:border-gold-600 hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-medium"
             >
               <Phone className="w-4 h-4 text-gold-600" />
               Book Site Visit
@@ -172,14 +172,14 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
       </div>
 
       {/* ── Trust Pillars Bar with Animated Counters ── */}
-      <div className="max-w-7xl mx-auto w-full relative z-10 border-t border-gold-200/40 pt-10 mt-6">
+      <div className="max-w-7xl mx-auto w-full relative z-10 border-t border-gold-200/40 dark:border-gold-800/30 pt-10 mt-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center select-none">
           <AnimatedStat target={100} suffix="%" label="MVDA Approved Plots" />
           <AnimatedStat target={450} prefix="₹" suffix="Cr+" label="Assets Advised & Transacted" />
           <AnimatedStat target={1200} suffix="+" label="NRI & HNIs Advised" />
           <AnimatedStat target={0} label="Pure Clean Registry Guarantee" />
         </div>
-        <p className="text-center mt-3 text-[9px] sm:text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+        <p className="text-center mt-3 text-[9px] sm:text-[10px] font-mono text-gray-400 dark:text-gray-500 uppercase tracking-widest">
           0 Litigation — Clean Title Verified on Every Plot
         </p>
       </div>

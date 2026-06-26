@@ -22,6 +22,7 @@ import FAQSection from '@/components/rk-properties/FAQSection';
 import ContactSection from '@/components/rk-properties/ContactSection';
 import Footer from '@/components/rk-properties/Footer';
 import FloatingActions from '@/components/rk-properties/FloatingActions';
+import DarkModeToggle from '@/components/rk-properties/DarkModeToggle';
 import RecentlyViewedStrip from '@/components/rk-properties/RecentlyViewedStrip';
 import CookieConsent from '@/components/rk-properties/CookieConsent';
 
@@ -45,10 +46,22 @@ export default function Home() {
   // Loading state
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gold-50 flex items-center justify-center">
-        <div className="text-center animate-pulse">
-          <span className="font-serif text-2xl text-gold-600 block mb-2">RK PROPERTIES</span>
-          <span className="text-xs font-mono text-gray-400">Loading sovereign experience...</span>
+      <div className="min-h-screen bg-gold-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="text-center space-y-6 animate-fade-in">
+          {/* Brand */}
+          <div className="space-y-2">
+            <span className="font-serif text-3xl text-gold-600 block tracking-tight">RK PROPERTIES</span>
+            <span className="block w-16 h-[2px] bg-gradient-to-r from-transparent via-gold-400 to-transparent mx-auto" />
+          </div>
+          {/* Skeleton lines */}
+          <div className="space-y-2.5 max-w-xs mx-auto">
+            <div className="h-3 w-full rounded-full skeleton-shimmer" />
+            <div className="h-3 w-3/4 rounded-full skeleton-shimmer" />
+            <div className="h-3 w-1/2 rounded-full skeleton-shimmer" />
+          </div>
+          <span className="text-[10px] font-mono text-gray-400 dark:text-gray-600 uppercase tracking-widest animate-pulse">
+            Loading sovereign experience...
+          </span>
         </div>
       </div>
     );
@@ -56,7 +69,7 @@ export default function Home() {
 
   return (
     <ToastProvider>
-      <div className="bg-gold-50 text-gold-800 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative pt-9">
+      <div className="bg-gold-50 dark:bg-[#0F0E0C] text-gold-800 dark:text-gold-200 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative pt-9">
         {/* ── Announcement Banner ── */}
         <AnnouncementBanner />
 
@@ -88,7 +101,7 @@ export default function Home() {
         <div className="section-divider max-w-7xl mx-auto my-0" />
 
         {/* ── Investment Calculator ── */}
-        <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white via-gold-50/50 to-white">
+        <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white dark:from-gray-950 via-gold-50/50 dark:via-gray-900/30 to-white dark:to-gray-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <InvestmentCalculator initialProjects={projects} />
           </div>
@@ -110,7 +123,7 @@ export default function Home() {
         <FAQSection />
 
         {/* ── Contact / Lead Capture ── */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white dark:bg-gray-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ContactSection
               projects={projects}
@@ -130,6 +143,9 @@ export default function Home() {
 
         {/* ── Floating Actions (Back to Top, WhatsApp, Scroll Progress) ── */}
         <FloatingActions />
+
+        {/* ── Dark Mode Toggle ── */}
+        <DarkModeToggle />
 
         {/* ── Cookie Consent ── */}
         <CookieConsent />

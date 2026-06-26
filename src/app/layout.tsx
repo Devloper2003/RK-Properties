@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "RK Properties | Luxury MVDA Approved Real Estate in Vrindavan",
@@ -144,8 +145,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-sans">
-        {children}
-        <Toaster />
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -62,8 +62,8 @@ export default function Navbar() {
       <nav
         className={`fixed top-9 inset-x-0 z-40 transition-all duration-500 select-none ${
           scrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-lg'
-            : 'bg-gold-50/80 backdrop-blur-md shadow-xs'
+            ? 'bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-lg dark:border-b dark:border-gold-700/30'
+            : 'bg-gold-50/80 dark:bg-gold-900/80 backdrop-blur-md shadow-xs'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,10 +74,10 @@ export default function Navbar() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               <div className="flex flex-col">
-                <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gold-800">
+                <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gold-800 dark:text-gold-100">
                   RK PROPERTIES
                 </span>
-                <span className={`text-[8px] sm:text-[9px] font-mono uppercase tracking-wider text-gold-600 font-semibold mt-px transition-all duration-500 ${scrolled ? 'text-[7px] sm:text-[8px]' : ''}`}>
+                <span className={`text-[8px] sm:text-[9px] font-mono uppercase tracking-wider text-gold-600 dark:text-gold-400 font-semibold mt-px transition-all duration-500 ${scrolled ? 'text-[7px] sm:text-[8px]' : ''}`}>
                   Trust &bull; Transparency &bull; Value &mdash; RK Group
                 </span>
               </div>
@@ -88,7 +88,7 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Links */}
-            <div className="hidden lg:flex items-center gap-7 text-xs font-mono uppercase tracking-wider font-semibold text-gray-600">
+            <div className="hidden lg:flex items-center gap-7 text-xs font-mono uppercase tracking-wider font-semibold text-gray-600 dark:text-gray-400">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.sectionId;
                 return (
@@ -97,8 +97,8 @@ export default function Navbar() {
                     onClick={() => handleNavClick(link.sectionId)}
                     className={`relative cursor-pointer transition-all duration-300 pb-0.5 flex items-center gap-1.5 ${
                       isActive
-                        ? 'text-gold-700'
-                        : 'hover:text-gold-600'
+                        ? 'text-gold-700 dark:text-gold-400'
+                        : 'hover:text-gold-600 dark:hover:text-gold-400'
                     }`}
                   >
                     {link.sectionId === 'calculator-anchor' && (
@@ -107,7 +107,7 @@ export default function Navbar() {
                     {link.label}
                     {/* Active indicator dot */}
                     <span
-                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-600 transition-all duration-300 ${
+                      className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-600 dark:bg-gold-400 transition-all duration-300 ${
                         isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
                       }`}
                     />
@@ -128,7 +128,7 @@ export default function Navbar() {
             </div>
 
             {/* Scrolled gold gradient bottom border */}
-            <div className={`absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-gold-400 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
+            <div className={`absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-gold-400 dark:via-gold-600 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
 
             {/* Mobile menu toggle */}
             <div className="lg:hidden flex items-center gap-2">
@@ -141,7 +141,7 @@ export default function Navbar() {
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-gray-500 hover:text-gray-900 focus:outline-none"
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gold-400 focus:outline-none"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -160,7 +160,7 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
           />
           {/* Menu panel */}
-          <div className="lg:hidden fixed top-20 inset-x-0 z-30 bg-white/98 backdrop-blur-lg border-b border-gold-100 shadow-lg p-5 space-y-1 font-mono text-xs uppercase tracking-wider animate-fade-in">
+          <div className="lg:hidden fixed top-20 inset-x-0 z-30 bg-white/98 dark:bg-gray-950/98 backdrop-blur-lg border-b border-gold-100 dark:border-gold-800/30 shadow-lg p-5 space-y-1 font-mono text-xs uppercase tracking-wider animate-fade-in">
             {navLinks.map((link) => {
               const isActive = activeSection === link.sectionId;
               return (
@@ -169,8 +169,8 @@ export default function Navbar() {
                   onClick={() => handleNavClick(link.sectionId)}
                   className={`flex items-center gap-2.5 w-full text-left py-2.5 px-3 rounded-lg cursor-pointer transition-colors ${
                     isActive
-                      ? 'bg-gold-100 text-gold-700 font-bold'
-                      : 'text-gray-600 hover:bg-gold-50 hover:text-gold-600'
+                      ? 'bg-gold-100 dark:bg-gold-900 text-gold-700 dark:text-gold-300 font-bold'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gold-50 dark:hover:bg-gray-900 hover:text-gold-600 dark:hover:text-gold-400'
                   }`}
                 >
                   {link.sectionId === 'calculator-anchor' ? (
@@ -184,7 +184,7 @@ export default function Navbar() {
                 </button>
               );
             })}
-            <div className="pt-3 border-t border-gold-100 mt-2">
+            <div className="pt-3 border-t border-gold-100 dark:border-gold-800/30 mt-2">
               <button
                 onClick={() => handleNavClick('contact-experience')}
                 className="w-full py-2.5 bg-gold-800 text-white font-bold px-3 rounded-xl text-center cursor-pointer flex items-center justify-center gap-2"

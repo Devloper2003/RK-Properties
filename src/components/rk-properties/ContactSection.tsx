@@ -98,7 +98,7 @@ export default function ContactSection({
     <section
       id="contact-experience"
       data-animate
-      className="relative group overflow-hidden bg-white rounded-3xl border border-gold-200/50 p-6 sm:p-10 shadow-lg select-none"
+      className="relative group overflow-hidden bg-white dark:bg-gray-900 rounded-3xl border border-gold-200/50 dark:border-gold-800/40 p-6 sm:p-10 shadow-lg select-none"
     >
       <div className="absolute inset-0 bg-radial from-gold-50/10 via-white to-white pointer-events-none" />
       <div className="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-gradient-to-t from-gold-300/10 to-transparent blur-3xl pointer-events-none" />
@@ -112,23 +112,23 @@ export default function ContactSection({
               Sovereign Site Tour Package
             </div>
 
-            <h3 className="text-3xl sm:text-4xl font-serif text-gold-800 tracking-tight leading-none font-medium">
+            <h3 className="text-3xl sm:text-4xl font-serif text-gold-800 dark:text-gold-100 tracking-tight leading-none font-medium">
               Schedule Your Guided <br />
               <span className="text-gold-600 italic">Vrindavan Darshan</span> Site-Tours
             </h3>
 
-            <p className="text-xs text-gray-500 leading-relaxed max-w-sm font-light">
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm font-light">
               We believe a property purchase in Vrindavan is a divine homecoming. RK Properties offers exclusive premium tour packages for NRI and elite domestic families to inspect the physical plots and immerse in the rich spiritual vibes.
             </p>
           </div>
 
           {/* VIP Perks Card */}
-          <div className="bg-gold-50/60 border border-gold-200/40 p-5 rounded-2xl space-y-4 shadow-xs">
+          <div className="bg-gold-50/60 dark:bg-gray-900/60 border border-gold-200/40 dark:border-gold-800/40 p-5 rounded-2xl space-y-4 shadow-xs">
             <span className="text-[10px] font-mono text-gold-700 font-bold uppercase tracking-wider block">
               ✦ Included VIP Devotional Tour Plan
             </span>
 
-            <div className="space-y-3 text-xs text-gray-600 font-light">
+            <div className="space-y-3 text-xs text-gray-600 dark:text-gray-300 font-light">
               <div className="flex gap-2.5 items-start">
                 <span className="p-1 rounded-md bg-white text-gold-600 font-bold">✓</span>
                 <p><strong>Complimentary Delhi-NCR pick-up:</strong> Chauffeur-driven premium SUVs from IGI Airport or your residence straight to Vrindavan.</p>
@@ -144,7 +144,7 @@ export default function ContactSection({
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-6 pt-4 border-t border-gold-200/20 text-xs font-mono text-gray-500 justify-between items-start">
+          <div className="flex flex-col sm:flex-row gap-6 pt-4 border-t border-gold-200/20 dark:border-gold-800/20 text-xs font-mono text-gray-500 dark:text-gray-400 justify-between items-start">
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-gold-600" />
               <span>Sovereign Desk: +91 91152 77000</span>
@@ -157,13 +157,13 @@ export default function ContactSection({
         </div>
 
         {/* Right Side - Form */}
-        <div data-animate="fade-right" className="lg:col-span-7 bg-gold-50/60 border border-gold-200/30 p-6 sm:p-8 rounded-3xl shadow-xs">
+        <div data-animate="fade-right" className="lg:col-span-7 bg-gold-50/60 dark:bg-gray-900/50 border border-gold-200/30 dark:border-gold-800/30 p-6 sm:p-8 rounded-3xl shadow-xs">
           {submitted ? (
             <div className="py-20 text-center space-y-4 animate-fade-in">
               <span className="inline-flex p-4 rounded-full bg-green-100 text-green-700 border border-green-200 animate-pulse mb-2">
                 <CheckCircle2 className="w-10 h-10" />
               </span>
-              <h4 className="font-serif text-2xl font-bold text-gray-900">Spiritual Tour Reservation Received!</h4>
+              <h4 className="font-serif text-2xl font-bold text-gray-900 dark:text-gold-100">Spiritual Tour Reservation Received!</h4>
               <p className="text-xs text-gold-600 font-mono uppercase tracking-wider">Verification Code: RKP-VIP-{Math.floor(Math.random() * 90000 + 10000)}</p>
               <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
                 Thank you, <strong className="text-gray-900">{name}</strong>. Our custom real estate concierges are preparing your detailed portfolio. Lead logs compiled instantly to the Enterprise Dashboard page.
@@ -180,7 +180,7 @@ export default function ContactSection({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter full name"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   />
                 </div>
                 <div className="space-y-1">
@@ -213,7 +213,7 @@ export default function ContactSection({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="e.g. contact@wealthy.com"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   />
                 </div>
                 <div className="space-y-1">

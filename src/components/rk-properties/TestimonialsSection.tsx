@@ -18,15 +18,15 @@ function StarRating() {
 
 export default function TestimonialsSection() {
   return (
-    <section data-animate className="py-20 bg-white select-none relative overflow-hidden">
+    <section data-animate className="py-20 bg-white dark:bg-gray-950 select-none relative overflow-hidden">
       {/* Subtle radial glow behind testimonial grid */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-radial from-gold-200/30 to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-6">
           <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">Verifiable Client Chronology</span>
-          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 mt-1 tracking-tight">Voices of Devotional Wisdom</h2>
-          <p className="text-xs text-gray-500 mt-2 font-mono">Durable legacies constructed alongside India&apos;s distinguished families.</p>
+          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gold-100 mt-1 tracking-tight">Voices of Devotional Wisdom</h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-mono">Durable legacies constructed alongside India&apos;s distinguished families.</p>
         </div>
 
         {/* Aggregate Rating Badge */}
@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
               key={t.id}
               data-animate
               style={{ '--stagger-idx': idx } as React.CSSProperties}
-              className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white to-gold-100/70 border border-gold-200 flex flex-col justify-between shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group"
+              className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white to-gold-100/70 dark:from-gray-900 dark:to-gray-800/70 border border-gold-200 dark:border-gold-800/40 flex flex-col justify-between shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden group"
             >
               {/* Gold accent line on the left */}
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-gold-500 via-gold-600 to-gold-500 rounded-l-3xl" />
@@ -69,17 +69,17 @@ export default function TestimonialsSection() {
 
               <div className="relative z-10">
                 <StarRating />
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed font-light italic mt-4 mb-6 pl-2">
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-light italic mt-4 mb-6 pl-2">
                   {t.quote}
                 </p>
               </div>
 
-              <div className="relative z-10 flex items-center gap-3 border-t border-gold-200/40 pt-4 mt-2">
-                <div className="h-10 w-10 rounded-full bg-gold-100 flex items-center justify-center font-serif text-gold-700 font-bold text-sm shrink-0">
+              <div className="relative z-10 flex items-center gap-3 border-t border-gold-200/40 dark:border-gold-800/30 pt-4 mt-2">
+                <div className="h-10 w-10 rounded-full bg-gold-100 dark:bg-gold-900 flex items-center justify-center font-serif text-gold-700 dark:text-gold-400 font-bold text-sm shrink-0">
                   {t.initials}
                 </div>
                 <div className="min-w-0">
-                  <h5 className="font-serif text-sm font-bold text-gold-800 truncate">{t.name}</h5>
+                  <h5 className="font-serif text-sm font-bold text-gold-800 dark:text-gold-200 truncate">{t.name}</h5>
                   <p className="text-[10px] text-gray-400 font-mono truncate">{t.role}</p>
                   <div className="mt-1.5 flex flex-wrap gap-1">
                     <span className="text-[8px] font-mono bg-gold-200/30 text-gold-700 px-1.5 py-0.5 rounded truncate max-w-[160px]">

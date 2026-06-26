@@ -30,6 +30,11 @@ export const propertiesData: Project[] = [
     roiProjection10Yr: "Expected 4.8X capital appreciation with top rental yields for cottages",
     details: "This parcel includes immediate allotment opportunities. Registered under Mathura-Vrindavan Master Plan 2031, guaranteeing absolute long-term spatial safety.",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+    ],
     tag: "High Appreciation Aura"
   },
   {
@@ -61,6 +66,11 @@ export const propertiesData: Project[] = [
     roiProjection10Yr: "Integration into the Greater Noida expansion boundary suggests high liquid utility (estimated 3.9X value)",
     details: "The project has successfully cleared all statutory environmental impact assessments and owns certified pristine groundwater resources.",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80"
+    ],
     tag: "Divine Serenity & Ease"
   },
   {
@@ -91,6 +101,11 @@ export const propertiesData: Project[] = [
     roiProjection10Yr: "Expected 5.5X. Excellent layout for high-yield boutique hotels or retail leases",
     details: "All municipal legal clearances are completely registered and viewable. Fast-tracked single-window approvals standard.",
     image: "https://images.unsplash.com/photo-1524813686514-a57563d77965?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80"
+    ],
     tag: "High Capital Multiplier"
   },
   {
@@ -121,6 +136,11 @@ export const propertiesData: Project[] = [
     roiProjection10Yr: "Generational prestige real estate with exceptional heirloom legacy value",
     details: "This represents highly coveted custom land parcels, with strict verified purchase invitation vetting in place.",
     image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80"
+    ],
     tag: "Elite Heirloom Devotion"
   }
 ];

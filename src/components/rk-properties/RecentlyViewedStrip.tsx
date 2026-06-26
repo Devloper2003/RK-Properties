@@ -25,7 +25,7 @@ export default function RecentlyViewedStrip() {
   };
 
   return (
-    <div data-animate className="py-6 bg-gradient-to-r from-gold-50 via-white to-gold-50 border-t border-b border-gold-200/20">
+    <div data-animate className="py-6 bg-gradient-to-r from-gold-50 via-white to-gold-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 border-t border-b border-gold-200/20 dark:border-gold-800/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Label */}
         <div className="flex items-center gap-2 mb-4">
@@ -46,7 +46,7 @@ export default function RecentlyViewedStrip() {
             <button
               key={p.id}
               onClick={() => handleCardClick(p.id)}
-              className="flex-none w-[220px] sm:w-[240px] group rounded-2xl bg-white border border-gold-200/40 shadow-xs hover:shadow-lg hover:border-gold-400/60 transition-all duration-300 overflow-hidden cursor-pointer text-left"
+              className="flex-none w-[220px] sm:w-[240px] group rounded-2xl bg-white dark:bg-gray-900 border border-gold-200/40 dark:border-gold-800/40 shadow-xs hover:shadow-lg hover:border-gold-400/60 transition-all duration-300 overflow-hidden cursor-pointer text-left"
             >
               <div className="relative h-28 overflow-hidden">
                 <img
@@ -64,7 +64,7 @@ export default function RecentlyViewedStrip() {
                 </div>
               </div>
               <div className="p-3">
-                <h5 className="font-serif font-bold text-gray-900 text-xs truncate group-hover:text-gold-600 transition-colors">
+                <h5 className="font-serif font-bold text-gray-900 dark:text-gold-200 text-xs truncate group-hover:text-gold-600 transition-colors">
                   {p.name}
                 </h5>
                 <div className="flex items-center justify-between mt-1.5">

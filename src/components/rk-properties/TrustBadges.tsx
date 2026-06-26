@@ -22,7 +22,7 @@ export default function TrustBadges() {
   return (
     <section
       data-animate
-      className="relative bg-gradient-to-r from-gold-50/40 via-gold-100/20 to-gold-50/40 py-10 border-t border-b border-gold-200/20 select-none overflow-hidden"
+      className="relative bg-gradient-to-r from-gold-50/40 via-gold-100/20 to-gold-50/40 dark:from-gray-900/40 dark:via-gray-800/20 dark:to-gray-900/40 py-10 border-t border-b border-gold-200/20 dark:border-gold-800/20 select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
@@ -30,7 +30,7 @@ export default function TrustBadges() {
             <p className="text-xs font-mono uppercase tracking-widest text-gold-600 font-semibold mb-1">
               SOVEREIGN RECOGNITION &amp; SHIELD
             </p>
-            <h3 className="text-sm font-serif text-gray-500 italic max-w-xl">
+            <h3 className="text-sm font-serif text-gray-500 dark:text-gray-400 italic max-w-xl">
               &quot;RK Properties guarantees absolute legal custody. Every land
               title listed under our banner undergoes triple check clearance
               procedures backed by government land record APIs.&quot;
@@ -41,8 +41,8 @@ export default function TrustBadges() {
             {badges.map((badge) => (
               <div
                 key={badge.label}
-                className={`group relative flex items-center gap-3 bg-white px-5 py-3.5 rounded-xl border border-gold-200/40 shadow-xs
-                  transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg hover:shadow-gold-200/30 hover:border-gold-300/60
+                className={`group relative flex items-center gap-3 bg-white dark:bg-gray-900 px-5 py-3.5 rounded-xl border border-gold-200/40 dark:border-gold-700/30 shadow-xs
+                  transition-all duration-300 ease-out hover:scale-105 hover:shadow-lg hover:shadow-gold-200/30 dark:hover:shadow-gold-900/30 hover:border-gold-300/60 dark:hover:border-gold-600/50
                   ${badge.span ? 'col-span-2 sm:col-span-1' : ''}`}
               >
                 {/* Subtle glow behind card on hover */}
@@ -62,7 +62,7 @@ export default function TrustBadges() {
                 />
 
                 <badge.icon className="w-6 h-6 text-gold-600 shrink-0 transition-transform duration-300 group-hover:scale-110" />
-                <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-gold-800">
+                <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-gold-800 dark:text-gold-300">
                   {badge.label}
                 </span>
               </div>

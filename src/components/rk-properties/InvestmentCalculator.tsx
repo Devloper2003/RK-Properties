@@ -51,7 +51,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
   };
 
   return (
-    <div id="calculator-section" className="bg-white rounded-3xl border border-gold-200/50 p-6 md:p-10 shadow-lg relative overflow-hidden select-none">
+    <div id="calculator-section" className="bg-white dark:bg-gray-900 rounded-3xl border border-gold-200/50 dark:border-gold-800/40 p-6 md:p-10 shadow-lg relative overflow-hidden select-none">
       <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-gradient-to-b from-gold-300/15 to-transparent blur-3xl pointer-events-none" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -62,10 +62,10 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
               <Coins className="w-3 h-3 text-gold-600" />
               Dynamic Wealth Engineer
             </div>
-            <h3 className="text-2xl sm:text-3xl font-serif text-gold-800 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-serif text-gold-800 dark:text-gold-100 tracking-tight">
               Pre-evaluate Your Vrindavan Legacy Yield
             </h3>
-            <p className="text-xs text-gray-500 mt-1 max-w-lg">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-lg">
               Compare appreciation parameters of MVDA projects against traditional physical assets. Move sliders to simulate real-world outcomes.
             </p>
           </div>
@@ -85,8 +85,8 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                   }}
                   className={`p-3 text-left rounded-xl border text-xs cursor-pointer transition-all ${
                     !isCustom && selectedProjectId === p.id
-                      ? 'border-gold-600 bg-gold-100/40 text-gold-800 font-medium'
-                      : 'border-gray-200 hover:border-gold-200 text-gray-600 bg-gold-50'
+                      ? 'border-gold-600 bg-gold-100/40 dark:bg-gold-900/40 text-gold-800 dark:text-gold-200 font-medium'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gold-200 text-gray-600 dark:text-gray-400 bg-gold-50 dark:bg-gray-800'
                   }`}
                 >
                   <div className="font-serif font-bold text-sm truncate">{p.name}</div>
@@ -101,8 +101,8 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                 onClick={() => setIsCustom(true)}
                 className={`p-3 text-left rounded-xl border text-xs cursor-pointer transition-all col-span-2 ${
                   isCustom
-                    ? 'border-gold-600 bg-gold-100/40 text-gold-800 font-medium'
-                    : 'border-gray-200 hover:border-gold-200 text-gray-600 bg-gold-50'
+                    ? 'border-gold-600 bg-gold-100/40 dark:bg-gold-900/40 text-gold-800 dark:text-gold-200 font-medium'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gold-200 text-gray-600 dark:text-gray-400 bg-gold-50 dark:bg-gray-800'
                 }`}
               >
                 <div className="font-serif font-bold text-sm">✦ Create Custom Asset Parameters</div>
@@ -115,8 +115,8 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
           <div className="space-y-6">
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-gray-500 font-bold uppercase tracking-wider">Step 2: Plot Area Size</span>
-                <span className="text-gold-700 font-bold text-sm">{plotSize} Sq. Yards</span>
+                <span className="text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">Step 2: Plot Area Size</span>
+                <span className="text-gold-700 dark:text-gold-300 font-bold text-sm">{plotSize} Sq. Yards</span>
               </div>
               <input
                 type="range"
@@ -127,18 +127,18 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                 onChange={(e) => setPlotSize(Number(e.target.value))}
                 className="w-full cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+              <div className="flex justify-between text-[10px] text-gray-400 dark:text-gray-500 font-mono">
                 <span>100 Sq. Yds (approx. 900 Sq.Ft)</span>
                 <span>1,000 Sq. Yds (villas)</span>
               </div>
             </div>
 
             {isCustom && (
-              <div className="grid grid-cols-2 gap-4 pt-1 border-t border-gold-200/20 animate-fade-in">
+              <div className="grid grid-cols-2 gap-4 pt-1 border-t border-gold-200/20 dark:border-gold-800/20 animate-fade-in">
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs font-mono text-gray-500">
+                  <div className="flex justify-between items-center text-xs font-mono text-gray-500 dark:text-gray-400">
                     <span>Price / Sq. Yard</span>
-                    <span className="text-gold-700 font-bold">₹{customPriceVal.toLocaleString()}</span>
+                    <span className="text-gold-700 dark:text-gold-300 font-bold">₹{customPriceVal.toLocaleString()}</span>
                   </div>
                   <input
                     type="range"
@@ -151,9 +151,9 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                   />
                 </div>
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center text-xs font-mono text-gray-500">
+                  <div className="flex justify-between items-center text-xs font-mono text-gray-500 dark:text-gray-400">
                     <span>Appreciation rate</span>
-                    <span className="text-gold-700 font-bold">+{customRate}% / Yr</span>
+                    <span className="text-gold-700 dark:text-gold-300 font-bold">+{customRate}% / Yr</span>
                   </div>
                   <input
                     type="range"
@@ -170,13 +170,13 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
           </div>
 
           {/* Principal */}
-          <div className="bg-gold-100/40 border border-gold-200/40 rounded-2xl p-4 flex justify-between items-center">
+          <div className="bg-gold-100/40 dark:bg-gold-900/30 border border-gold-200/40 dark:border-gold-800/30 rounded-2xl p-4 flex justify-between items-center">
             <div>
-              <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block">Principal Net Outlay</span>
-              <span className="text-xs text-gray-500 font-mono">({plotSize} Yds × ₹{currentPricePerYard.toLocaleString()})</span>
+              <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500 uppercase tracking-widest block">Principal Net Outlay</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">({plotSize} Yds × ₹{currentPricePerYard.toLocaleString()})</span>
             </div>
             <div className="text-right">
-              <span className="text-2xl font-serif text-gold-800 font-bold block">
+              <span className="text-2xl font-serif text-gold-800 dark:text-gold-100 font-bold block">
                 {formatRawCurrency(principal)}
               </span>
             </div>
@@ -184,14 +184,14 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
         </div>
 
         {/* Right Side */}
-        <div className="lg:col-span-6 bg-gold-50/80 rounded-3xl border border-gold-200/30 p-6 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-gold-50/80 dark:bg-gray-900/50 rounded-3xl border border-gold-200/30 dark:border-gold-800/30 p-6 flex flex-col justify-between">
           <div className="space-y-6">
-            <h4 className="text-xs font-mono uppercase tracking-widest text-gray-400">Projected Estate Accumulation</h4>
+            <h4 className="text-xs font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500">Projected Estate Accumulation</h4>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-white rounded-xl border border-gold-200/20 shadow-xs relative">
-                <span className="text-[10px] font-mono text-gold-600 font-bold uppercase tracking-wider block mb-1">5 Year Projection</span>
-                <span className="text-xl sm:text-2xl font-serif text-gold-800 font-bold block">
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gold-200/20 dark:border-gold-800/30 shadow-xs relative">
+                <span className="text-[10px] font-mono text-gold-600 dark:text-gold-400 font-bold uppercase tracking-wider block mb-1">5 Year Projection</span>
+                <span className="text-xl sm:text-2xl font-serif text-gold-800 dark:text-gold-100 font-bold block">
                   {formatCurrency(get5YearReturn())}
                 </span>
                 <span className="text-[10px] text-green-700 font-mono font-medium mt-1 inline-block">
@@ -199,12 +199,12 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                 </span>
               </div>
 
-              <div className="p-4 bg-gold-50 border border-gold-500/30 rounded-xl shadow-xs relative overflow-hidden">
-                <span className="text-[10px] font-mono text-gold-700 font-bold uppercase tracking-wider block mb-1 flex items-center gap-1">
+              <div className="p-4 bg-gold-50 dark:bg-gold-900/40 border border-gold-500/30 dark:border-gold-700/30 rounded-xl shadow-xs relative overflow-hidden">
+                <span className="text-[10px] font-mono text-gold-700 dark:text-gold-300 font-bold uppercase tracking-wider block mb-1 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-gold-600" />
                   10 Year Legacy Value
                 </span>
-                <span className="text-xl sm:text-2xl font-serif text-gold-700 font-bold block">
+                <span className="text-xl sm:text-2xl font-serif text-gold-700 dark:text-gold-300 font-bold block">
                   {formatCurrency(get10YearReturn())}
                 </span>
                 <span className="text-[10px] text-green-700 font-mono font-bold mt-1 inline-block">
@@ -215,7 +215,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
 
             {/* Comparison Bars */}
             <div className="space-y-4 pt-4 border-t border-gold-200/20">
-              <span className="text-xs font-mono font-bold text-gray-500 uppercase tracking-wider block">
+              <span className="text-xs font-mono font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">
                 5-Year Asset Growth Comparison
               </span>
 
@@ -228,7 +228,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                     </span>
                     <span className="font-mono text-gray-600 font-medium">{formatCurrency(compFD)}</span>
                   </div>
-                  <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
                     <div
                       className="bg-gray-400 h-full rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(15, (compFD / compRealEstate) * 100)}%` }}
@@ -244,7 +244,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                     </span>
                     <span className="font-mono text-gray-600 font-medium">{formatCurrency(compGold)}</span>
                   </div>
-                  <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
                     <div
                       className="bg-amber-400 h-full rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(15, (compGold / compRealEstate) * 100)}%` }}
@@ -260,7 +260,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
                     </span>
                     <span className="font-mono text-gray-600 font-medium">{formatCurrency(compMF)}</span>
                   </div>
-                  <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
                     <div
                       className="bg-blue-400 h-full rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(15, (compMF / compRealEstate) * 100)}%` }}
@@ -287,7 +287,7 @@ export default function InvestmentCalculator({ initialProjects = propertiesData 
             </div>
           </div>
 
-          <p className="text-[10px] text-gray-400 leading-normal mt-6 font-mono border-t border-gold-200/10 pt-3 flex items-center gap-1.5">
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 leading-normal mt-6 font-mono border-t border-gold-200/10 dark:border-gold-800/10 pt-3 flex items-center gap-1.5">
             <span>ℹ</span>
             <span>Historical figures of Vrindavan plots outperform traditional Indian banking models. Calculations assume steady annual compounded yields.</span>
           </p>

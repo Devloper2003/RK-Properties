@@ -83,7 +83,7 @@ export default function FloatingActions() {
             : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        <div className="relative w-[52px] h-[52px] rounded-full bg-gold-800 hover:bg-gold-600 transition-colors flex items-center justify-center">
+        <div className="relative w-[52px] h-[52px] rounded-full bg-gold-800 dark:bg-gold-700 hover:bg-gold-600 dark:hover:bg-gold-500 transition-colors flex items-center justify-center">
           <CircularProgress progress={progress} />
           <span className="relative z-10 text-white font-mono text-[11px] font-bold leading-none">
             {displayPercent}

@@ -60,18 +60,18 @@ export default function UrgencySection() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gold-50">
+    <section className="py-20 bg-gradient-to-b from-white dark:from-gray-950 to-gold-50 dark:to-gray-900">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div data-animate className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-red-50 border border-red-200 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/50 rounded-full mb-4">
             <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-red-600">Limited Availability</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 font-bold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 dark:text-gold-100 font-bold tracking-tight">
             Plots Are Disappearing Fast
           </h2>
-          <p className="text-sm text-gray-500 mt-3 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 max-w-2xl mx-auto font-light leading-relaxed">
             Vrindavan&apos;s most sought-after MVDA-approved estates are seeing unprecedented demand.
             Secure your plot before the next price revision.
           </p>
@@ -86,23 +86,23 @@ export default function UrgencySection() {
                 key={item.projectId}
                 data-animate
                 style={{ '--stagger-idx': idx } as React.CSSProperties}
-                className="bg-white border border-gold-200/50 rounded-2xl p-5 sm:p-6 shadow-xs"
+                className="bg-white dark:bg-gray-900 border border-gold-200/50 dark:border-gold-800/40 rounded-2xl p-5 sm:p-6 shadow-xs"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-3">
-                    <h4 className="font-serif text-base sm:text-lg font-bold text-gray-900">{item.name}</h4>
+                    <h4 className="font-serif text-base sm:text-lg font-bold text-gray-900 dark:text-gold-100">{item.name}</h4>
                     <span className={`text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border ${getBadgeClass(item.type)}`}>
                       {item.type}
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-2xl font-serif font-bold text-gold-800">{item.remaining}</span>
-                    <span className="text-xs text-gray-400 font-mono"> / {item.totalPlots} Plots Remaining</span>
+                    <span className="text-2xl font-serif font-bold text-gold-800 dark:text-gold-200">{item.remaining}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500 font-mono"> / {item.totalPlots} Plots Remaining</span>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="relative w-full h-3 bg-gold-100 rounded-full overflow-hidden">
+                <div className="relative w-full h-3 bg-gold-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full bg-gradient-to-r ${getBarColor(item.type, soldPercent)} transition-all duration-1000 ease-out`}
                     style={{ width: `${soldPercent}%` }}

@@ -49,7 +49,7 @@ export default function FAQSection() {
     <section
       id="faq-section-anchor"
       data-animate
-      className="py-20 bg-gradient-to-b from-white via-gold-50/30 to-white border-t border-b border-gold-200/20 select-none"
+      className="py-20 bg-gradient-to-b from-white via-gold-50/30 to-white dark:from-gray-950 dark:via-gray-900/30 dark:to-gray-950 border-t border-b border-gold-200/20 dark:border-gold-800/20 select-none"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Header */}
@@ -57,7 +57,7 @@ export default function FAQSection() {
           <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
             SOVEREIGN COMPLIANCE DICTIONARY
           </span>
-          <h2 className="text-3xl font-serif text-gray-900 mt-1">
+          <h2 className="text-3xl font-serif text-gray-900 dark:text-gold-100 mt-1">
             Registry FAQs &amp; Land Registry Guardrails
           </h2>
         </div>
@@ -72,7 +72,7 @@ export default function FAQSection() {
               placeholder="Search questions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-10 py-3 rounded-xl bg-white border border-gold-200/50 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-400/40 focus:border-gold-400/60 transition-all"
+              className="w-full pl-11 pr-10 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gold-200/50 dark:border-gold-800/40 text-sm text-gray-900 dark:text-gold-100 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gold-400/40 focus:border-gold-400/60 transition-all"
             />
             {searchQuery && (
               <button
@@ -131,17 +131,17 @@ export default function FAQSection() {
             return (
               <div
                 key={faq.id}
-                className={`border rounded-2xl bg-white overflow-hidden shadow-xs transition-all duration-300 ${
+                className={`border rounded-2xl bg-white dark:bg-gray-900 overflow-hidden shadow-xs transition-all duration-300 ${
                   isOpen
-                    ? 'border-gold-400/60 shadow-sm'
-                    : 'border-gold-200/40 hover:border-gold-300/60'
+                    ? 'border-gold-400/60 dark:border-gold-600/50 shadow-sm'
+                    : 'border-gold-200/40 dark:border-gold-800/40 hover:border-gold-300/60 dark:hover:border-gold-600/50'
                 }`}
               >
                 <button
                   onClick={() => setActiveFaq(isOpen ? null : faq.id)}
-                  className="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex justify-between items-start sm:items-center gap-3 cursor-pointer hover:bg-gold-50/20 transition-colors"
+                  className="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex justify-between items-start sm:items-center gap-3 cursor-pointer hover:bg-gold-50/20 dark:hover:bg-gray-800/20 transition-colors"
                 >
-                  <span className="font-serif font-bold text-gray-900 text-sm sm:text-base leading-snug">
+                  <span className="font-serif font-bold text-gray-900 dark:text-gold-100 text-sm sm:text-base leading-snug">
                     {faq.question}
                   </span>
                   <ChevronDown
@@ -153,7 +153,7 @@ export default function FAQSection() {
 
                 <div className={`faq-answer-wrapper ${isOpen ? 'open' : ''}`}>
                   <div className="faq-answer-inner">
-                    <div className="px-5 sm:px-6 pb-5 text-xs text-gray-600 leading-relaxed font-light border-t border-gold-200/10 pt-4">
+                    <div className="px-5 sm:px-6 pb-5 text-xs text-gray-600 dark:text-gray-300 leading-relaxed font-light border-t border-gold-200/10 dark:border-gold-800/10 pt-4">
                       {/* Category badge */}
                       <button
                         onClick={(e) => {

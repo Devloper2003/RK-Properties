@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X, Share2 } from 'lucide-react';
+import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X, Share2, Images } from 'lucide-react';
 import { Project, Lead } from '@/types/rk-properties';
 import { useToast } from '@/components/rk-properties/ToastProvider';
 import { usePropertyStore } from '@/store/use-property-store';
+import ImageGallery from '@/components/rk-properties/ImageGallery';
 
 interface PropertyShowcaseProps {
   onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
@@ -17,7 +18,7 @@ interface PropertyShowcaseProps {
 function PropertyImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className="relative h-64 overflow-hidden bg-gold-100">
+    <div className="relative h-64 overflow-hidden bg-gold-100 dark:bg-gray-800">
       {!loaded && <div className="absolute inset-0 skeleton-shimmer" />}
       <img
         src={src}
@@ -41,6 +42,13 @@ export default function PropertyShowcase({ onAddLead, onBookProject, projects = 
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const { addToast } = useToast();
   const { addRecentlyViewed } = usePropertyStore();
+  const [galleryImages, setGalleryImages] = useState<string[] | null>(null);
+  const [galleryName, setGalleryName] = useState('');
+
+  const openGallery = (project: Project) => {
+    setGalleryName(project.name);
+    setGalleryImages([project.image, ...(project.gallery || [])]);
+  };
 
   const handleBrochureSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,7 +174,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
             id={`project-card-${p.id}`}
             data-animate
             style={{ '--stagger-idx': idx } as React.CSSProperties}
-            className="group relative bg-gold-50 border border-gold-200/40 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gold-500/70 transition-all duration-500 flex flex-col justify-between"
+            className="group relative bg-gold-50 dark:bg-gray-900 border border-gold-200/40 dark:border-gold-800/40 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gold-500/70 dark:hover:border-gold-600/60 transition-all duration-500 flex flex-col justify-between"
           >
             {/* Image with skeleton loading */}
             <div className="relative">
@@ -178,7 +186,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               {/* Compare Checkbox */}
               {onToggleCompare && (
                 <label
-                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/95 backdrop-blur-md rounded-lg border border-gold-200 shadow-xs cursor-pointer hover:border-gold-400 transition-colors"
+                  className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-lg border border-gold-200 dark:border-gold-700/40 shadow-xs cursor-pointer hover:border-gold-400 dark:hover:border-gold-600 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <input
@@ -188,20 +196,20 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                     disabled={!compareIds.includes(p.id) && compareIds.length >= 3}
                     className="w-3.5 h-3.5 rounded accent-gold-700 cursor-pointer"
                   />
-                  <span className="text-[9px] font-mono font-bold text-gold-700 uppercase tracking-wider">Compare</span>
+                  <span className="text-[9px] font-mono font-bold text-gold-700 dark:text-gold-300 uppercase tracking-wider">Compare</span>
                 </label>
               )}
 
               {/* MVDA Badge */}
-              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 border border-gold-200 backdrop-blur-md rounded-full shadow-xs z-10">
+              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 dark:bg-gray-900/95 border border-gold-200 dark:border-gold-700/40 backdrop-blur-md rounded-full shadow-xs z-10">
                 <ShieldCheck className="w-4 h-4 text-gold-600" />
-                <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-gold-700">
+                <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-gold-700 dark:text-gold-300">
                   MVDA APPROVED
                 </span>
               </div>
 
               {/* Tag */}
-              <div className="absolute bottom-4 left-4 px-2.5 py-1 bg-gold-600/90 backdrop-blur-sm text-white font-mono text-[9px] font-bold uppercase tracking-widest rounded-lg z-10">
+              <div className="absolute bottom-4 left-4 px-2.5 py-1 bg-gold-600/90 dark:bg-gold-700/90 backdrop-blur-sm text-white font-mono text-[9px] font-bold uppercase tracking-widest rounded-lg z-10">
                 {p.tag}
               </div>
 
@@ -226,32 +234,32 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
             <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-gold-600 transition-colors leading-tight">
+                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 dark:text-gold-100 group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors leading-tight">
                     {p.name}
                   </h4>
                 </div>
 
                 <div className="flex justify-between items-center mb-3 mt-2">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 font-mono">
                     <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0" />
                     <span className="truncate max-w-[200px] sm:max-w-none">{p.location}</span>
                   </div>
                   <div className="text-right shrink-0 ml-2">
-                    <span className="text-[9px] font-mono text-gray-400 uppercase tracking-wider block">Starting from</span>
-                    <span className="text-gold-800 font-serif font-semibold text-lg">
+                    <span className="text-[9px] font-mono text-gray-400 dark:text-gray-500 uppercase tracking-wider block">Starting from</span>
+                    <span className="text-gold-800 dark:text-gold-200 font-serif font-semibold text-lg">
                       {p.price.split(' ')[0]} <span className="text-xs text-gray-500 font-mono">/ yd</span>
                     </span>
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500 leading-relaxed font-light line-clamp-2 mb-5">
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-light line-clamp-2 mb-5">
                   {p.description}
                 </p>
 
-                <div className="grid grid-cols-2 gap-4 mb-6 border-b border-gold-200/20 pb-4">
+                <div className="grid grid-cols-2 gap-4 mb-6 border-b border-gold-200/20 dark:border-gold-800/20 pb-4">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Available Sizes</span>
-                    <span className="text-xs font-medium text-gray-800">{p.size}</span>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500 block">Available Sizes</span>
+                    <span className="text-xs font-medium text-gray-800 dark:text-gray-300">{p.size}</span>
                   </div>
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Appreciation Velocity</span>
@@ -266,7 +274,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={() => { setSelectedProject(p); addRecentlyViewed(p.id); }}
-                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 border border-gold-200 hover:border-gold-500 hover:bg-gold-50/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 border border-gold-200 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 hover:bg-gold-50/20 dark:hover:bg-gray-800/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Eye className="w-3.5 h-3.5" />
                   Technical Details
@@ -274,7 +282,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
                 <button
                   onClick={() => setBrochureProject(p)}
-                  className="py-3 px-4 rounded-xl border border-gold-200/40 hover:border-gold-500 bg-gold-50/20 hover:bg-gold-50 text-gold-700 cursor-pointer transition-all duration-200"
+                  className="py-3 px-4 rounded-xl border border-gold-200/40 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 bg-gold-50/20 dark:bg-gray-800/20 hover:bg-gold-50 dark:hover:bg-gray-800 text-gold-700 dark:text-gold-300 cursor-pointer transition-all duration-200"
                   title="Download Instant PDF Brochure"
                 >
                   <Download className="w-4 h-4" />
@@ -303,17 +311,18 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
       {/* Project Detail Modal */}
       {selectedProject && (
         <div
-          className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm flex justify-center items-center p-4"
+          className="fixed inset-0 z-50 bg-gray-900/40 dark:bg-gray-950/80 backdrop-blur-sm flex justify-center items-center p-4"
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedProject(null); }}
         >
-          <div className="bg-gold-50 w-full max-w-3xl rounded-2xl border border-gold-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-fade-in">
+          <div className="bg-gold-50 dark:bg-gray-950 w-full max-w-3xl rounded-2xl border border-gold-200 dark:border-gold-800 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-fade-in">
             <div className="relative h-48 sm:h-56">
               <img
                 src={selectedProject.image}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover cursor-pointer"
                 alt={selectedProject.name}
+                onClick={() => openGallery(selectedProject)}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent" />
               <button
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 p-1.5 rounded-full bg-black/40 text-white hover:bg-black/60 cursor-pointer text-lg"
@@ -332,13 +341,13 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
             <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
               <div>
-                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400 mb-1">Corporate Property Description</h5>
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed font-light">{selectedProject.description}</p>
+                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">Corporate Property Description</h5>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-light">{selectedProject.description}</p>
               </div>
 
-              <div className="bg-gold-50/55 border border-gold-200/40 p-4 sm:p-5 rounded-2xl">
-                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gold-700 font-bold mb-3">Sovereign Protection Highlights</h5>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 font-light">
+              <div className="bg-gold-50/55 dark:bg-gold-900/30 border border-gold-200/40 dark:border-gold-800/40 p-4 sm:p-5 rounded-2xl">
+                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gold-700 dark:text-gold-300 font-bold mb-3">Sovereign Protection Highlights</h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 dark:text-gray-300 font-light">
                   {selectedProject.highlights.map((h, index) => (
                     <div key={index} className="flex gap-2 items-start">
                       <CheckCircle2 className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" />
@@ -349,12 +358,12 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               </div>
 
               <div className="space-y-2">
-                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400">Pristine Infrastructures Secured</h5>
+                <h5 className="text-[10px] font-mono uppercase tracking-widest text-gray-400 dark:text-gray-500">Pristine Infrastructures Secured</h5>
                 <div className="flex flex-wrap gap-2">
                   {selectedProject.amenities.map((amenity, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 rounded-full bg-white border border-gold-200/40 text-[11px] font-medium text-gray-700"
+                      className="px-3 py-1 rounded-full bg-white dark:bg-gray-800 border border-gold-200/40 dark:border-gold-700/40 text-[11px] font-medium text-gray-700 dark:text-gray-300"
                     >
                       ✦ {amenity}
                     </span>
@@ -362,10 +371,10 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-gold-200/20 pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-gold-200/20 dark:border-gold-800/20 pt-4">
                 <div>
-                  <h6 className="text-[10px] font-mono uppercase tracking-widest text-gold-800 font-bold">5 Year Yield Trajectory</h6>
-                  <p className="text-xs text-gray-500 mt-1">{selectedProject.roiProjection5Yr}</p>
+                  <h6 className="text-[10px] font-mono uppercase tracking-widest text-gold-800 dark:text-gold-200 font-bold">5 Year Yield Trajectory</h6>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{selectedProject.roiProjection5Yr}</p>
                 </div>
                 <div>
                   <h6 className="text-[10px] font-mono uppercase tracking-widest text-gold-700 font-bold">10 Year Legacy Protection</h6>
@@ -374,10 +383,17 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               </div>
             </div>
 
-            <div className="border-t border-gold-200/20 p-4 sm:px-6 bg-gold-200/10 flex justify-end gap-3 bg-gold-50">
+            <div className="border-t border-gold-200/20 dark:border-gold-800/20 p-4 sm:px-6 bg-gold-200/10 dark:bg-gray-900/50 flex justify-end gap-3 bg-gold-50 dark:bg-gray-950">
+              <button
+                onClick={() => openGallery(selectedProject)}
+                className="flex items-center gap-1.5 py-2.5 px-4 rounded-xl border border-gold-200 dark:border-gold-700/40 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 dark:text-gold-300 hover:bg-gold-50 dark:hover:bg-gray-800 cursor-pointer transition-all"
+              >
+                <Images className="w-3.5 h-3.5" />
+                Photo Gallery
+              </button>
               <button
                 onClick={() => handleGetBrochureFromModal(selectedProject)}
-                className="py-2.5 px-4 rounded-xl border border-gold-200 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 hover:bg-gold-50 cursor-pointer transition-all"
+                className="py-2.5 px-4 rounded-xl border border-gold-200 dark:border-gold-700/40 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 dark:text-gold-300 hover:bg-gold-50 dark:hover:bg-gray-800 cursor-pointer transition-all"
               >
                 Get Brochure PDF
               </button>
@@ -398,22 +414,22 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
       {/* Brochure Download Modal */}
       {brochureProject && (
         <div
-          className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex justify-center items-center p-4"
+          className="fixed inset-0 z-50 bg-gray-900/60 dark:bg-gray-950/80 backdrop-blur-sm flex justify-center items-center p-4"
           onClick={(e) => { if (e.target === e.currentTarget) setBrochureProject(null); }}
         >
-          <div className="bg-gold-50 w-full max-w-md rounded-2xl border border-gold-200 p-6 sm:p-8 relative shadow-2xl animate-fade-in">
+          <div className="bg-gold-50 dark:bg-gray-950 w-full max-w-md rounded-2xl border border-gold-200 dark:border-gold-800 p-6 sm:p-8 relative shadow-2xl animate-fade-in">
             <button
               onClick={() => setBrochureProject(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 cursor-pointer text-lg"
+              className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gold-300 cursor-pointer text-lg"
             >
               <X className="w-4 h-4" />
             </button>
 
             <div className="text-center space-y-2 mb-6">
-              <span className="inline-flex p-3 bg-gold-100 rounded-full border border-gold-200 text-gold-700 mb-2">
+              <span className="inline-flex p-3 bg-gold-100 dark:bg-gold-900 rounded-full border border-gold-200 dark:border-gold-700/40 text-gold-700 dark:text-gold-300 mb-2">
                 <Download className="w-6 h-6 animate-bounce" />
               </span>
-              <h4 className="font-serif text-xl font-bold text-gray-900">
+              <h4 className="font-serif text-xl font-bold text-gray-900 dark:text-gold-100">
                 Download Official Brochure
               </h4>
               <p className="text-xs text-gold-600 font-mono uppercase tracking-wider">
@@ -442,7 +458,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                     value={brochureName}
                     onChange={(e) => setBrochureName(e.target.value)}
                     placeholder="Enter your name"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   />
                 </div>
                 <div className="space-y-1">
@@ -453,7 +469,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                     value={brochurePhone}
                     onChange={(e) => setBrochurePhone(e.target.value)}
                     placeholder="e.g. +91 98765 43210"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   />
                 </div>
                 <div className="space-y-1">
@@ -464,7 +480,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                     value={brochureEmail}
                     onChange={(e) => setBrochureEmail(e.target.value)}
                     placeholder="e.g. consult@nrigroup.com"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   />
                 </div>
                 <div className="space-y-1">
@@ -472,7 +488,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                   <select
                     value={brochurePersona}
                     onChange={(e) => setBrochurePersona(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gold-200 dark:border-gold-800/40 text-xs focus:ring-1 focus:ring-gold-500 bg-white dark:bg-gray-800 dark:text-gold-100"
                   >
                     <option value="NRI Investor">NRI (Non-Resident Indian)</option>
                     <option value="Executive Business Owner">Business Owner & Entrepreneur</option>
@@ -492,6 +508,14 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
             )}
           </div>
         </div>
+      )}
+      {/* Image Gallery Lightbox */}
+      {galleryImages && (
+        <ImageGallery
+          images={galleryImages}
+          projectName={galleryName}
+          onClose={() => setGalleryImages(null)}
+        />
       )}
     </div>
   );
