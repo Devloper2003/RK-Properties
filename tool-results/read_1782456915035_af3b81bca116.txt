@@ -1,0 +1,600 @@
+     1→'use client';
+     2→
+     3→import { useState, useCallback, useRef } from 'react';
+     4→import {
+     5→  Compass, ShieldCheck, Building, HelpCircle,
+     6→  ChevronDown, ArrowRight, Menu, X, Users,
+     7→  Award, FileCheck, Sparkles, Lock
+     8→} from 'lucide-react';
+     9→
+    10→import { Project, Lead, FAQ } from '@/types/rk-properties';
+    11→import { propertiesData, sampleFaqs, sampleTestimonials } from '@/data/propertyData';
+    12→
+    13→import HeroSection from '@/components/rk-properties/HeroSection';
+    14→import StrategicBlueprint from '@/components/rk-properties/StrategicBlueprint';
+    15→import InvestmentCalculator from '@/components/rk-properties/InvestmentCalculator';
+    16→import PropertyShowcase from '@/components/rk-properties/PropertyShowcase';
+    17→import ContactSection from '@/components/rk-properties/ContactSection';
+    18→import AdminDashboard from '@/components/rk-properties/AdminDashboard';
+    19→
+    20→export default function Home() {
+    21→  // Navigation & UI Modes
+    22→  const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
+    23→  const [isBlueprintOpen, setIsBlueprintOpen] = useState<boolean>(false);
+    24→  const [activeFaq, setActiveFaq] = useState<string | null>("faq_1");
+    25→  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>("All");
+    26→  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+    27→
+    28→  // Dynamic State
+    29→  const initialLeads: Lead[] = [
+    30→    {
+    31→      id: "lead_101",
+    32→      name: "Rajesh Singhania",
+    33→      email: "rajesh@singhaniagroup.org",
+    34→      phone: "+1 650 338 9012",
+    35→      projectInterest: "Krishna Radhika Enclave",
+    36→      category: "NRI Investor",
+    37→      status: "Interested",
+    38→      date: new Date().toISOString(),
+    39→      budget: "₹80L - ₹1.5Cr",
+    40→      notes: "Initial registration from London. Requesting MVDA registry details."
+    41→    },
+    42→    {
+    43→      id: "lead_102",
+    44→      name: "Dr. Ananya Goel",
+    45→      email: "ananya.goel@apollo.com",
+    46→      phone: "+91 98112 00412",
+    47→      projectInterest: "Yamuna Devotee Gated Heights",
+    48→      category: "High-Caliber Professional",
+    49→      status: "Site Visit",
+    50→      date: new Date().toISOString(),
+    51→      budget: "₹45L - ₹90L",
+    52→      siteVisitDate: "2026-06-28",
+    53→      notes: "Cardiologist in Delhi. Wants a premium quiet setting for family parents."
+    54→    },
+    55→    {
+    56→      id: "lead_110",
+    57→      name: "Sohan Lal Varma",
+    58→      email: "sohan.varma@gmail.com",
+    59→      phone: "+91 88002 99112",
+    60→      projectInterest: "Chhatikara Prime Meadows",
+    61→      category: "Retired Senior Devotee",
+    62→      status: "Negotiation",
+    63→      date: new Date().toISOString(),
+    64→      budget: "₹30L - ₹50L",
+    65→      notes: "Retired railway head. Wants turn-key cottage options."
+    66→    }
+    67→  ];
+    68→
+    69→  const [leads, setLeads] = useState<Lead[]>(() => {
+    70→    if (typeof window !== 'undefined') {
+    71→      const cached = localStorage.getItem('rk_leads_v1');
+    72→      if (cached) {
+    73→        try { return JSON.parse(cached); } catch {}
+    74→      }
+    75→    }
+    76→    return initialLeads;
+    77→  });
+    78→  const [projects, setProjects] = useState<Project[]>(() => {
+    79→    if (typeof window !== 'undefined') {
+    80→      const cached = localStorage.getItem('rk_projects_v1');
+    81→      if (cached) {
+    82→        try { return JSON.parse(cached); } catch {}
+    83→      }
+    84→    }
+    85→    return propertiesData;
+    86→  });
+    87→  const [selectedProjectForContact, setSelectedProjectForContact] = useState<string>('');
+    88→  const [mounted, setMounted] = useState(false);
+    89→  const initializedRef = useRef(false);
+    90→
+    91→  // Initialize on first client render
+    92→  if (typeof window !== 'undefined' && !initializedRef.current) {
+    93→    initializedRef.current = true;
+    94→    // Seed localStorage if empty
+    95→    if (!localStorage.getItem('rk_leads_v1')) {
+    96→      localStorage.setItem('rk_leads_v1', JSON.stringify(initialLeads));
+    97→    }
+    98→    setMounted(true);
+    99→  }
+   100→
+   101→  // Save to localStorage on changes
+   102→  if (mounted && leads.length > 0 && typeof window !== 'undefined') {
+   103→    localStorage.setItem('rk_leads_v1', JSON.stringify(leads));
+   104→  }
+   105→
+   106→  if (mounted && typeof window !== 'undefined') {
+   107→    localStorage.setItem('rk_projects_v1', JSON.stringify(projects));
+   108→  }
+   109→
+   110→  // Lead Actions
+   111→  const handleAddLead = useCallback(async (leadData: Omit<Lead, 'id' | 'date'>) => {
+   112→    const newLead: Lead = {
+   113→      ...leadData,
+   114→      id: `lead_${Math.floor(Math.random() * 89999 + 10000)}`,
+   115→      date: new Date().toISOString()
+   116→    };
+   117→    setLeads(prev => [newLead, ...prev]);
+   118→
+   119→    // Also save to database
+   120→    try {
+   121→      await fetch('/api/leads', {
+   122→        method: 'POST',
+   123→        headers: { 'Content-Type': 'application/json' },
+   124→        body: JSON.stringify(leadData)
+   125→      });
+   126→    } catch (e) {
+   127→      console.error('Failed to save lead to database', e);
+   128→    }
+   129→  }, []);
+   130→
+   131→  const handleUpdateLeadStatus = useCallback((leadId: string, status: Lead['status']) => {
+   132→    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status } : l));
+   133→    try {
+   134→      fetch('/api/leads', {
+   135→        method: 'PATCH',
+   136→        headers: { 'Content-Type': 'application/json' },
+   137→        body: JSON.stringify({ id: leadId, status })
+   138→      });
+   139→    } catch {}
+   140→  }, []);
+   141→
+   142→  const handleScheduleVisit = useCallback((leadId: string, date: string) => {
+   143→    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status: 'Site Visit' as const, siteVisitDate: date } : l));
+   144→    try {
+   145→      fetch('/api/leads', {
+   146→        method: 'PATCH',
+   147→        headers: { 'Content-Type': 'application/json' },
+   148→        body: JSON.stringify({ id: leadId, status: 'Site Visit', siteVisitDate: date })
+   149→      });
+   150→    } catch {}
+   151→  }, []);
+   152→
+   153→  const handleAddProject = useCallback((projectData: Omit<Project, 'id'>) => {
+   154→    const newProject: Project = {
+   155→      ...projectData,
+   156→      id: `proj_${Date.now()}`
+   157→    };
+   158→    setProjects(prev => [newProject, ...prev]);
+   159→  }, []);
+   160→
+   161→  // Scroll helper
+   162→  const scrollToId = (id: string) => {
+   163→    setMobileMenuOpen(false);
+   164→    const element = document.getElementById(id);
+   165→    if (element) {
+   166→      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+   167→    }
+   168→  };
+   169→
+   170→  const handleBookProject = (projectName: string) => {
+   171→    setSelectedProjectForContact(projectName);
+   172→    scrollToId('contact-experience');
+   173→  };
+   174→
+   175→  // Filter projects
+   176→  const filteredProjects = selectedCategoryFilter === "All"
+   177→    ? projects
+   178→    : projects.filter(p => p.type === selectedCategoryFilter || (selectedCategoryFilter === "Plots" && (p.type === "Investment Plots" || p.type === "Residential Project")));
+   179→
+   180→  // Admin Mode
+   181→  if (isAdminMode) {
+   182→    return (
+   183→      <AdminDashboard
+   184→        leads={leads}
+   185→        projects={projects}
+   186→        onAddProject={handleAddProject}
+   187→        onUpdateLeadStatus={handleUpdateLeadStatus}
+   188→        onScheduleVisit={handleScheduleVisit}
+   189→        onClose={() => setIsAdminMode(false)}
+   190→      />
+   191→    );
+   192→  }
+   193→
+   194→  if (!mounted) {
+   195→    return (
+   196→      <div className="min-h-screen bg-gold-50 flex items-center justify-center">
+   197→        <div className="text-center animate-pulse">
+   198→          <span className="font-serif text-2xl text-gold-600 block mb-2">RK PROPERTIES</span>
+   199→          <span className="text-xs font-mono text-gray-400">Loading sovereign experience...</span>
+   200→        </div>
+   201→      </div>
+   202→    );
+   203→  }
+   204→
+   205→  return (
+   206→    <div className="bg-gold-50 text-gold-800 min-h-screen font-sans selection:bg-gold-200 selection:text-gold-900 relative">
+   207→
+   208→      {/* Navigation Header */}
+   209→      <nav className="fixed top-0 inset-x-0 z-40 bg-gold-50/90 backdrop-blur-md border-b border-gold-200/20 shadow-xs select-none">
+   210→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   211→          <div className="flex justify-between items-center h-20">
+   212→            {/* Brand */}
+   213→            <div className="flex flex-col cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+   214→              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gold-800">
+   215→                RK PROPERTIES
+   216→              </span>
+   217→              <span className="text-[8px] sm:text-[9px] font-mono uppercase tracking-wider text-gold-600 font-semibold mt-px">
+   218→                Trust • Transparency • Value — RK Group
+   219→              </span>
+   220→            </div>
+   221→
+   222→            {/* Desktop Links */}
+   223→            <div className="hidden lg:flex items-center gap-8 text-xs font-mono uppercase tracking-wider font-semibold text-gray-600">
+   224→              <button onClick={() => scrollToId('project-showcase-section')} className="hover:text-gold-600 cursor-pointer transition-colors">
+   225→                Premium Projects
+   226→              </button>
+   227→              <button onClick={() => scrollToId('why-vrindavan')} className="hover:text-gold-600 cursor-pointer transition-colors">
+   228→                Why Vrindavan
+   229→              </button>
+   230→              <button onClick={() => scrollToId('calculator-anchor')} className="hover:text-gold-800 hover:underline cursor-pointer transition-colors flex items-center gap-1.5">
+   231→                <Sparkles className="w-3 h-3 text-gold-600" /> Investment Calculator
+   232→              </button>
+   233→              <button onClick={() => scrollToId('faq-section-anchor')} className="hover:text-gold-600 cursor-pointer transition-colors">
+   234→                Registry FAQs
+   235→              </button>
+   236→            </div>
+   237→
+   238→            {/* Action widgets */}
+   239→            <div className="hidden md:flex items-center gap-3">
+   240→              <button
+   241→                onClick={() => setIsBlueprintOpen(true)}
+   242→                className="px-4 py-2 text-[10px] font-mono uppercase font-bold tracking-widest text-gold-800 rounded-xl hover:bg-gold-100 border border-gold-200/40 cursor-pointer transition-all flex items-center gap-1.5"
+   243→              >
+   244→                <Compass className="w-3.5 h-3.5" />
+   245→                Strategy Briefing
+   246→              </button>
+   247→              <button
+   248→                onClick={() => setIsAdminMode(true)}
+   249→                className="px-4 py-2 bg-gold-800 hover:bg-gold-600 text-white text-[10px] font-mono uppercase font-bold tracking-widest rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+   250→              >
+   251→                <Lock className="w-3 h-3 text-gold-200" />
+   252→                Admin CRM
+   253→              </button>
+   254→            </div>
+   255→
+   256→            {/* Mobile menu */}
+   257→            <div className="lg:hidden flex items-center gap-2">
+   258→              <button
+   259→                onClick={() => setIsBlueprintOpen(true)}
+   260→                className="p-1.5 rounded-lg border border-gold-200/50 text-gold-700"
+   261→              >
+   262→                <Compass className="w-4 h-4" />
+   263→              </button>
+   264→              <button
+   265→                onClick={() => setIsAdminMode(true)}
+   266→                className="p-1.5 rounded-lg bg-gold-800 text-white"
+   267→              >
+   268→                <Lock className="w-4 h-4" />
+   269→              </button>
+   270→              <button
+   271→                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+   272→                className="p-2 text-gray-500 hover:text-gray-900 focus:outline-none"
+   273→              >
+   274→                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+   275→              </button>
+   276→            </div>
+   277→          </div>
+   278→        </div>
+   279→
+   280→        {/* Mobile menu */}
+   281→        {mobileMenuOpen && (
+   282→          <div className="lg:hidden bg-white border-t border-gold-100 p-4 space-y-3 font-mono text-xs uppercase tracking-wider animate-fade-in">
+   283→            <button onClick={() => scrollToId('project-showcase-section')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
+   284→              Premium Projects
+   285→            </button>
+   286→            <button onClick={() => scrollToId('why-vrindavan')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
+   287→              Why Vrindavan
+   288→            </button>
+   289→            <button onClick={() => scrollToId('calculator-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
+   290→              Investment Calculator
+   291→            </button>
+   292→            <button onClick={() => scrollToId('faq-section-anchor')} className="block w-full text-left py-2 text-gray-600 cursor-pointer">
+   293→              Registry FAQs
+   294→            </button>
+   295→            <button onClick={() => scrollToId('contact-experience')} className="block w-full text-left py-2 bg-gold-100 text-gold-700 font-bold px-3 rounded-lg text-center cursor-pointer">
+   296→              Book Site Tour Package
+   297→            </button>
+   298→          </div>
+   299→        )}
+   300→      </nav>
+   301→
+   302→      {/* Hero Section */}
+   303→      <HeroSection
+   304→        onExploreProjects={() => scrollToId('project-showcase-section')}
+   305→        onScheduleConsult={() => scrollToId('contact-experience')}
+   306→        onOpenBlueprint={() => setIsBlueprintOpen(true)}
+   307→      />
+   308→
+   309→      {/* Trust Badges */}
+   310→      <section className="bg-gradient-to-r from-gold-50/40 via-gold-100/20 to-gold-50/40 py-10 border-t border-b border-gold-200/20 select-none">
+   311→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   312→          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+   313→            <div>
+   314→              <p className="text-xs font-mono uppercase tracking-widest text-gold-600 font-semibold mb-1">
+   315→                SOVEREIGN RECOGNITION & SHIELD
+   316→              </p>
+   317→              <h3 className="text-sm font-serif text-gray-500 italic max-w-xl">
+   318→                &quot;RK Properties guarantees absolute legal custody. Every land title listed under our banner undergoes triple check clearance procedures backed by government land record APIs.&quot;
+   319→              </h3>
+   320→            </div>
+   321→            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+   322→              <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gold-200/40 shadow-xs">
+   323→                <ShieldCheck className="w-5 h-5 text-gold-600 shrink-0" />
+   324→                <span className="text-[10px] font-mono uppercase tracking-wider font-bold">UP-RERA AGENT</span>
+   325→              </div>
+   326→              <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gold-200/40 shadow-xs">
+   327→                <FileCheck className="w-5 h-5 text-gold-600 shrink-0" />
+   328→                <span className="text-[10px] font-mono uppercase tracking-wider font-bold">MVDA REGULATED</span>
+   329→              </div>
+   330→              <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gold-200/40 shadow-xs col-span-2 sm:col-span-1">
+   331→                <Award className="w-5 h-5 text-gold-600 shrink-0" />
+   332→                <span className="text-[10px] font-mono uppercase tracking-wider font-bold">100% CLEAR REGISTRIES</span>
+   333→              </div>
+   334→            </div>
+   335→          </div>
+   336→        </div>
+   337→      </section>
+   338→
+   339→      {/* Why Vrindavan */}
+   340→      <section id="why-vrindavan" className="py-20 bg-gradient-to-b from-white via-gold-50 to-white select-none">
+   341→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   342→          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+   343→            <div className="lg:col-span-5 space-y-6">
+   344→              <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
+   345→                The Epicenter of Spiritual Sovereignty
+   346→              </span>
+   347→              <h2 className="text-3xl sm:text-4xl font-serif text-gold-800 tracking-tight leading-tight">
+   348→                Vrindavan&apos;s Majestic Ascent: <br />
+   349→                From holy <span className="font-serif italic text-gold-600">Faith</span> to <span className="underline decoration-gold-200 decoration-4">Wealth</span>
+   350→              </h2>
+   351→              <p className="text-sm text-gray-600 leading-relaxed font-light">
+   352→                Vrindavan is no longer just an ancient sacred pilgrimage destination. Backed by government focus and prime mega-development mandates, it represents one of India&apos;s fast-growing regional real estate corridors.
+   353→              </p>
+   354→              <div className="space-y-4 pt-2">
+   355→                <div className="flex gap-4">
+   356→                  <span className="flex-none p-2.5 bg-gold-100 text-gold-700 h-10 w-10 text-center rounded-xl font-bold font-serif">1</span>
+   357→                  <div>
+   358→                    <h4 className="font-serif text-base font-bold text-gray-900">Unrivalled Pilgrimage Volume</h4>
+   359→                    <p className="text-xs text-gray-500 mt-1">Surpassing 20 million visits per year—driving immense rental yields and boutique hotel requirements near upcoming corridors.</p>
+   360→                  </div>
+   361→                </div>
+   362→                <div className="flex gap-4">
+   363→                  <span className="flex-none p-2.5 bg-gold-100 text-gold-700 h-10 w-10 text-center rounded-xl font-bold font-serif">2</span>
+   364→                  <div>
+   365→                    <h4 className="font-serif text-base font-bold text-gray-900">High Speed Connectivity</h4>
+   366→                    <p className="text-xs text-gray-500 mt-1">Seamless connectivity via Yamuna Expressway and upcoming Rapid Transit links connects Delhi-NCR in under 120 minutes.</p>
+   367→                  </div>
+   368→                </div>
+   369→              </div>
+   370→            </div>
+   371→
+   372→            <div className="lg:col-span-7 bg-gold-100/40 border border-gold-300/30 rounded-3xl p-6 sm:p-10 grid grid-cols-1 sm:grid-cols-2 gap-8 shadow-xs">
+   373→              <div className="space-y-2">
+   374→                <span className="text-3xl sm:text-4xl font-serif text-gold-600 font-bold block">₹2.8L Cr</span>
+   375→                <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">Planned Smart Regional Investments</span>
+   376→                <p className="text-xs text-gray-400 font-light mt-1">Uttar Pradesh state allocation for Yamuna Expressway tourism corridor expansion schemes.</p>
+   377→              </div>
+   378→              <div className="space-y-2">
+   379→                <span className="text-3xl sm:text-4xl font-serif text-gold-600 font-bold block">70 Stories</span>
+   380→                <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">Chandrodaya Temple Height</span>
+   381→                <p className="text-xs text-gray-400 font-light mt-1">The upcoming tallest religious skyscraper will anchor future residential expansion rates.</p>
+   382→              </div>
+   383→              <div className="space-y-2 border-t border-gold-200/10 pt-6">
+   384→                <span className="text-3xl sm:text-4xl font-serif text-gold-600 font-bold block">18–24%</span>
+   385→                <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">Average Land Appreciation</span>
+   386→                <p className="text-xs text-gray-400 font-light mt-1">Historic compound annual return for MVDA authorized plots along Chhatikara transit core.</p>
+   387→              </div>
+   388→              <div className="space-y-2 border-t border-gold-200/10 pt-6">
+   389→                <span className="text-3xl sm:text-4xl font-serif text-gold-600 font-bold block">100% Tax Exempt</span>
+   390→                <span className="text-xs font-mono text-gray-500 uppercase tracking-wider block">Capital Gain Options</span>
+   391→                <p className="text-xs text-gray-400 font-light mt-1">Reinvest company surplus funds in approved land parcels and optimize corporate returns.</p>
+   392→              </div>
+   393→            </div>
+   394→          </div>
+   395→        </div>
+   396→      </section>
+   397→
+   398→      {/* Property Showcase */}
+   399→      <section id="project-showcase-section" className="py-20 bg-white select-none">
+   400→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   401→          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
+   402→            <div>
+   403→              <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
+   404→                Exclusive Hand-picked Land Registers
+   405→              </span>
+   406→              <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 tracking-tight font-medium mt-1">
+   407→                Featured MVDA Authorized Real Estates
+   408→              </h2>
+   409→            </div>
+   410→
+   411→            <div className="flex flex-wrap gap-2 bg-gold-50 p-1 rounded-xl border border-gold-200/50">
+   412→              {[
+   413→                { label: "Show All", val: "All" },
+   414→                { label: "Elite Townships", val: "Premium Township" },
+   415→                { label: "Residential Plots", val: "Residential Project" },
+   416→                { label: "Investment Plots", val: "Investment Plots" }
+   417→              ].map((filter) => (
+   418→                <button
+   419→                  key={filter.val}
+   420→                  onClick={() => setSelectedCategoryFilter(filter.val)}
+   421→                  className={`px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-mono tracking-wider uppercase cursor-pointer transition-all ${
+   422→                    selectedCategoryFilter === filter.val
+   423→                      ? 'bg-white text-gold-700 shadow-xs font-bold'
+   424→                      : 'text-gray-500 hover:text-gold-600'
+   425→                  }`}
+   426→                >
+   427→                  {filter.label}
+   428→                </button>
+   429→              ))}
+   430→            </div>
+   431→          </div>
+   432→
+   433→          <PropertyShowcase
+   434→            projects={filteredProjects}
+   435→            onAddLead={handleAddLead}
+   436→            onBookProject={handleBookProject}
+   437→          />
+   438→        </div>
+   439→      </section>
+   440→
+   441→      {/* Investment Calculator */}
+   442→      <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white via-gold-50/50 to-white border-t border-gold-200/10">
+   443→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   444→          <InvestmentCalculator initialProjects={projects} />
+   445→        </div>
+   446→      </section>
+   447→
+   448→      {/* Testimonials */}
+   449→      <section className="py-20 bg-white select-none">
+   450→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   451→          <div className="text-center max-w-2xl mx-auto mb-16">
+   452→            <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">Verifiable Client Chronology</span>
+   453→            <h2 className="text-3xl sm:text-4xl font-serif text-gray-900 mt-1 tracking-tight">Voices of Devotional Wisdom</h2>
+   454→            <p className="text-xs text-gray-500 mt-2 font-mono">Durable legacies constructed alongside India&apos;s distinguished families.</p>
+   455→          </div>
+   456→
+   457→          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+   458→            {sampleTestimonials.map((t) => (
+   459→              <div
+   460→                key={t.id}
+   461→                className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white to-gold-100/70 border border-gold-200 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300"
+   462→              >
+   463→                <div>
+   464→                  <span className="text-3xl font-serif text-gold-600/30 block mb-2">&ldquo;</span>
+   465→                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed font-light italic mb-6">
+   466→                    {t.quote}
+   467→                  </p>
+   468→                </div>
+   469→
+   470→                <div className="flex items-center gap-3 border-t border-gold-200/40 pt-4 mt-2">
+   471→                  <div className="h-10 w-10 rounded-full bg-gold-100 flex items-center justify-center font-serif text-gold-700 font-bold text-sm">
+   472→                    {t.initials}
+   473→                  </div>
+   474→                  <div>
+   475→                    <h5 className="font-serif text-sm font-bold text-gold-800">{t.name}</h5>
+   476→                    <p className="text-[10px] text-gray-400 font-mono">{t.role}</p>
+   477→                    <div className="mt-1.5 flex flex-wrap gap-1">
+   478→                      <span className="text-[8px] font-mono bg-gold-200/30 text-gold-700 px-1.5 py-0.5 rounded">
+   479→                        🏠 {t.projectBought}
+   480→                      </span>
+   481→                      <span className="text-[8px] font-mono bg-green-100 text-green-800 font-bold px-1.5 py-0.5 rounded">
+   482→                        📈 {t.appreciationObserved}
+   483→                      </span>
+   484→                    </div>
+   485→                  </div>
+   486→                </div>
+   487→              </div>
+   488→            ))}
+   489→          </div>
+   490→        </div>
+   491→      </section>
+   492→
+   493→      {/* FAQ Section */}
+   494→      <section id="faq-section-anchor" className="py-20 bg-gradient-to-b from-white via-gold-50/30 to-white border-t border-b border-gold-200/20 select-none">
+   495→        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+   496→          <div className="text-center mb-12">
+   497→            <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">SOVEREIGN COMPLIANCE DICTIONARY</span>
+   498→            <h2 className="text-3xl font-serif text-gray-900 mt-1">Registry FAQs & Land Registry Guardrails</h2>
+   499→          </div>
+   500→
+   501→          <div className="space-y-4">
+   502→            {sampleFaqs.map((faq: FAQ) => {
+   503→              const isOpen = activeFaq === faq.id;
+   504→              return (
+   505→                <div
+   506→                  key={faq.id}
+   507→                  className="border border-gold-200/40 rounded-2xl bg-white overflow-hidden shadow-xs transition-all"
+   508→                >
+   509→                  <button
+   510→                    onClick={() => setActiveFaq(isOpen ? null : faq.id)}
+   511→                    className="w-full px-6 py-5 text-left flex justify-between items-center cursor-pointer hover:bg-gold-50/20"
+   512→                  >
+   513→                    <span className="font-serif font-bold text-gray-900 text-sm sm:text-base pr-4">
+   514→                      {faq.question}
+   515→                    </span>
+   516→                    <ChevronDown className={`w-4 h-4 text-gold-600 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+   517→                  </button>
+   518→
+   519→                  {isOpen && (
+   520→                    <div className="px-6 pb-5 text-xs text-gray-600 leading-relaxed font-light border-t border-gold-200/10 pt-4 animate-fade-in">
+   521→                      <p>{faq.answer}</p>
+   522→                      <div className="mt-3 text-[10px] text-gold-600 font-mono font-bold uppercase tracking-widest">
+   523→                        Category Focus: {faq.category}
+   524→                      </div>
+   525→                    </div>
+   526→                  )}
+   527→                </div>
+   528→              );
+   529→            })}
+   530→          </div>
+   531→        </div>
+   532→      </section>
+   533→
+   534→      {/* Contact Section */}
+   535→      <section className="py-20 bg-white">
+   536→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   537→          <ContactSection
+   538→            projects={projects}
+   539→            onAddLead={handleAddLead}
+   540→            selectedProjectName={selectedProjectForContact}
+   541→          />
+   542→        </div>
+   543→      </section>
+   544→
+   545→      {/* Footer */}
+   546→      <footer className="bg-gradient-to-br from-gold-800 via-gold-900 to-gold-900 text-gold-100/80 pt-16 pb-12 select-none border-t border-gold-600/25">
+   547→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   548→          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-gold-700/30 pb-12 mb-12">
+   549→            {/* Brand */}
+   550→            <div className="md:col-span-4 space-y-4">
+   551→              <span className="text-xl font-serif font-bold text-white tracking-tight">RK PROPERTIES</span>
+   552→              <p className="text-xs text-gray-400 font-light leading-relaxed">
+   553→                A majestic synthesis of absolute title security, professional real estate consulting services, and sacred living opportunities in Vrindavan Dham. Built on three core pillars: Trust, Transparency, and Value.
+   554→              </p>
+   555→              <div className="text-[10px] font-mono text-gold-400">
+   556→                <span>RERA ID: UPRERAAGT11245 (Approved Uttar Pradesh State Category)</span>
+   557→              </div>
+   558→            </div>
+   559→
+   560→            {/* Links 1 */}
+   561→            <div className="md:col-span-2 space-y-3 font-mono text-xs uppercase tracking-wider">
+   562→              <span className="text-white block font-bold mb-1">Dham Assets</span>
+   563→              <button onClick={() => scrollToId('project-showcase-section')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Gated Townships</button>
+   564→              <button onClick={() => scrollToId('project-showcase-section')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Residential Plots</button>
+   565→              <button onClick={() => scrollToId('project-showcase-section')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Investment Meadow</button>
+   566→            </div>
+   567→
+   568→            {/* Links 2 */}
+   569→            <div className="md:col-span-2 space-y-3 font-mono text-xs uppercase tracking-wider">
+   570→              <span className="text-white block font-bold mb-1">Verify Compliance</span>
+   571→              <button onClick={() => setIsBlueprintOpen(true)} className="block text-gray-400 hover:text-white cursor-pointer text-left">Consumer Moat</button>
+   572→              <button onClick={() => scrollToId('faq-section-anchor')} className="block text-gray-400 hover:text-white cursor-pointer text-left">Legal FAQ Registry</button>
+   573→              <button onClick={() => setIsAdminMode(true)} className="block text-gray-400 hover:text-white cursor-pointer text-left">Authorized CRM</button>
+   574→            </div>
+   575→
+   576→            {/* Contact */}
+   577→            <div className="md:col-span-4 space-y-3 text-xs leading-relaxed text-gray-400">
+   578→              <span className="text-white font-mono uppercase tracking-wider font-bold block mb-1">Corporate Headquarters</span>
+   579→              <p>Chhatikara-Vrindavan Link Road, directly near Prem Mandir Perimeter gate, Vrindavan, Mathura District, Uttar Pradesh - 281121</p>
+   580→              <p className="font-mono text-[11px] text-white">Representative Desk: listing.services@rkproperties.in</p>
+   581→            </div>
+   582→          </div>
+   583→
+   584→          <div className="flex flex-col sm:flex-row justify-between items-center text-[10px] font-mono text-gray-500 gap-4">
+   585→            <span className="text-center sm:text-left">&copy; 2026 RK Properties Ltd. All rights reserved globally. RERA agent compliance assured.</span>
+   586→            <div className="flex gap-4">
+   587→              <span>DISCLAIMER: All land boundaries undergo statutory approvals. Historical ROI figures are for forecasting models only.</span>
+   588→            </div>
+   589→          </div>
+   590→        </div>
+   591→      </footer>
+   592→
+   593→      {/* Strategic Blueprint Modal */}
+   594→      <StrategicBlueprint
+   595→        isOpen={isBlueprintOpen}
+   596→        onClose={() => setIsBlueprintOpen(false)}
+   597→      />
+   598→    </div>
+   599→  );
+   600→}

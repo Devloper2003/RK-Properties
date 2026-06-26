@@ -3,32 +3,32 @@
 import { useState, useEffect } from 'react';
 import { Mail, Phone, CalendarRange, Send, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Project, Lead } from '@/types/rk-properties';
+import { usePropertyStore } from '@/store/use-property-store';
 
 interface ContactSectionProps {
   projects?: Project[];
   onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
-  selectedProjectName?: string;
 }
 
 export default function ContactSection({
   projects = [],
-  onAddLead,
-  selectedProjectName = ''
+  onAddLead
 }: ContactSectionProps) {
+  const { selectedProjectForContact } = usePropertyStore();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [projectInterest, setProjectInterest] = useState(selectedProjectName || projects[0]?.name || '');
+  const [projectInterest, setProjectInterest] = useState(selectedProjectForContact || projects[0]?.name || '');
   const [category, setCategory] = useState('NRI Investor');
   const [siteVisitDate, setSiteVisitDate] = useState('');
   const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    if (selectedProjectName) {
-      setProjectInterest(selectedProjectName);
+    if (selectedProjectForContact) {
+      setProjectInterest(selectedProjectForContact);
     }
-  }, [selectedProjectName]);
+  }, [selectedProjectForContact]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
