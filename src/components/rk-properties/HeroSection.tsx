@@ -2,19 +2,42 @@
 
 import { useMemo } from 'react';
 import { ArrowRight, Phone } from 'lucide-react';
+import { useAnimatedCounter } from '@/hooks/use-scroll-animations';
+import { useToast } from '@/components/rk-properties/ToastProvider';
 
 interface HeroSectionProps {
   onExploreProjects: () => void;
   onScheduleConsult: () => void;
 }
 
+/* ── Small sub-component so each counter gets its own hook instance ── */
+function AnimatedStat({ target, suffix, prefix, label }: { target: number; suffix?: string; prefix?: string; label: string }) {
+  const { count, ref } = useAnimatedCounter(target, 2200, true);
+  const display = target === 0
+    ? '0'
+    : `${prefix ?? ''}${count.toLocaleString('en-IN')}${suffix ?? ''}`;
+
+  return (
+    <div ref={ref} className="flex flex-col items-center">
+      <span className="text-2xl sm:text-3xl font-serif text-gold-600 font-semibold mb-1">
+        {display}
+      </span>
+      <span className="text-[10px] sm:text-xs font-mono text-gray-500 uppercase tracking-widest leading-normal">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 export default function HeroSection({ onExploreProjects, onScheduleConsult }: HeroSectionProps) {
+  const { addToast } = useToast();
+
   const birds = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({
     id: i,
     left: Math.random() * 80 + 10,
     top: Math.random() * 25 + 10,
     size: Math.random() * 8 + 4,
-    delay: Math.random() * 15
+    delay: Math.random() * 15,
   })), []);
 
   const particles = useMemo(() => Array.from({ length: 15 }).map((_, idx) => ({
@@ -27,21 +50,36 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
     del: Math.random() * 4,
   })), []);
 
-  const stats = [
-    { value: "100%", label: "MVDA Approved Plots" },
-    { value: "₹450Cr+", label: "Assets Advised & Transacted" },
-    { value: "1,200+", label: "NRI & HNIs Advised" },
-    { value: "0 Litigation", label: "Pure Clean Registry Guarantee" }
-  ];
+  const handleBookSiteVisit = () => {
+    onScheduleConsult();
+    addToast({
+      type: 'success',
+      title: 'Site Visit Requested',
+      message: 'Our concierge team will contact you within 2 hours to plan your Vrindavan site tour.',
+    });
+  };
 
   return (
     <section className="relative overflow-hidden min-h-[92vh] flex flex-col justify-between bg-gradient-to-b from-gold-50 via-gold-100 to-gold-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      {/* Background Effects */}
+      {/* ── Ornamental border frame ── */}
+      <div className="absolute inset-3 sm:inset-6 border border-gold-300/25 rounded-2xl pointer-events-none z-0" />
+      <div className="absolute inset-4 sm:inset-7 border border-gold-200/15 rounded-xl pointer-events-none z-0" />
+
+      {/* ── Enhanced background layers ── */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-radial from-gold-200/45 to-transparent blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-radial from-gold-600/10 to-transparent blur-3xl pointer-events-none" />
       <div className="absolute -top-[150px] left-1/2 -translate-x-1/2 w-[80%] h-[350px] bg-gradient-to-b from-gold-100/95 via-gold-200/40 to-transparent blur-2xl rounded-full pointer-events-none" />
+      {/* Extra warm glow layer */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-radial from-gold-300/20 via-gold-100/10 to-transparent blur-[80px] pointer-events-none" />
+      {/* Diagonal accent sweep */}
+      <div
+        className="absolute top-0 right-0 w-[45%] h-full pointer-events-none opacity-[0.04]"
+        style={{
+          background: 'linear-gradient(135deg, transparent 30%, rgba(180,130,50,0.6) 50%, transparent 70%)',
+        }}
+      />
 
-      {/* Floating Particles */}
+      {/* ── Floating Particles ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {particles.map((p) => (
           <div
@@ -59,7 +97,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
         ))}
       </div>
 
-      {/* Cinematic Birds */}
+      {/* ── Cinematic Birds ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
         {birds.map((b) => (
           <span
@@ -70,7 +108,7 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
               top: `${b.top}%`,
               fontSize: `${b.size}px`,
               animationDelay: `${b.delay}s`,
-              transform: `translateY(${Math.sin(b.id) * 15}px)`
+              transform: `translateY(${Math.sin(b.id) * 15}px)`,
             }}
           >
             ✦
@@ -78,7 +116,11 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
         ))}
       </div>
 
-      <div className="max-w-7xl mx-auto w-full relative z-10 flex-1 flex flex-col justify-center">
+      {/* ── Main scroll-triggered content ── */}
+      <div
+        data-animate
+        className="max-w-7xl mx-auto w-full relative z-10 flex-1 flex flex-col justify-center"
+      >
         {/* Elite Brand Badge */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-100 border border-gold-200/50 shadow-xs backdrop-blur-xs">
@@ -92,30 +134,35 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
         {/* Hero Copywriting Block */}
         <div className="text-center max-w-4xl mx-auto select-none">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-gold-800 tracking-tight leading-[1.1] mb-6 font-medium">
-            Invest Where <span className="text-gold-600 font-serif italic">Faith</span> Meets <br className="hidden sm:inline" />
+            Invest Where <span className="text-gold-600 font-serif italic">Faith</span> Meets
+            <br className="hidden sm:inline" />
             <span className="relative inline-block mt-1">
               <span className="relative z-10">Future Wealth</span>
-              <span className="absolute left-0 bottom-1 w-full h-[6px] bg-gold-200/60 -z-10 rounded-sm" />
+              {/* Gold underline decoration */}
+              <span className="absolute left-1/2 -translate-x-1/2 bottom-1 w-[110%] h-[6px] rounded-sm bg-gradient-to-r from-transparent via-gold-400/80 to-transparent" />
+              <span className="absolute left-1/2 -translate-x-1/2 bottom-0.5 w-[80%] h-[3px] rounded-sm bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
             </span>
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-600 font-sans max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            Secure high-yielding <span className="font-medium text-gray-800">MVDA Approved Plots</span> in Vrindavan&apos;s high-appreciation corridors. Tailor-made for NRIs and elite professionals seeking complete legal transparency and spiritual inheritance.
+            Secure high-yielding <span className="font-medium text-gray-800">MVDA Approved Plots</span> in
+            Vrindavan&apos;s high-appreciation corridors. Tailor-made for NRIs and elite professionals seeking
+            complete legal transparency and spiritual inheritance.
           </p>
 
           {/* Action CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
             <button
               onClick={onExploreProjects}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-gold-800 text-white font-medium hover:bg-gold-700 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group"
+              className="hero-btn-shimmer w-full sm:w-auto px-8 py-4 rounded-full bg-gold-800 text-white font-medium hover:bg-gold-700 hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group"
             >
               Explore MVDA Projects
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
-              onClick={onScheduleConsult}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-gold-800 border border-gold-200/60 shadow-xs hover:border-gold-500 hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-medium"
+              onClick={handleBookSiteVisit}
+              className="hero-btn-shimmer w-full sm:w-auto px-8 py-4 rounded-full bg-white text-gold-800 border border-gold-200/60 shadow-xs hover:border-gold-500 hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer font-medium"
             >
               <Phone className="w-4 h-4 text-gold-600" />
               Book Site Visit
@@ -124,21 +171,47 @@ export default function HeroSection({ onExploreProjects, onScheduleConsult }: He
         </div>
       </div>
 
-      {/* Trust Pillars Bar */}
+      {/* ── Trust Pillars Bar with Animated Counters ── */}
       <div className="max-w-7xl mx-auto w-full relative z-10 border-t border-gold-200/40 pt-10 mt-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center select-none">
-          {stats.map((stat, idx) => (
-            <div key={idx} className="flex flex-col items-center">
-              <span className="text-2xl sm:text-3xl font-serif text-gold-600 font-semibold mb-1">
-                {stat.value}
-              </span>
-              <span className="text-[10px] sm:text-xs font-mono text-gray-500 uppercase tracking-widest leading-normal">
-                {stat.label}
-              </span>
-            </div>
-          ))}
+          <AnimatedStat target={100} suffix="%" label="MVDA Approved Plots" />
+          <AnimatedStat target={450} prefix="₹" suffix="Cr+" label="Assets Advised & Transacted" />
+          <AnimatedStat target={1200} suffix="+" label="NRI & HNIs Advised" />
+          <AnimatedStat target={0} label="Pure Clean Registry Guarantee" />
         </div>
+        <p className="text-center mt-3 text-[9px] sm:text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+          0 Litigation — Clean Title Verified on Every Plot
+        </p>
       </div>
+
+      {/* ── Scoped shimmer keyframes ── */}
+      <style jsx>{`
+        .hero-btn-shimmer {
+          position: relative;
+          overflow: hidden;
+        }
+        .hero-btn-shimmer::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 60%;
+          height: 100%;
+          background: linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0) 30%,
+            rgba(255, 255, 255, 0.25) 50%,
+            rgba(255, 255, 255, 0) 70%,
+            transparent 100%
+          );
+          transition: left 0.6s ease;
+          pointer-events: none;
+        }
+        .hero-btn-shimmer:hover::after {
+          left: 120%;
+        }
+      `}</style>
     </section>
   );
 }

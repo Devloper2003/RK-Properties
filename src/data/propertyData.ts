@@ -149,6 +149,24 @@ export const sampleFaqs: FAQ[] = [
     question: "How does the registration process occur if I am unable to physically visit Mathura/Vrindavan?",
     answer: "We support remote legal operations. Through certified Power of Attorney (PoA) processes validated by your local embassy (for NRIs) or online video-assisted registry bookings (for clinical practitioners/doctors), our corporate legal desk handles 100% of local department approvals and delivers your pristine registered title deeds direct to your door.",
     category: "Legal/Registry"
+  },
+  {
+    id: "faq_5",
+    question: "What financing options are available for NRIs purchasing Vrindavan plots?",
+    answer: "NRIs can avail dedicated home loan products from leading banks such as SBI NRI Home Loans and HDFC NRI Housing Finance. Most MVDA-approved RK Properties projects are pre-approved for up to 80% Loan-to-Value (LTV) financing. Current interest rates for NRI home loans range from 8.35% to 9.15% per annum depending on the lender and loan tenure. Our advisory team assists with the complete loan application, documentation, and disbursement coordination remotely, including income verification from overseas employers and NRO/NRE account management.",
+    category: "Investment"
+  },
+  {
+    id: "faq_6",
+    question: "Is Vrindavan real estate a good option for long-term generational wealth transfer?",
+    answer: "Absolutely. Vrindavan real estate offers a unique dual advantage for generational wealth planning. First, the spiritual and cultural significance ensures the land holds intrinsic emotional and heritage value that transcends market cycles — your children and grandchildren inherit not just an asset but a sacred family legacy. Second, from a purely financial standpoint, the 18–24% historical CAGR significantly outperforms traditional fixed deposits (6–7%) and gold (8–10%), making it an exceptional long-term compounding vehicle. Under Indian succession law, inherited property enjoys significant tax benefits — children inheriting the property receive a stepped-up cost basis, meaning capital gains tax is calculated only on appreciation after the date of inheritance, not from the original purchase price. RK Properties' litigation-free guarantee and complete documentation ensure a seamless inter-generational title transfer.",
+    category: "Vrindavan Growth"
+  },
+  {
+    id: "faq_7",
+    question: "What infrastructure developments are upcoming near RK Properties' project zones?",
+    answer: "Several transformative infrastructure projects are actively underway or in advanced planning stages that will significantly boost land values in our project zones. The 70-story Chandrodaya Temple (the world's tallest religious structure) is under construction and will create a massive tourism and commercial ecosystem. The Delhi-Mathura semi-highspeed rail corridor has been approved with an estimated ₹12,000 crore investment, reducing travel time between Delhi and Vrindavan to under 90 minutes. The Yamuna Expressway expansion project includes new interchanges and dedicated freight corridors that will enhance connectivity to the National Capital Region. Additionally, the UP government has allocated ₹2.8 lakh crore in the Mathura-Vrindavan Master Plan 2031 for road widening, smart city infrastructure, sewage treatment plants, and heritage tourism development. These investments directly benefit RK Properties' Chhatikara NH-2 corridor and Yamuna Expressway link projects.",
+    category: "Project Approvals"
   }
 ];
 

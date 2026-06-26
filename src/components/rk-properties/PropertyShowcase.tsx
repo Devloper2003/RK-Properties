@@ -1,13 +1,31 @@
 'use client';
 
 import { useState } from 'react';
-import { ShieldCheck, Download, Eye, MapPin, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Download, Eye, MapPin, CheckCircle2, Sparkles, X } from 'lucide-react';
 import { Project, Lead } from '@/types/rk-properties';
+import { useToast } from '@/components/rk-properties/ToastProvider';
 
 interface PropertyShowcaseProps {
   onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
   onBookProject: (projectName: string) => void;
   projects?: Project[];
+}
+
+function PropertyImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative h-64 overflow-hidden bg-gold-100">
+      {!loaded && <div className="absolute inset-0 skeleton-shimmer" />}
+      <img
+        src={src}
+        alt={alt}
+        referrerPolicy="no-referrer"
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      />
+    </div>
+  );
 }
 
 export default function PropertyShowcase({ onAddLead, onBookProject, projects = [] }: PropertyShowcaseProps) {
@@ -18,6 +36,7 @@ export default function PropertyShowcase({ onAddLead, onBookProject, projects = 
   const [brochureEmail, setBrochureEmail] = useState('');
   const [brochurePersona, setBrochurePersona] = useState('NRI Investor');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const { addToast } = useToast();
 
   const handleBrochureSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +54,11 @@ export default function PropertyShowcase({ onAddLead, onBookProject, projects = 
     });
 
     setDownloadSuccess(true);
+    addToast({
+      type: 'success',
+      title: 'Brochure Requested!',
+      message: `Your ${brochureProject.name} dossier is being prepared and will download shortly.`,
+    });
 
     setTimeout(() => {
       const dateStr = new Date().toLocaleDateString('en-IN');
@@ -91,10 +115,20 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
     }, 1500);
   };
 
+  const handleGetBrochureFromModal = (project: Project) => {
+    setSelectedProject(null);
+    setBrochureProject(project);
+    addToast({
+      type: 'info',
+      title: 'Fill in your details',
+      message: 'Complete the form to receive your verified property dossier.',
+    });
+  };
+
   const getStatusClasses = (status: string) => {
     switch (status) {
       case 'Selling Fast': return 'bg-red-50 text-red-600 border-red-200';
-      case 'Pre-launch': return 'bg-blue-50 text-blue-600 border-blue-200';
+      case 'Pre-launch': return 'bg-sky-50 text-sky-600 border-sky-200';
       case 'Almost Sold Out': return 'bg-amber-50 text-amber-600 border-amber-200';
       default: return 'bg-green-50 text-green-700 border-green-200';
     }
@@ -103,53 +137,75 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
   return (
     <div className="space-y-12 select-none">
       {/* Property Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {projects.map((p) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8" data-animate-stagger>
+        {projects.map((p, idx) => (
           <div
             key={p.id}
             id={`project-card-${p.id}`}
-            className="group relative bg-gold-50 border border-gold-200/40 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gold-500/70 transition-all duration-300 flex flex-col justify-between"
+            data-animate
+            style={{ '--stagger-idx': idx } as React.CSSProperties}
+            className="group relative bg-gold-50 border border-gold-200/40 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gold-500/70 transition-all duration-500 flex flex-col justify-between"
           >
-            {/* Image */}
-            <div className="relative h-64 overflow-hidden">
-              <img
-                src={p.image}
-                alt={p.name}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
-              />
-              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 border border-gold-200 backdrop-blur-md rounded-full shadow-xs">
+            {/* Image with skeleton loading */}
+            <div className="relative">
+              <PropertyImage src={p.image} alt={p.name} />
+
+              {/* Bottom gradient overlay on image */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+
+              {/* MVDA Badge */}
+              <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 border border-gold-200 backdrop-blur-md rounded-full shadow-xs z-10">
                 <ShieldCheck className="w-4 h-4 text-gold-600" />
                 <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-gold-700">
                   MVDA APPROVED
                 </span>
               </div>
-              <div className="absolute bottom-4 left-4 items-center px-2.5 py-1 bg-gold-600 text-white font-mono text-[9px] font-bold uppercase tracking-widest rounded-lg">
+
+              {/* Tag */}
+              <div className="absolute bottom-4 left-4 px-2.5 py-1 bg-gold-600/90 backdrop-blur-sm text-white font-mono text-[9px] font-bold uppercase tracking-widest rounded-lg z-10">
                 {p.tag}
               </div>
-              <div className={`absolute top-4 right-4 text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1.5 rounded-full border ${getStatusClasses(p.status)}`}>
+
+              {/* Status badge */}
+              <div className={`absolute top-4 right-4 text-[9px] font-mono font-bold uppercase tracking-widest px-2.5 py-1.5 rounded-full border z-10 ${getStatusClasses(p.status)}`}>
                 {p.status}
               </div>
+
+              {/* Pre-launch NEW ribbon */}
+              {p.status === 'Pre-launch' && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1 z-10">
+                  <div className="relative px-3 py-0.5 bg-gold-500 text-white font-mono text-[8px] font-bold uppercase tracking-widest rounded-b-lg shadow-md">
+                    <Sparkles className="w-3 h-3 inline mr-1" />
+                    NEW
+                    <span className="absolute -top-0 left-0 w-full h-0.5 bg-gold-300/60" />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Content */}
             <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-gold-600 transition-colors">
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-gold-600 transition-colors leading-tight">
                     {p.name}
                   </h4>
-                  <span className="text-gold-800 font-serif font-semibold text-lg whitespace-nowrap">
-                    {p.price.split(' ')[0]} <span className="text-xs text-gray-500 font-mono">/ yd</span>
-                  </span>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono mb-4">
-                  <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0" />
-                  <span className="truncate">{p.location}</span>
+                <div className="flex justify-between items-center mb-3 mt-2">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono">
+                    <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+                    <span className="truncate max-w-[200px] sm:max-w-none">{p.location}</span>
+                  </div>
+                  <div className="text-right shrink-0 ml-2">
+                    <span className="text-[9px] font-mono text-gray-400 uppercase tracking-wider block">Starting from</span>
+                    <span className="text-gold-800 font-serif font-semibold text-lg">
+                      {p.price.split(' ')[0]} <span className="text-xs text-gray-500 font-mono">/ yd</span>
+                    </span>
+                  </div>
                 </div>
 
-                <p className="text-xs text-gray-500 leading-relaxed font-light line-clamp-3 mb-6">
+                <p className="text-xs text-gray-500 leading-relaxed font-light line-clamp-2 mb-5">
                   {p.description}
                 </p>
 
@@ -171,7 +227,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               <div className="flex items-center gap-3 pt-2">
                 <button
                   onClick={() => setSelectedProject(p)}
-                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 border border-gold-200 hover:border-gold-500 hover:bg-gold-50/20 cursor-pointer transition-all flex items-center justify-center gap-2"
+                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 border border-gold-200 hover:border-gold-500 hover:bg-gold-50/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <Eye className="w-3.5 h-3.5" />
                   Technical Details
@@ -179,7 +235,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
                 <button
                   onClick={() => setBrochureProject(p)}
-                  className="py-3 px-4 rounded-xl border border-gold-200/40 hover:border-gold-500 bg-gold-50/20 hover:bg-gold-50 text-gold-700 cursor-pointer transition-all"
+                  className="py-3 px-4 rounded-xl border border-gold-200/40 hover:border-gold-500 bg-gold-50/20 hover:bg-gold-50 text-gold-700 cursor-pointer transition-all duration-200"
                   title="Download Instant PDF Brochure"
                 >
                   <Download className="w-4 h-4" />
@@ -187,7 +243,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
                 <button
                   onClick={() => onBookProject(p.name)}
-                  className="py-3 px-4 rounded-xl bg-gold-800 hover:bg-gold-600 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all"
+                  className="py-3 px-5 rounded-xl bg-gradient-to-r from-gold-800 to-gold-700 hover:from-gold-600 hover:to-gold-500 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Book Plot
                 </button>
@@ -199,7 +255,10 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
       {/* Project Detail Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm flex justify-center items-center p-4">
+        <div
+          className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm flex justify-center items-center p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setSelectedProject(null); }}
+        >
           <div className="bg-gold-50 w-full max-w-3xl rounded-2xl border border-gold-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-fade-in">
             <div className="relative h-48 sm:h-56">
               <img
@@ -212,7 +271,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 p-1.5 rounded-full bg-black/40 text-white hover:bg-black/60 cursor-pointer text-lg"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
               <div className="absolute bottom-4 left-6">
                 <span className="px-3 py-1 bg-white/95 text-gold-700 font-mono text-[10px] font-bold rounded-full border border-gold-200">
@@ -270,10 +329,7 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
             <div className="border-t border-gold-200/20 p-4 sm:px-6 bg-gold-200/10 flex justify-end gap-3 bg-gold-50">
               <button
-                onClick={() => {
-                  setSelectedProject(null);
-                  setBrochureProject(selectedProject);
-                }}
+                onClick={() => handleGetBrochureFromModal(selectedProject)}
                 className="py-2.5 px-4 rounded-xl border border-gold-200 text-xs font-mono font-semibold uppercase tracking-wider text-gold-700 hover:bg-gold-50 cursor-pointer transition-all"
               >
                 Get Brochure PDF
@@ -294,13 +350,16 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
 
       {/* Brochure Download Modal */}
       {brochureProject && (
-        <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex justify-center items-center p-4">
+        <div
+          className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex justify-center items-center p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setBrochureProject(null); }}
+        >
           <div className="bg-gold-50 w-full max-w-md rounded-2xl border border-gold-200 p-6 sm:p-8 relative shadow-2xl animate-fade-in">
             <button
               onClick={() => setBrochureProject(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 cursor-pointer text-lg"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
 
             <div className="text-center space-y-2 mb-6">

@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 
 import { usePropertyStore } from '@/store/use-property-store';
+import { useScrollAnimations } from '@/hooks/use-scroll-animations';
+import { ToastProvider } from '@/components/rk-properties/ToastProvider';
 
 // Public-facing section components (organized by function & role)
 import Navbar from '@/components/rk-properties/Navbar';
@@ -16,6 +18,7 @@ import TestimonialsSection from '@/components/rk-properties/TestimonialsSection'
 import FAQSection from '@/components/rk-properties/FAQSection';
 import ContactSection from '@/components/rk-properties/ContactSection';
 import Footer from '@/components/rk-properties/Footer';
+import FloatingActions from '@/components/rk-properties/FloatingActions';
 
 export default function Home() {
   const {
@@ -25,6 +28,9 @@ export default function Home() {
     scrollToId,
     addLead
   } = usePropertyStore();
+
+  // Activate scroll-triggered animations
+  useScrollAnimations();
 
   // Initialize on first client render
   useEffect(() => {
@@ -44,53 +50,70 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-gold-50 text-gold-800 min-h-screen font-sans selection:bg-gold-200 selection:text-gold-900 relative">
-      {/* ── Navigation ── */}
-      <Navbar />
+    <ToastProvider>
+      <div className="bg-gold-50 text-gold-800 min-h-screen flex flex-col font-sans selection:bg-gold-200 selection:text-gold-900 relative">
+        {/* ── Navigation ── */}
+        <Navbar />
 
-      {/* ── Hero ── */}
-      <HeroSection
-        onExploreProjects={() => scrollToId('project-showcase-section')}
-        onScheduleConsult={() => scrollToId('contact-experience')}
-      />
+        {/* ── Hero ── */}
+        <HeroSection
+          onExploreProjects={() => scrollToId('project-showcase-section')}
+          onScheduleConsult={() => scrollToId('contact-experience')}
+        />
 
-      {/* ── Trust Badges ── */}
-      <TrustBadges />
+        {/* ── Trust Badges ── */}
+        <TrustBadges />
 
-      {/* ── Why Vrindavan ── */}
-      <WhyVrindavan />
+        {/* ── Section Divider ── */}
+        <div className="section-divider max-w-7xl mx-auto my-0" />
 
-      {/* ── Property Showcase ── */}
-      <PropertyShowcaseSection />
+        {/* ── Why Vrindavan ── */}
+        <WhyVrindavan />
 
-      {/* ── Investment Calculator ── */}
-      <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white via-gold-50/50 to-white border-t border-gold-200/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <InvestmentCalculator initialProjects={projects} />
-        </div>
-      </section>
+        {/* ── Property Showcase ── */}
+        <PropertyShowcaseSection />
 
-      {/* ── Our Strategy ── */}
-      <StrategySection />
+        {/* ── Section Divider ── */}
+        <div className="section-divider max-w-7xl mx-auto my-0" />
 
-      {/* ── Testimonials ── */}
-      <TestimonialsSection />
+        {/* ── Investment Calculator ── */}
+        <section id="calculator-anchor" className="py-20 bg-gradient-to-b from-white via-gold-50/50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <InvestmentCalculator initialProjects={projects} />
+          </div>
+        </section>
 
-      {/* ── FAQ ── */}
-      <FAQSection />
+        {/* ── Section Divider ── */}
+        <div className="section-divider max-w-7xl mx-auto my-0" />
 
-      {/* ── Contact / Lead Capture ── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ContactSection
-            projects={projects}
-            onAddLead={addLead}
-          />
-        </div>
-      </section>
+        {/* ── Our Strategy ── */}
+        <StrategySection />
 
-      {/* ── Footer ── */}
-      <Footer />
-    </div>
+        {/* ── Section Divider ── */}
+        <div className="section-divider max-w-7xl mx-auto my-0" />
+
+        {/* ── Testimonials ── */}
+        <TestimonialsSection />
+
+        {/* ── FAQ ── */}
+        <FAQSection />
+
+        {/* ── Contact / Lead Capture ── */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ContactSection
+              projects={projects}
+              onAddLead={addLead}
+            />
+          </div>
+        </section>
+
+        {/* ── Footer ── */}
+        <Footer />
+
+        {/* ── Floating Actions (Back to Top, WhatsApp, Scroll Progress) ── */}
+        <FloatingActions />
+      </div>
+    </ToastProvider>
   );
 }

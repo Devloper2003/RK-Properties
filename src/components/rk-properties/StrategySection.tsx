@@ -85,7 +85,7 @@ export default function StrategySection() {
     <section id="our-strategy" className="py-20 bg-gradient-to-b from-white via-gold-50/40 to-white select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div data-animate className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
             The RK Properties Difference
           </span>
@@ -98,19 +98,26 @@ export default function StrategySection() {
         </div>
 
         {/* Strategy Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        <div data-animate-stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
           {strategyPillars.map((pillar, index) => {
             const Icon = pillar.icon;
             return (
               <div
                 key={index}
-                className="group p-6 sm:p-8 rounded-3xl bg-white border border-gold-200/40 shadow-xs hover:shadow-lg hover:border-gold-500/60 transition-all duration-300"
+                data-animate
+                style={{ '--stagger-idx': index } as React.CSSProperties}
+                className="group relative p-6 sm:p-8 rounded-3xl bg-white border border-gold-200/40 shadow-xs hover:shadow-[0_0_24px_rgba(212,175,55,0.15)] hover:border-gold-500/60 hover:border-l-2 transition-all duration-300"
               >
+                {/* Animated number badge */}
+                <span className="absolute top-4 right-5 font-mono text-[11px] font-bold text-gold-400/40 group-hover:text-gold-500/70 transition-colors duration-300">
+                  0{index + 1}
+                </span>
+
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2.5 rounded-xl bg-gold-100 text-gold-700 group-hover:bg-gold-200 transition-colors">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-serif text-base sm:text-lg font-bold text-gray-900">{pillar.title}</h3>
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-gray-900 pr-8">{pillar.title}</h3>
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed font-light mb-5">
                   {pillar.description}
@@ -130,7 +137,7 @@ export default function StrategySection() {
 
         {/* How It Works - Process Flow */}
         <div className="mb-16">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <div data-animate className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-gold-600 font-bold block">
               Transparent Investment Journey
             </span>
@@ -142,28 +149,53 @@ export default function StrategySection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {processSteps.map((step, index) => (
-              <div key={index} className="relative p-5 rounded-2xl bg-gradient-to-br from-white to-gold-50/70 border border-gold-200/40 shadow-xs group hover:shadow-md hover:border-gold-500/60 transition-all duration-300">
-                <span className="absolute -top-3 left-4 px-2.5 py-0.5 rounded-full bg-gold-600 text-white font-mono font-bold text-[10px] tracking-wider">
-                  STEP {step.step}
-                </span>
-                <div className="text-2xl mb-3 mt-2">{step.icon}</div>
-                <h4 className="font-serif font-bold text-gray-900 text-sm mb-2">{step.title}</h4>
-                <p className="text-[11px] text-gray-500 leading-relaxed font-light">{step.description}</p>
-                {index < processSteps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 text-gold-300 z-10">
-                    <ArrowRight className="w-5 h-5" />
+          {/* Process Steps with Timeline */}
+          <div className="relative">
+            {/* Desktop horizontal timeline line */}
+            <div className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-gold-300 to-transparent z-0" />
+
+            {/* Mobile/tablet vertical timeline line */}
+            <div className="lg:hidden absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold-300 via-gold-200 to-transparent z-0" />
+
+            <div data-animate-stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5 relative z-10">
+              {processSteps.map((step, index) => (
+                <div
+                  key={index}
+                  data-animate
+                  style={{ '--stagger-idx': index } as React.CSSProperties}
+                  className="relative p-5 rounded-2xl bg-gradient-to-br from-white to-gold-50/70 border border-gold-200/40 shadow-xs group hover:shadow-md hover:border-gold-500/60 transition-all duration-300"
+                >
+                  {/* Desktop: step dot on the timeline */}
+                  <div className="hidden lg:flex absolute -top-2.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-gold-600 border-4 border-white shadow-sm z-20 items-center justify-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {/* Mobile/tablet: step dot on vertical timeline */}
+                  <div className="lg:hidden absolute left-[-26px] top-5 w-5 h-5 rounded-full bg-gold-600 border-4 border-gold-50 shadow-sm z-20 flex items-center justify-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                  </div>
+
+                  <span className="absolute -top-3 left-4 px-2.5 py-0.5 rounded-full bg-gold-600 text-white font-mono font-bold text-[10px] tracking-wider shadow-sm">
+                    STEP {step.step}
+                  </span>
+                  <div className="text-2xl mb-3 mt-2">{step.icon}</div>
+                  <h4 className="font-serif font-bold text-gray-900 text-sm mb-2">{step.title}</h4>
+                  <p className="text-[11px] text-gray-500 leading-relaxed font-light">{step.description}</p>
+                  {index < processSteps.length - 1 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-3 text-gold-300 z-10">
+                      <ArrowRight className="w-5 h-5" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Competitive Moat - Why Over Others */}
-        <div className="bg-gold-800 rounded-3xl p-8 sm:p-12 text-gold-100 relative overflow-hidden">
+        <div data-animate="scale-in" className="bg-gold-800 rounded-3xl p-8 sm:p-12 text-gold-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-gold-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-60 h-60 bg-gold-500/5 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-gold-300 font-bold block">

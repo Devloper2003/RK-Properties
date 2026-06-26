@@ -62,6 +62,7 @@
   background: radial-gradient(circle at top right, rgba(244, 239, 230, 0.8), rgba(252, 251, 247, 1));
 }
 
+/* ── Fade-in animations ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -69,6 +70,143 @@
 
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
+}
+
+/* ── Slide in from right (toast) ── */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Scroll-triggered section animations ── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-animate="fade-left"] {
+  transform: translateX(-40px) translateY(0);
+}
+[data-animate="fade-left"].is-visible {
+  transform: translateX(0) translateY(0);
+}
+
+[data-animate="fade-right"] {
+  transform: translateX(40px) translateY(0);
+}
+[data-animate="fade-right"].is-visible {
+  transform: translateX(0) translateY(0);
+}
+
+[data-animate="scale-in"] {
+  transform: scale(0.92) translateY(0);
+}
+[data-animate="scale-in"].is-visible {
+  transform: scale(1) translateY(0);
+}
+
+/* Staggered children animation */
+[data-animate-stagger] > [data-animate] {
+  transition-delay: calc(var(--stagger-idx, 0) * 100ms);
+}
+
+/* ── Shimmer loading skeleton ── */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #F4EFE6 0%,
+    #E5E1D8 40%,
+    #F4EFE6 80%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+/* ── Subtle float animation for decorative elements ── */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+/* ── FAQ accordion smooth open/close ── */
+.faq-answer-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-answer-wrapper.open {
+  grid-template-rows: 1fr;
+}
+.faq-answer-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Pulse ring for WhatsApp button ── */
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* ── Decorative section divider ── */
+.section-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #E5E1D8 20%, #D4AF37 50%, #E5E1D8 80%, transparent);
+}
+
+.section-divider::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #FCFBF7;
+  padding: 0 1rem;
+  color: #D4AF37;
+  font-size: 14px;
+}
+
+/* ── Glassmorphism utility ── */
+.glass {
+  background: rgba(252, 251, 247, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 225, 216, 0.4);
+}
+
+/* ── Submit button animated glow ── */
+@keyframes submitGlow {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(212, 175, 55, 0.25); }
+  50% { box-shadow: 0 0 20px 6px rgba(212, 175, 55, 0.45); }
+}
+
+.submit-glow {
+  animation: submitGlow 2.5s ease-in-out infinite;
+}
+.submit-glow:hover {
+  animation: none;
+  box-shadow: 0 0 24px 8px rgba(212, 175, 55, 0.5);
 }
 
 /* Custom range input styling */

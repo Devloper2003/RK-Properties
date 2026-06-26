@@ -1,20 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, Phone, CalendarRange, Send, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, CalendarRange, Send, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Project, Lead } from '@/types/rk-properties';
 import { usePropertyStore } from '@/store/use-property-store';
+import { useToast } from '@/components/rk-properties/ToastProvider';
 
 interface ContactSectionProps {
   projects?: Project[];
   onAddLead: (lead: Omit<Lead, 'id' | 'date'>) => void;
 }
 
+const budgetOptions = [
+  { label: '₹35L – ₹50L', value: '₹35L - ₹50L' },
+  { label: '₹50L – ₹70L', value: '₹50L - ₹70L' },
+  { label: '₹70L – ₹90L', value: '₹70L - ₹90L' },
+  { label: '₹90L+', value: '₹90L+' },
+];
+
 export default function ContactSection({
   projects = [],
   onAddLead
 }: ContactSectionProps) {
   const { selectedProjectForContact } = usePropertyStore();
+  const { addToast } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -22,7 +31,9 @@ export default function ContactSection({
   const [category, setCategory] = useState('NRI Investor');
   const [siteVisitDate, setSiteVisitDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [budget, setBudget] = useState('₹35L - ₹50L');
   const [submitted, setSubmitted] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
 
   useEffect(() => {
     if (selectedProjectForContact) {
@@ -30,9 +41,27 @@ export default function ContactSection({
     }
   }, [selectedProjectForContact]);
 
+  const validatePhone = (value: string): boolean => {
+    const digitsOnly = value.replace(/\D/g, '');
+    return digitsOnly.length >= 10;
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setPhone(value);
+    if (value && !validatePhone(value)) {
+      setPhoneError('Please enter a valid 10+ digit Indian mobile number');
+    } else {
+      setPhoneError('');
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !phone) return;
+    if (!validatePhone(phone)) {
+      setPhoneError('Please enter a valid 10+ digit Indian mobile number');
+      return;
+    }
 
     onAddLead({
       name,
@@ -41,9 +70,16 @@ export default function ContactSection({
       projectInterest,
       category,
       status: siteVisitDate ? 'Site Visit' : 'New',
-      budget: '₹35L - ₹90L',
+      budget,
       notes: notes || "Direct website contact form inquiry.",
       siteVisitDate: siteVisitDate || undefined
+    });
+
+    // Show toast notification
+    addToast({
+      type: 'success',
+      title: 'Tour Reservation Confirmed!',
+      message: `Thank you, ${name}. Our concierge will contact you within 2 hours with a detailed itinerary.`,
     });
 
     setSubmitted(true);
@@ -54,17 +90,22 @@ export default function ContactSection({
       setPhone('');
       setSiteVisitDate('');
       setNotes('');
-    }, 4000);
+      setBudget('₹35L - ₹50L');
+    }, 2000);
   };
 
   return (
-    <section id="contact-experience" className="relative group overflow-hidden bg-white rounded-3xl border border-gold-200/50 p-6 sm:p-10 shadow-lg select-none">
+    <section
+      id="contact-experience"
+      data-animate
+      className="relative group overflow-hidden bg-white rounded-3xl border border-gold-200/50 p-6 sm:p-10 shadow-lg select-none"
+    >
       <div className="absolute inset-0 bg-radial from-gold-50/10 via-white to-white pointer-events-none" />
       <div className="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-gradient-to-t from-gold-300/10 to-transparent blur-3xl pointer-events-none" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
         {/* Left Side */}
-        <div className="lg:col-span-5 space-y-8 flex flex-col justify-between">
+        <div data-animate="fade-left" className="lg:col-span-5 space-y-8 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-100/60 border border-gold-200/30 text-gold-700 font-mono text-[10px] uppercase tracking-widest">
               <CalendarRange className="w-3 h-3 text-gold-600 animate-pulse" />
@@ -116,7 +157,7 @@ export default function ContactSection({
         </div>
 
         {/* Right Side - Form */}
-        <div className="lg:col-span-7 bg-gold-50/60 border border-gold-200/30 p-6 sm:p-8 rounded-3xl shadow-xs">
+        <div data-animate="fade-right" className="lg:col-span-7 bg-gold-50/60 border border-gold-200/30 p-6 sm:p-8 rounded-3xl shadow-xs">
           {submitted ? (
             <div className="py-20 text-center space-y-4 animate-fade-in">
               <span className="inline-flex p-4 rounded-full bg-green-100 text-green-700 border border-green-200 animate-pulse mb-2">
@@ -144,14 +185,22 @@ export default function ContactSection({
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Mobile Contact Number</label>
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="e.g. +91 99000 88000"
-                    className="w-full px-4 py-3 rounded-xl border border-gold-200 text-xs focus:ring-1 focus:ring-gold-500 bg-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      placeholder="e.g. +91 99000 88000"
+                      className={`w-full px-4 py-3 rounded-xl border text-xs focus:ring-1 focus:ring-gold-500 bg-white ${phoneError ? 'border-red-400 focus:ring-red-400' : 'border-gold-200'}`}
+                    />
+                    {phoneError && (
+                      <div className="flex items-center gap-1 mt-1 text-[10px] text-red-500 font-mono">
+                        <AlertCircle className="w-3 h-3" />
+                        {phoneError}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -210,6 +259,27 @@ export default function ContactSection({
                 </div>
               </div>
 
+              {/* Budget Range Selector */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Investment Budget Range</label>
+                <div className="flex flex-wrap gap-2">
+                  {budgetOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setBudget(opt.value)}
+                      className={`px-3 py-2 rounded-lg text-[11px] font-mono border cursor-pointer transition-all duration-200 ${
+                        budget === opt.value
+                          ? 'bg-gold-600 text-white border-gold-600 shadow-sm'
+                          : 'bg-white text-gray-600 border-gold-200 hover:border-gold-400 hover:bg-gold-50'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="space-y-1">
                 <label className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block">Special Directives / Questions</label>
                 <textarea
@@ -223,7 +293,8 @@ export default function ContactSection({
 
               <button
                 type="submit"
-                className="w-full py-4 bg-gold-600 hover:bg-gold-800 text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-xl cursor-pointer transition-all flex items-center justify-center gap-2 mt-4"
+                disabled={!!phoneError}
+                className="submit-glow w-full py-4 bg-gold-600 hover:bg-gold-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-mono text-xs font-semibold uppercase tracking-wider rounded-xl cursor-pointer transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <Send className="w-3.5 h-3.5" />
                 Reserve Guided Visit & Pick-up
