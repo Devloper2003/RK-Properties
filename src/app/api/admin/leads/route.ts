@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/admin-auth';
 
 export async function GET(request: NextRequest) {
-  const authError = requireAuth();
+  const authError = await requireAuth();
   if (authError) return authError;
 
   try {
