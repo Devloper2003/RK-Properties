@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/admin-auth';
 
 export async function GET() {
+  const authError = requireAuth();
+  if (authError) return authError;
+
   try {
     const totalLeads = await db.lead.count();
     const newLeads = await db.lead.count({ where: { status: 'New' } });
     const totalProjects = await db.project.count();
     const totalSubscribers = await db.newsletterSubscriber.count();
+    const totalMedia = await db.projectMedia.count();
 
     // Leads by status
     const leadsByStatusRaw = await db.lead.groupBy({
@@ -41,6 +46,7 @@ export async function GET() {
       newLeads,
       totalProjects,
       totalSubscribers,
+      totalMedia,
       leadsByStatus,
       recentLeads,
       leadsByProject,

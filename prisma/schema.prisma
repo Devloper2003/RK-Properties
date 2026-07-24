@@ -40,8 +40,25 @@ model Project {
   details          String
   image            String
   tag              String
+  mapEmbedUrl      String   @default("")
+  videoUrl         String   @default("")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  media            ProjectMedia[]
+}
+
+model ProjectMedia {
+  id        String   @id @default(cuid())
+  projectId String
+  type      String   // "image" | "document" | "video" | "map"
+  url       String
+  name      String
+  size      Int      @default(0)
+  mimeType  String   @default("")
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
 }
 
 model NewsletterSubscriber {

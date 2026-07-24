@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/admin-auth';
 
 const DEFAULT_SETTINGS: Record<string, string> = {
   bannerText: 'Welcome to RK Properties — Premium Real Estate in Vrindavan',
@@ -10,6 +11,9 @@ const DEFAULT_SETTINGS: Record<string, string> = {
 };
 
 export async function GET() {
+  const authError = requireAuth();
+  if (authError) return authError;
+
   try {
     const settings = await db.siteSetting.findMany();
     const result: Record<string, string> = { ...DEFAULT_SETTINGS };
@@ -26,6 +30,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
+  const authError = requireAuth();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const results: { key: string; value: string }[] = [];

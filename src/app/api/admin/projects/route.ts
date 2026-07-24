@@ -1,13 +1,16 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/admin-auth';
 
 export async function GET() {
-  try {
-    let projects = await db.project.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+  const authError = requireAuth();
+  if (authError) return authError;
 
-    // If DB is empty, return empty array (admin can create projects via UI)
+  try {
+    const projects = await db.project.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { media: { orderBy: { createdAt: 'desc' } } },
+    });
     return NextResponse.json(projects);
   } catch (error) {
     console.error('Error fetching admin projects:', error);
@@ -16,12 +19,16 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const authError = requireAuth();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const {
       name, type, status, location, size, price, priceVal,
       appreciationRate, amenities, description, highlights,
-      roiProjection5Yr, roiProjection10Yr, details, image, tag
+      roiProjection5Yr, roiProjection10Yr, details, image, tag,
+      mapEmbedUrl, videoUrl
     } = body;
 
     if (!name) {
@@ -46,6 +53,8 @@ export async function POST(request: NextRequest) {
         details: details || '',
         image: image || '',
         tag: tag || '',
+        mapEmbedUrl: mapEmbedUrl || '',
+        videoUrl: videoUrl || '',
       },
     });
 
