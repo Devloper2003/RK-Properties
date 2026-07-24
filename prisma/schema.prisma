@@ -7,6 +7,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── Admin & Auth ─────────────────────────────────────────────
+
+model AdminUser {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  passwordHash  String
+  name          String
+  email         String   @unique
+  role          String   @default("admin") // admin | editor | viewer
+  isActive      Boolean  @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  activityLogs  ActivityLog[]
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String   // login | create_project | update_lead | upload_media etc.
+  details   String   @default("")
+  ipAddress String   @default("")
+  createdAt DateTime @default(now())
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ─── Projects ──────────────────────────────────────────────────
+
+model Project {
+  id               String         @id @default(cuid())
+  name             String
+  slug             String         @unique
+  type             String
+  status           String
+  location         String
+  size             String
+  price            String
+  priceVal         Int
+  appreciationRate Float
+  amenities        String         // JSON array
+  description      String
+  highlights       String         // JSON array
+  roiProjection5Yr String
+  roiProjection10Yr String
+  details          String
+  image            String
+  tag              String
+  mapEmbedUrl      String         @default("")
+  videoUrl         String         @default("")
+  brochureUrl      String         @default("")
+  masterPlanUrl    String         @default("")
+  paymentPlan      String         @default("")
+  floorPlanUrl     String         @default("")
+  virtualTourUrl   String         @default("")
+  qrCodeUrl        String         @default("")
+  featured         Boolean        @default(false)
+  seoTitle         String         @default("")
+  seoDescription   String         @default("")
+  seoKeywords      String         @default("")
+  ogImage          String         @default("")
+  published        Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  media            ProjectMedia[]
+}
+
+model ProjectMedia {
+  id        String   @id @default(cuid())
+  projectId String
+  type      String   // "image" | "document" | "video" | "map" | "floorplan" | "brochure" | "masterplan"
+  url       String
+  name      String
+  size      Int      @default(0)
+  mimeType  String   @default("")
+  sortOrder Int     @default(0)
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ─── Leads ─────────────────────────────────────────────────────
+
 model Lead {
   id               String   @id @default(cuid())
   name             String
@@ -18,48 +104,53 @@ model Lead {
   notes            String?
   budget           String?
   siteVisitDate    String?
+  source           String   @default("website")
+  assignedTo       String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
 
-model Project {
-  id               String   @id @default(cuid())
-  name             String
-  type             String
-  status           String
-  location         String
-  size             String
-  price            String
-  priceVal         Int
-  appreciationRate Float
-  amenities        String
-  description      String
-  highlights       String
-  roiProjection5Yr String
-  roiProjection10Yr String
-  details          String
-  image            String
-  tag              String
-  mapEmbedUrl      String   @default("")
-  videoUrl         String   @default("")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  media            ProjectMedia[]
+// ─── Blog ──────────────────────────────────────────────────────
+
+model BlogPost {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  content        String   // HTML/Markdown
+  excerpt        String   @default("")
+  featuredImage  String   @default("")
+  category       String   @default("")
+  tags           String   @default("") // JSON array
+  author         String   @default("")
+  status         String   @default("draft") // draft | published | scheduled
+  publishedAt    DateTime?
+  seoTitle       String   @default("")
+  seoDescription String   @default("")
+  seoKeywords    String   @default("")
+  ogImage        String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
-model ProjectMedia {
+// ─── Media Library ─────────────────────────────────────────────
+
+model Media {
   id        String   @id @default(cuid())
-  projectId String
-  type      String   // "image" | "document" | "video" | "map"
+  fileName  String
+  originalName String
+  mimeType  String
+  size      Int
   url       String
-  name      String
-  size      Int      @default(0)
-  mimeType  String   @default("")
+  folder    String   @default("/")
+  alt       String   @default("")
+  tags      String   @default("") // JSON array
   createdAt DateTime @default(now())
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  @@index([projectId])
+  @@index([folder])
+  @@index([mimeType])
 }
+
+// ─── Newsletter ────────────────────────────────────────────────
 
 model NewsletterSubscriber {
   id           Int      @id @default(autoincrement())
@@ -67,9 +158,85 @@ model NewsletterSubscriber {
   subscribedAt DateTime @default(now())
 }
 
+// ─── Site Settings ─────────────────────────────────────────────
+
 model SiteSetting {
   id        String   @id @default("main")
   key       String   @unique
   value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Testimonials ──────────────────────────────────────────────
+
+model Testimonial {
+  id                    String   @id @default(cuid())
+  name                  String
+  role                  String
+  quote                 String
+  category              String
+  initials              String
+  projectBought         String
+  appreciationObserved  String
+  featured              Boolean  @default(false)
+  sortOrder             Int      @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// ─── FAQs ──────────────────────────────────────────────────────
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String
+  sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Pages (CMS) ───────────────────────────────────────────────
+
+model Page {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  content        String   // HTML/JSON
+  status         String   @default("draft") // draft | published
+  seoTitle       String   @default("")
+  seoDescription String   @default("")
+  seoKeywords    String   @default("")
+  ogImage        String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// ─── Team Members ──────────────────────────────────────────────
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String   @default("")
+ image     String   @default("")
+ email     String   @default("")
+ phone     String   @default("")
+ sortOrder Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Partners / Clients ────────────────────────────────────────
+
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logo      String   @default("")
+ website   String   @default("")
+ sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

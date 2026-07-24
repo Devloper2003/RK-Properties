@@ -236,3 +236,29 @@ Stage Summary:
 - Full CRUD for leads, projects, newsletter subscribers, and site settings
 - All shadcn/ui components used: Table, Card, Badge, Dialog, AlertDialog, Select, Input, Textarea, Label, Button, Skeleton
 - Consistent gold/dark luxury theme throughout
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Build public-facing API routes for RK Properties — enhance /api/projects with DB-first + static fallback
+
+Work Log:
+- Read worklog and all existing API route files to understand current architecture
+- Read Prisma schema (Project + ProjectMedia models) and static propertyData.ts fallback
+- Verified existing routes are intact: /api/brochure (POST), /api/brochure/[id] (GET), /api/newsletter (POST), /api/leads (GET/POST/PATCH), /api/ (GET hello-world)
+- REPLACED /api/projects/route.ts with enhanced version:
+  - GET only (removed POST — creation is admin-only via /api/admin/projects)
+  - Filters by `published: true` so only admin-published projects appear on public site
+  - Includes related `media` array (ProjectMedia) ordered by sortOrder
+  - Safely parses `amenities` and `highlights` from JSON strings to arrays (with try/catch defaults)
+  - Builds `gallery` array from media items where type='image'
+  - Returns full media objects with id, type, url, name, size, mimeType, sortOrder
+  - Returns all Project fields: id, name, type, status, location, size, price, priceVal, appreciationRate, amenities, description, highlights, roiProjection5Yr, roiProjection10Yr, details, image, tag, gallery, mapEmbedUrl, videoUrl, media
+  - Falls back to static propertiesData when DB has zero published projects
+  - Falls back to static data on DB connection errors (graceful degradation)
+- ESLint: 0 new errors (only pre-existing warning in layout.tsx + error in upload/)
+
+Stage Summary:
+- 1 file replaced: src/app/api/projects/route.ts (was 51 lines → now 91 lines)
+- 0 files broken: all other public routes (brochure, newsletter, leads) verified intact
+- Public /api/projects now serves admin-managed data with zero-downtime fallback to static data

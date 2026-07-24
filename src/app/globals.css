@@ -205,7 +205,7 @@
 }
 
 .section-divider::before {
-  content: '✦';
+  content: '\2726';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -379,15 +379,320 @@ input[type="range"].gold-track {
   background: linear-gradient(to right, #D4AF37 0%, #D4AF37 var(--track-fill, 50%), #F4EFE6 var(--track-fill, 50%), #F4EFE6 100%);
 }
 
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM CSS UTILITIES — Sobha / DLF / DAMAC Level
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Hero Parallax: fixed bg with slow zoom ── */
+@keyframes heroSlowZoom {
+  0% { transform: scale(1.05); }
+  100% { transform: scale(1.15); }
+}
+
+.hero-parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+.hero-parallax::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  animation: heroSlowZoom 25s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+/* ── Image reveal clip-path animation ── */
+@keyframes imageReveal {
+  0% { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+.image-reveal {
+  animation: imageReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Text shimmer (gold sweep) ── */
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg, #D4AF37 0%, #F4EFE6 25%, #D4AF37 50%, #8B735B 75%, #D4AF37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 4s linear infinite;
+}
+
+/* ── Dark glassmorphism variant ── */
+.glass-dark {
+  background: rgba(10, 10, 15, 0.65);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+/* ── Premium card hover with shadow + border ── */
+.card-luxury-hover {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.card-luxury-hover:hover {
+  box-shadow: 0 20px 60px -12px rgba(212, 175, 55, 0.2), 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+/* ── Floating badge positioning ── */
+.floating-badge {
+  position: absolute;
+  z-index: 10;
+  animation: floatUp 6s ease-in-out infinite;
+}
+
+/* ── Video overlay gradient ── */
+.video-overlay {
+  position: relative;
+}
+.video-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 15, 0.7) 0%,
+    rgba(10, 10, 15, 0.3) 30%,
+    rgba(10, 10, 15, 0.2) 50%,
+    rgba(10, 10, 15, 0.6) 80%,
+    rgba(10, 10, 15, 0.9) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Enhanced .glass for dark mode ── */
+.dark .glass {
+  background: rgba(18, 18, 26, 0.75);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border-color: rgba(212, 175, 55, 0.12);
+}
+
+/* ── Premium ornamental divider ── */
+.premium-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.premium-divider::before,
+.premium-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+}
+
+/* ── Stat card: floating glassmorphism style ── */
+.stat-card {
+  background: rgba(252, 251, 247, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat-card:hover {
+  background: rgba(252, 251, 247, 0.14);
+  border-color: rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
+}
+.dark .stat-card {
+  background: rgba(18, 18, 26, 0.6);
+  border-color: rgba(212, 175, 55, 0.1);
+}
+.dark .stat-card:hover {
+  background: rgba(18, 18, 26, 0.8);
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+/* ── Luxury button: gold filled ── */
+.btn-luxury {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #D4AF37 0%, #8B735B 100%);
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+.btn-luxury::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.btn-luxury:hover::after {
+  left: 120%;
+}
+.btn-luxury:hover {
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Luxury button: outlined gold ── */
+.btn-luxury-outline {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  border: 1.5px solid rgba(212, 175, 55, 0.6);
+  color: #D4AF37;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-luxury-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(139, 115, 91, 0.05));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.btn-luxury-outline:hover::before {
+  opacity: 1;
+}
+.btn-luxury-outline:hover {
+  border-color: #D4AF37;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  transform: translateY(-1px);
+}
+.dark .btn-luxury-outline {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: #D4AF37;
+}
+
+/* ── Typewriter reveal animation ── */
+@keyframes typewriterReveal {
+  0% { max-width: 0; opacity: 0; }
+  10% { opacity: 1; }
+  100% { max-width: 100%; opacity: 1; }
+}
+.typewriter-reveal {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 0;
+  animation: typewriterReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+}
+
+/* ── Trust marquee smooth scroll ── */
+@keyframes marqueeSmooth {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee-smooth {
+  animation: marqueeSmooth 40s linear infinite;
+}
+.animate-marquee-smooth:hover {
+  animation-play-state: paused;
+}
+
+/* ── Gold glow status badge ── */
+@keyframes statusGlow {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(212, 175, 55, 0.2); }
+  50% { box-shadow: 0 0 16px 4px rgba(212, 175, 55, 0.35); }
+}
+.status-glow {
+  animation: statusGlow 2.5s ease-in-out infinite;
+}
+
+/* ── View Details slide-up on hover ── */
+@keyframes slideUp {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.slide-up-hover .slide-up-content {
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide-up-hover:hover .slide-up-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── FAQ active gold accent ── */
+.faq-active-gold {
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.15), 0 4px 16px rgba(212, 175, 55, 0.08);
+}
+.dark .faq-active-gold {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.1), 0 4px 16px rgba(212, 175, 55, 0.05);
+}
+
+/* ── Gold accent input fields ── */
+.input-gold-accent {
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.input-gold-accent:focus {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1), 0 0 12px rgba(212, 175, 55, 0.08);
+}
+.dark .input-gold-accent {
+  border-color: rgba(212, 175, 55, 0.15);
+  background: rgba(18, 18, 26, 0.6);
+}
+.dark .input-gold-accent:focus {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+}
+
+/* ── Subtle gold gradient border (pseudo-element) ── */
+.gold-border-gradient {
+  position: relative;
+}
+.gold-border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(139, 115, 91, 0.1), rgba(212, 175, 55, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Social link hover scale ── */
+.social-link-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.social-link-hover:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
 /* ── Dark Mode Overrides ── */
 .dark body {
   background: #0F0E0C;
   color: #E5E1D8;
-}
-
-.dark .glass {
-  background: rgba(15, 14, 12, 0.8);
-  border-color: rgba(212, 175, 55, 0.15);
 }
 
 .dark .section-divider {

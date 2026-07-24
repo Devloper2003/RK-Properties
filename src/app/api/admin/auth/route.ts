@@ -1,28 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyPassword, createAdminToken } from '@/lib/admin-auth';
+import { verifyCredentials, createAdminToken, getAdminSession, logActivity, ensureDefaultAdmin } from '@/lib/admin-auth';
+
+export async function GET() {
+  await ensureDefaultAdmin();
+  const session = await getAdminSession();
+  if (!session?.authenticated || !session.user) {
+    return NextResponse.json({ authenticated: false });
+  }
+  return NextResponse.json({ authenticated: true, user: session.user });
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json();
-
-    if (!password) {
-      return NextResponse.json({ error: 'Password is required' }, { status: 400 });
+    await ensureDefaultAdmin();
+    const { username, password } = await request.json();
+    if (!username || !password) {
+      return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
     }
-
-    if (!verifyPassword(password)) {
-      return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    const user = await verifyCredentials(username, password);
+    if (!user) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
-
-    const token = createAdminToken();
-    const response = NextResponse.json({ success: true });
+    const token = createAdminToken(user.id, user.role);
+    const response = NextResponse.json({ success: true, user });
     response.cookies.set('admin_session', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: '/',
     });
-
+    await logActivity(user.id, 'login', 'Admin logged in');
     return response;
   } catch (error) {
     console.error('Admin auth error:', error);
@@ -31,6 +39,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE() {
+  try {
+    const session = await getAdminSession();
+    if (session?.user) {
+      await logActivity(session.user.id, 'logout', 'Admin logged out');
+    }
+  } catch {}
   const response = NextResponse.json({ success: true });
   response.cookies.set('admin_session', '', {
     httpOnly: true,
