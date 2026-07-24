@@ -194,3 +194,45 @@ Stage Summary:
 - New files: src/app/projects/page.tsx, src/app/api/brochure/route.ts
 - Modified: src/components/rk-properties/Navbar.tsx
 - All 4 projects displayed with full details, gallery, and brochure download
+
+---
+Task ID: 9
+Agent: full-stack-developer
+Task: Build complete admin panel
+
+Work Log:
+- Added SiteSetting model to prisma/schema.prisma (id, key, value, updatedAt) and pushed to DB
+- Created 8 admin API routes under /api/admin/:
+  - GET /api/admin/stats — Dashboard stats (total/new leads, projects count, subscribers, leads by status, recent leads, leads by project)
+  - GET /api/admin/leads — List leads with ?search=, ?status=, ?project= filters
+  - PATCH /api/admin/leads/[id] — Update lead status, notes, siteVisitDate
+  - DELETE /api/admin/leads/[id] — Delete lead
+  - GET /api/admin/projects — List all projects from DB
+  - POST /api/admin/projects — Create new project
+  - PATCH /api/admin/projects/[id] — Update project fields
+  - DELETE /api/admin/projects/[id] — Delete project
+  - GET /api/admin/newsletter — List all subscribers
+  - DELETE /api/admin/newsletter/[id] — Delete subscriber
+  - GET /api/admin/settings — Get site settings (with hardcoded defaults, upserted from DB)
+  - PATCH /api/admin/settings — Update site settings (upsert pattern)
+- Built complete admin dashboard at /admin (src/app/admin/page.tsx) as single-page app with:
+  - Collapsible left sidebar (gold/dark theme) with 5 nav items: Dashboard, Leads, Projects, Newsletter, Settings
+  - Mobile-responsive: sidebar overlays on mobile with backdrop
+  - Dashboard tab: 4 stat cards (Total Leads, New Leads, Total Projects, Newsletter), recent leads table, leads by status progress bars, leads by project breakdown
+  - Leads tab: search input + status filter dropdown, full table with Name/Email/Phone/Project/Category/Status/Date/Actions, inline status update select, notes dialog, delete confirmation
+  - Projects tab: Add New Project button, table with Name/Type/Status/Location/Price/Appreciation/Actions, full edit dialog with all 16 fields
+  - Newsletter tab: subscriber table with email/date/delete action, total count
+  - Settings tab: form with bannerText, contactPhone, contactEmail, whatsappNumber, companyAddress
+  - All dialogs use shadcn/ui Dialog and AlertDialog components
+  - Loading states with Loader2 spinner, empty states with descriptive messages
+  - Gold/dark luxury theme consistent with public website
+  - All API responses verified (200 OK)
+  - ESLint: 0 errors from new code (pre-existing errors in layout.tsx + upload/ only)
+
+Stage Summary:
+- 1 Prisma model added (SiteSetting)
+- 10 API route files created under /api/admin/
+- 1 admin dashboard page created (/admin) with 5 tab sections
+- Full CRUD for leads, projects, newsletter subscribers, and site settings
+- All shadcn/ui components used: Table, Card, Badge, Dialog, AlertDialog, Select, Input, Textarea, Label, Button, Skeleton
+- Consistent gold/dark luxury theme throughout

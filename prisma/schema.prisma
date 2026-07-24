@@ -49,3 +49,10 @@ model NewsletterSubscriber {
   email        String   @unique
   subscribedAt DateTime @default(now())
 }
+
+model SiteSetting {
+  id        String   @id @default("main")
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
