@@ -70,7 +70,7 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Brand */}
             <button
               onClick={handleHomeClick}
@@ -174,7 +174,7 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
           />
           {/* Menu panel */}
-          <div className="lg:hidden fixed top-20 inset-x-0 z-30 bg-white/98 dark:bg-gray-950/98 border-b border-gold-100 dark:border-gold-800/30 shadow-lg p-5 space-y-1 font-mono text-xs uppercase tracking-wider animate-fade-in">
+          <div className="lg:hidden fixed top-[100px] sm:top-[116px] inset-x-0 z-30 bg-white/98 dark:bg-gray-950/98 border-b border-gold-100 dark:border-gold-800/30 shadow-lg p-5 space-y-1 font-mono text-xs uppercase tracking-wider animate-fade-in">
             {/* Home link in mobile menu */}
             {activeOverlay && (
               <button

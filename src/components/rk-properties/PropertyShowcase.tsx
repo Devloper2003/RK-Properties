@@ -271,45 +271,50 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  onClick={() => { setSelectedProject(p); addRecentlyViewed(p.id); }}
-                  className="flex-1 py-3 px-4 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 border border-gold-200 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 hover:bg-gold-50/20 dark:hover:bg-gray-800/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  Technical Details
-                </button>
+              <div className="flex flex-col gap-2 pt-2">
+                {/* Primary action row - full width on mobile, side by side on sm+ */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => usePropertyStore.getState().openOverlay('project-detail', p.id)}
+                    className="flex-1 py-3 px-4 rounded-xl border-2 border-gold-600 dark:border-gold-500 text-gold-700 dark:text-gold-300 text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 hover:bg-gold-50 dark:hover:bg-gold-900/40 flex items-center justify-center gap-1.5"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => onBookProject(p.name)}
+                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-gold-800 to-gold-700 hover:from-gold-600 hover:to-gold-500 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg text-center"
+                  >
+                    Book Plot
+                  </button>
+                </div>
+                {/* Secondary action row */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setSelectedProject(p); addRecentlyViewed(p.id); }}
+                    className="flex-1 py-2.5 px-3 rounded-xl font-mono text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 border border-gold-200 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 hover:bg-gold-50/20 dark:hover:bg-gray-800/20 cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5"
+                  >
+                    <Eye className="w-3 h-3" />
+                    <span className="hidden sm:inline">Technical Details</span>
+                    <span className="sm:hidden">Details</span>
+                  </button>
 
-                <button
-                  onClick={() => setBrochureProject(p)}
-                  className="py-3 px-4 rounded-xl border border-gold-200/40 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 bg-gold-50/20 dark:bg-gray-800/20 hover:bg-gold-50 dark:hover:bg-gray-800 text-gold-700 dark:text-gold-300 cursor-pointer transition-all duration-200"
-                  title="Download Instant PDF Brochure"
-                >
-                  <Download className="w-4 h-4" />
-                </button>
+                  <button
+                    onClick={() => setBrochureProject(p)}
+                    className="py-2.5 px-3 rounded-xl border border-gold-200/40 dark:border-gold-800/40 hover:border-gold-500 dark:hover:border-gold-600 bg-gold-50/20 dark:bg-gray-800/20 hover:bg-gold-50 dark:hover:bg-gray-800 text-gold-700 dark:text-gold-300 cursor-pointer transition-all duration-200"
+                    title="Download Instant PDF Brochure"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
 
-                <button
-                  onClick={() => handleShareWhatsApp(p)}
-                  className="py-3 px-3.5 rounded-xl border border-green-200/40 hover:border-green-400 bg-green-50/20 hover:bg-green-50 text-green-700 cursor-pointer transition-all duration-200"
-                  title="Share on WhatsApp"
-                >
-                  <Share2 className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => usePropertyStore.getState().openOverlay('project-detail', p.id)}
-                  className="py-3 px-5 rounded-xl border-2 border-gold-600 dark:border-gold-500 text-gold-700 dark:text-gold-300 text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 hover:bg-gold-50 dark:hover:bg-gold-900/40 flex items-center gap-1.5"
-                >
-                  <Eye className="w-4 h-4" />
-                  View Details
-                </button>
-
-                <button
-                  onClick={() => onBookProject(p.name)}
-                  className="py-3 px-5 rounded-xl bg-gradient-to-r from-gold-800 to-gold-700 hover:from-gold-600 hover:to-gold-500 text-white text-xs uppercase font-semibold font-mono tracking-wider cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg"
-                >
-                  Book Plot
-                </button>
+                  <button
+                    onClick={() => handleShareWhatsApp(p)}
+                    className="py-2.5 px-3 rounded-xl border border-green-200/40 hover:border-green-400 bg-green-50/20 hover:bg-green-50 text-green-700 cursor-pointer transition-all duration-200"
+                    title="Share on WhatsApp"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
