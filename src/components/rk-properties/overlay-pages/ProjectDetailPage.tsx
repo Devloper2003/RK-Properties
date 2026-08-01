@@ -44,6 +44,8 @@ const statusConfig: Record<string, { bg: string; label: string }> = {
   'Pre-launch': { bg: 'bg-sky-500', label: 'Pre-launch' },
   'Almost Sold Out': { bg: 'bg-amber-500', label: 'Almost Sold Out' },
   'Fully Developed': { bg: 'bg-[#D4AF37]', label: 'Fully Developed' },
+  'MVDA Approved': { bg: 'bg-emerald-600', label: 'MVDA Approved' },
+  'New Launch': { bg: 'bg-violet-500', label: 'New Launch' },
 };
 
 /* ─── Amenity icon mapping ─── */

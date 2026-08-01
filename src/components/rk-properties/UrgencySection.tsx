@@ -9,14 +9,15 @@ interface AvailabilityItem {
   name: string;
   totalPlots: number;
   remaining: number;
-  type: 'Selling Fast' | 'Almost Sold Out' | 'Pre-launch';
+  type: 'Selling Fast' | 'Almost Sold Out' | 'Pre-launch' | 'MVDA Approved' | 'New Launch';
 }
 
 const HARD_CODED_AVAILABILITY: AvailabilityItem[] = [
-  { projectId: 'proj_1', name: 'Krishna Radhika Enclave', totalPlots: 45, remaining: 12, type: 'Selling Fast' },
-  { projectId: 'proj_2', name: 'Yamuna Devotee Gated Heights', totalPlots: 60, remaining: 38, type: 'Pre-launch' },
-  { projectId: 'proj_3', name: 'Chhatikara Prime Meadows', totalPlots: 35, remaining: 6, type: 'Almost Sold Out' },
-  { projectId: 'proj_4', name: 'Govardhan Heritage Meadows', totalPlots: 18, remaining: 3, type: 'Almost Sold Out' },
+  { projectId: 'bbk', name: 'Bankey Bihari Kunj', totalPlots: 120, remaining: 34, type: 'MVDA Approved' },
+  { projectId: 'bbg', name: 'Bankey Bihari Greens', totalPlots: 80, remaining: 65, type: 'New Launch' },
+  { projectId: 'bav', name: 'Braj Anand Vatika', totalPlots: 60, remaining: 48, type: 'New Launch' },
+  { projectId: 'bbd', name: 'Bankey Bihari Dham', totalPlots: 90, remaining: 22, type: 'MVDA Approved' },
+  { projectId: 'blg', name: 'Braj Lotus Greens', totalPlots: 50, remaining: 42, type: 'New Launch' },
 ];
 
 function useCountdown(targetDate: Date) {
@@ -55,6 +56,8 @@ export default function UrgencySection() {
     switch (type) {
       case 'Almost Sold Out': return 'bg-red-50 text-red-600 border-red-200';
       case 'Selling Fast': return 'bg-amber-50 text-amber-600 border-amber-200';
+      case 'MVDA Approved': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'New Launch': return 'bg-violet-50 text-violet-700 border-violet-200';
       default: return 'bg-sky-50 text-sky-600 border-sky-200';
     }
   };

@@ -160,6 +160,8 @@ ${brochureProject.amenities.map((a: string) => `[✓] ${a}`).join('\n')}
       case 'Selling Fast': return 'bg-red-50 text-red-600 border-red-200';
       case 'Pre-launch': return 'bg-sky-50 text-sky-600 border-sky-200';
       case 'Almost Sold Out': return 'bg-amber-50 text-amber-600 border-amber-200';
+      case 'MVDA Approved': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'New Launch': return 'bg-violet-50 text-violet-700 border-violet-200';
       default: return 'bg-green-50 text-green-700 border-green-200';
     }
   };

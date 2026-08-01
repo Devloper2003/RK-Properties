@@ -2,7 +2,7 @@ export interface Project {
   id: string;
   name: string;
   type: 'Residential Project' | 'Investment Plots' | 'Premium Township' | 'Verified Estates';
-  status: 'Pre-launch' | 'Selling Fast' | 'Almost Sold Out' | 'Fully Developed';
+  status: 'Pre-launch' | 'Selling Fast' | 'Almost Sold Out' | 'Fully Developed' | 'New Launch' | 'MVDA Approved';
   location: string;
   size: string;
   price: string;
